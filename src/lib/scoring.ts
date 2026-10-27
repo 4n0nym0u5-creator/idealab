@@ -35,13 +35,16 @@ export function workingScores(idea: Pick<Idea, "scores" | "scoreOverrides">, key
   return scores;
 }
 
-export function compareRank(a: Pick<Idea, "id" | "total" | "scores" | "scoreOverrides">, b: Pick<Idea, "id" | "total" | "scores" | "scoreOverrides">): number {
+export function compareRank(a: Pick<Idea, "id" | "total" | "scores" | "scoreOverrides" | "complaintFrequency">, b: Pick<Idea, "id" | "total" | "scores" | "scoreOverrides" | "complaintFrequency">): number {
   if (a.total !== b.total) return b.total - a.total;
   const left = workingScores(a);
   const right = workingScores(b);
   if (left.distro !== right.distro) return right.distro - left.distro;
   if (left.legal !== right.legal) return right.legal - left.legal;
   if (left.build !== right.build) return right.build - left.build;
+  const leftComplaint = a.complaintFrequency ?? -1;
+  const rightComplaint = b.complaintFrequency ?? -1;
+  if (leftComplaint !== rightComplaint) return rightComplaint - leftComplaint;
   return a.id.localeCompare(b.id);
 }
 

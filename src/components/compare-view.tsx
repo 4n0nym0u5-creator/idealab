@@ -80,6 +80,10 @@ export function CompareView({ ideas, initialIds, criteriaOrder }: { ideas: Idea[
                   {selected.map((idea) => <td key={idea.id}>{idea.category}{idea.secondaryCategories.length ? <div className="small faint">{idea.secondaryCategories.join(", ")}</div> : null}</td>)}
                 </tr>
                 <tr>
+                  <td>Complaint frequency <span className="faint">evidence, not scored</span></td>
+                  {selected.map((idea) => <td key={idea.id}>{idea.complaintFrequency == null ? "—" : idea.complaintFrequency.toFixed(2)}</td>)}
+                </tr>
+                <tr>
                   <td>Bundle fit</td>
                   {selected.map((idea) => <td key={idea.id}>{idea.bundleFit ? `${tierLabel(idea.bundleFit.tier)} · ${idea.bundleFit.module}` : "—"}</td>)}
                 </tr>

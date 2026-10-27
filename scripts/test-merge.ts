@@ -58,6 +58,12 @@ function canonicalFromFile(idea: Record<string, unknown>) {
     ...(Array.isArray(idea.secondary_categories) && idea.secondary_categories.length ? { secondary_categories: idea.secondary_categories } : {}),
     ...(Array.isArray(idea.category_history) && idea.category_history.length ? { category_history: idea.category_history } : {}),
     ...(idea.bundle_fit ? { bundle_fit: idea.bundle_fit } : {}),
+    ...(typeof idea.complaint_frequency === "number" ? { complaint_frequency: idea.complaint_frequency } : {}),
+    ...(Array.isArray(idea.pain_cluster_ids) && idea.pain_cluster_ids.length ? { pain_cluster_ids: idea.pain_cluster_ids } : {}),
+    ...(Array.isArray(idea.related_pain_cluster_ids) && idea.related_pain_cluster_ids.length ? { related_pain_cluster_ids: idea.related_pain_cluster_ids } : {}),
+    ...(Array.isArray(idea.merged_ids) && idea.merged_ids.length ? { merged_ids: idea.merged_ids } : {}),
+    ...(Array.isArray(idea.related_ids) && idea.related_ids.length ? { related_ids: idea.related_ids } : {}),
+    ...(Array.isArray(idea.run4_merge) && idea.run4_merge.length ? { run4_merge: idea.run4_merge } : {}),
   };
 }
 
@@ -273,17 +279,21 @@ test("production upgrade preserves notes, statuses and overrides", async () => {
     }, "test");
     const upgraded = await seedIfEmpty("migrate-v2");
     assert.equal(upgraded.skipped, false);
-    assert.equal(upgraded.ideas, 170);
+    assert.equal(upgraded.ideas, 187);
     const portfolio = await loadPortfolio();
-    assert.equal(portfolio.ideas.length, 170);
-    assert.equal(portfolio.runs.length, 4);
+    assert.equal(portfolio.ideas.length, 187);
+    assert.equal(portfolio.runs.length, 5);
     assert.equal(portfolio.settings.rubricVersion, "2.0");
-    assert.equal(portfolio.settings.schemaVersion, "3");
+    assert.equal(portfolio.settings.schemaVersion, "4");
     assert.equal(portfolio.bundles.length, 1);
     assert.equal(portfolio.bundles[0]?.id, "life-admin-pass");
     assert.equal(portfolio.bundles[0]?.total, 68.8);
     assert.ok(portfolio.bundles[0]?.revenueScenarios.base);
-    assert.equal(portfolio.ideas.filter((idea) => idea.category === "Life Admin").length, 51);
+    assert.equal(portfolio.ideas.filter((idea) => idea.category === "Life Admin").length, 53);
+    assert.equal(portfolio.painClusters.length, 53);
+    assert.equal(Object.keys(portfolio.settings.idAliases).length, 17);
+    assert.equal(portfolio.ideas.find((idea) => idea.id === "xero-invoice-chaser-lite")?.status, "candidate");
+    assert.equal(portfolio.ideas.find((idea) => idea.id === "appstore-screenshot-maker")?.status, "candidate");
     const kept = portfolio.ideas.find((idea) => idea.id === "mac-quicklook-data-viewer");
     assert.equal(kept?.status, "building");
     assert.equal(kept?.statusLocked, true);
@@ -297,7 +307,7 @@ test("production upgrade preserves notes, statuses and overrides", async () => {
     await seedIfEmpty("migrate-v2");
     const after = await loadPortfolio();
     assert.equal(after.ideas.find((idea) => idea.id === "mac-quicklook-data-viewer")?.userNotes, "Edited after the upgrade.");
-    assert.equal(after.ideas.length, 170);
+    assert.equal(after.ideas.length, 187);
     assert.equal(after.bundles[0]?.revenueScenarios.base?.monthly.length, 36);
   } finally {
     await closeDb();
@@ -319,7 +329,7 @@ test("run 5 import matches the v3 research database and keeps category overrides
     assert.equal(preview.ideasRescored, 16);
     await commitImport(run5Text, "test");
     const portfolio = await loadPortfolio();
-    const golden = JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", "ideas.json"), "utf8")) as {
+    const golden = JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", "ideas-v3.json"), "utf8")) as {
       ideas: Record<string, unknown>[];
       bundles: Record<string, unknown>[];
       category_overrides: Record<string, unknown>;
@@ -383,6 +393,79 @@ test("run 5 import matches the v3 research database and keeps category overrides
     assert.equal(changed?.category, "Pets");
     assert.ok(changed?.secondaryCategories.includes(moved.category));
     assert.equal(changed?.categoryHistory.at(-1)?.note, "explicit move");
+  } finally {
+    await closeDb();
+  }
+});
+
+test("run 4 import matches the v4 research database and redirects aliases", async () => {
+  const { closeDb } = await import("../src/lib/db");
+  const { migrate } = await import("../src/lib/migrate");
+  const { readResearchFile, replacePortfolio, commitImport, loadPortfolio, canonicalIdea, previewImport } = await import("../src/lib/store");
+  const { canonicalBundle, canonicalOverrides } = await import("../src/lib/bundles");
+  const { canonicalCluster, canonicalMethod } = await import("../src/lib/pain");
+  try {
+    await migrate();
+    const v3 = readResearchFile(path.join(process.cwd(), "data", "ideas-v3.json"));
+    await replacePortfolio(v3, "test");
+    const run4Text = fs.readFileSync(path.join(process.cwd(), "data", "run4.json"), "utf8");
+    const preview = await previewImport(run4Text);
+    assert.equal(preview.ideasAdded, 17);
+    assert.equal(preview.ideasRescored, 32);
+    await commitImport(run4Text, "test");
+    const portfolio = await loadPortfolio();
+    const golden = JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", "ideas.json"), "utf8")) as {
+      ideas: Record<string, unknown>[];
+      bundles: Record<string, unknown>[];
+      category_overrides: Record<string, unknown>;
+      pain_clusters: Record<string, unknown>[];
+      pain_method: Record<string, unknown>;
+      id_aliases: Record<string, string>;
+    };
+    const byId = new Map(portfolio.ideas.map((idea) => [idea.id, canonicalIdea(idea)]));
+    assert.equal(portfolio.ideas.length, golden.ideas.length);
+    for (const raw of golden.ideas) {
+      assert.deepEqual(byId.get(String(raw.id)), canonicalFromFile(raw), String(raw.id));
+    }
+    assert.equal(portfolio.runs.map((run) => run.runNumber).join(","), "1,2,3,4,5");
+    assert.equal(portfolio.runs.find((run) => run.runNumber === 4)?.ideasAdded, 17);
+    assert.equal(portfolio.runs.find((run) => run.runNumber === 4)?.ideasRescored, 32);
+    assert.match(portfolio.runs.find((run) => run.runNumber === 4)?.focus ?? "", /pain-point/);
+    assert.deepEqual(canonicalOverrides(portfolio.settings.categoryOverrides), golden.category_overrides);
+    assert.deepEqual(portfolio.settings.idAliases, golden.id_aliases);
+    assert.equal(portfolio.settings.idAliases["notion-local-backup"], "saas-bulk-exporter-pattern");
+    assert.deepEqual(canonicalMethod(portfolio.settings.painMethod!), golden.pain_method);
+    assert.equal(portfolio.painClusters.length, golden.pain_clusters.length);
+    const clusters = new Map(portfolio.painClusters.map((cluster) => [cluster.id, canonicalCluster(cluster)]));
+    for (const raw of golden.pain_clusters) {
+      assert.deepEqual(clusters.get(String(raw.id)), raw, String(raw.id));
+    }
+    assert.equal(portfolio.bundles.length, 1);
+    assert.deepEqual(canonicalBundle(portfolio.bundles[0]), golden.bundles[0]);
+    const folded = portfolio.ideas.find((idea) => idea.id === "saas-bulk-exporter-pattern");
+    assert.equal(folded?.complaintFrequency, 2.4);
+    assert.ok(folded?.scoreHistory.some((item) => item.run === 4 && item.note?.includes("scores unchanged")));
+    const before = folded?.scoreHistory.find((item) => item.run === 3);
+    const evidence = folded?.scoreHistory.find((item) => item.run === 4);
+    assert.equal(evidence?.total, before?.total);
+    assert.equal(portfolio.ideas.find((idea) => idea.id === "xero-invoice-chaser-lite")?.status, "candidate");
+    assert.equal(portfolio.ideas.find((idea) => idea.id === "appstore-screenshot-maker")?.status, "candidate");
+    assert.equal(portfolio.ideas.some((idea) => idea.id === "notion-local-backup"), false);
+
+    const sample = portfolio.ideas.find((idea) => idea.id === "clean-recipe-box");
+    assert.ok(sample);
+    await commitImport(JSON.stringify({
+      run: { run_number: 6, date: "2026-11-06", author: "Test", rubric_version: "2.0" },
+      ideas: [{
+        id: "notion-local-backup",
+        notes: `${folded?.notes}\nAlias redirect check.`,
+        scores: folded?.scores,
+      }],
+    }), "test");
+    const after = await loadPortfolio();
+    assert.equal(after.ideas.some((idea) => idea.id === "notion-local-backup"), false);
+    assert.match(after.ideas.find((idea) => idea.id === "saas-bulk-exporter-pattern")?.notes ?? "", /Alias redirect check/);
+    assert.equal(after.ideas.find((idea) => idea.id === "clean-recipe-box")?.complaintFrequency, sample.complaintFrequency);
   } finally {
     await closeDb();
   }

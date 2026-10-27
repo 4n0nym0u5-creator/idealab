@@ -223,3 +223,16 @@ totals, kept the v1 totals in `score_history` (tagged `rubric_version: "1.0"`), 
 **Effect:** Mac utilities fell hardest (Quick Look viewer from #5 to #28, −4.6 points; display restorer from #19 to #38;
 per-app audio −5.4). Pure web tools rose (event-run-sheet from #7 to #1; trust page, timezone planner and Notion
 templates each gained about 4-5 points).
+
+## complaint_frequency (CFS 1.0) — how it is used (decided 27 Oct 2026, Run 4 merge)
+**Decision: CFS is evidence, not a weighted criterion. The rubric stays at v2.0. No v2.1.**
+- Why it is not weighted:
+  1. *Coverage.* CFS exists only where an idea links to one of the 53 Run 4 clusters (34 of 187 ideas). Weighting it would mean imputing values for the other ~80%.
+  2. *Bias.* The corpus is about 75 chosen subreddits plus HN/SE, posts only, swept in October. Topic-named subs inflate volume, and Christmas and footy pain is under-sampled. Whirlpool, Quora and ProductReview were unreachable.
+  3. *Double counting.* The 10-point `pain` criterion already measures how acute and frequent the problem is. CFS measures the same thing.
+- How it is used:
+  1. *Pain calibration.* When scoring or rescoring `pain`, read CFS ≥3 as support for pain 4–5, 2–3 as support for 3–4, and 1–2 as no change. A CFS below 1 or a missing CFS never lowers `pain` on its own, because it can mean the topic simply wasn't covered (tipping and team-club clusters have no forum matches).
+  2. *Tie-breaker.* Within equal totals, the shortlist tie-break is still distro → legal → build. CFS is a display-level tie-breaker after that.
+  3. *Display.* `complaint_frequency` and `pain_cluster_ids` are shown on the idea. The cluster (`db.pain_clusters`) holds raw counts and verbatim quotes with URLs.
+- Merging Run 4 ideas into existing ids did **not** rescore those ideas. Their totals are unchanged. Run 4's own suggested scores are kept in `run4_merge[].suggested_scores` for audit. A future deliberate rescore may use them under the calibration rule above.
+- If CFS is later swept across most ideas with a broader, comment-level corpus, revisit this as rubric v2.1. That would mean taking weight from `pain` rather than adding new weight, and recomputing the score history.
