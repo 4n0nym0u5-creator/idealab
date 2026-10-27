@@ -193,6 +193,18 @@ This is a clarification only; the weights are unchanged and the rubric stays at 
 - Design rules: never claim to make anyone "secure" or "compliant"; never give a "safe" verdict; alert on your own failures (heartbeats); verify ownership before any active check; keep secrets local.
 - Put soft risks in `notes`, not `kill_flags`, because any kill flag auto-kills the idea.
 
+## Addendum (Run 5): Life Admin guidance for the `legal` criterion
+- **Dates, not documents.** Store an expiry date and a nickname, never ID numbers or scans. Tools that store ID scans
+  (passport, licence, Medicare) or ID numbers in the cloud score legal 0-1 and are killed.
+- Health information and children's data: local-only (on device) or dates-only (first name + dates). Storing health
+  information in the cloud removes the small-business Privacy Act exemption; cloud health records hubs score legal ≤2.
+- No tax, insurance, energy-plan, financial or legal advice ("what can I claim", "switch to this plan"): show the user's
+  own numbers and link to official sources (ATO, ACCC, Service NSW, Energy Made Easy, passports.gov.au). AI advice tools are killed.
+- Bank-linked or credential-holding "cancel for me" services: legal ≤1, killed.
+- Bundles are scored as one product on the same 13 criteria (stored in `bundles[]`, never shortlisted). Score the
+  hardest part of the shared platform (accounts, sharing, billing, reminder emails), not the easiest module.
+  The Life Admin Pass scored 68.8 in Run 5.
+
 ## Version 2.0 changelog (Run 3, 27 Oct 2026)
 **Why:** the owner is not an engineer and will build with AI. v1's `build` criterion measured effort for an
 "AI-assisted builder" but not whether a non-engineer can verify and debug the result. That made native Mac

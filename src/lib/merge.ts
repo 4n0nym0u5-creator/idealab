@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { isCriterionKey, isOptionalCriterion, type CriterionKey, type Scores, type Weights } from "./criteria";
+import { mergeBundles, overridesFromUnknown } from "./bundles";
 import { recompute, totalOf } from "./scoring";
-import { isCustomerType, isManualStatus, isStatus, type Evidence, type Idea, type PainPoint, type Run, type ScoreSnapshot, type Status } from "./types";
+import { isCustomerType, isManualStatus, isStatus, type BundleFit, type BundleRecord, type CategoryEvent, type CategoryOverride, type Evidence, type Idea, type PainPoint, type Run, type ScoreSnapshot, type Status } from "./types";
 
 export class ImportError extends Error {
   constructor(message: string) {
@@ -16,7 +17,8 @@ const scoresSchema = z.record(z.string(), scoreValue);
 const evidenceSchema = z.object({
   url: z.string().min(1),
   note: z.string(),
-});
+  run: z.number().optional(),
+}).passthrough();
 
 const incomingIdeaSchema = z
   .object({
@@ -39,6 +41,18 @@ const incomingIdeaSchema = z
       sources: z.array(evidenceSchema).optional(),
       quotes: z.array(z.string()).optional(),
     })).optional(),
+    secondary_categories: z.array(z.string()).optional(),
+    bundle_fit: z.object({
+      tier: z.string(),
+      module: z.string(),
+      note: z.string(),
+    }).nullable().optional(),
+    category_change: z.object({
+      from: z.string(),
+      to: z.string(),
+      note: z.string().optional(),
+    }).optional(),
+    history_note: z.string().optional(),
     status: z.string().optional(),
     kill_flags: z.array(z.string()).optional(),
     avoid_flags: z.array(z.string()).optional(),
@@ -157,7 +171,7 @@ function asPainPoint(item: { id: string; label: string; count: number; cluster?:
     label: item.label,
     count: item.count,
     ...(item.cluster ? { cluster: item.cluster } : {}),
-    sources: (item.sources ?? []).map((source) => ({ url: source.url, note: source.note })),
+    sources: (item.sources ?? []).map((source) => ({ ...source, url: source.url, note: source.note })),
     quotes: [...(item.quotes ?? [])],
   };
 }
@@ -170,7 +184,7 @@ function unionEvidence(current: Evidence[], incoming: Evidence[]): { evidence: E
     const previous = map.get(item.url);
     if (!previous) added.push(item.url);
     else if (previous.note !== item.note) added.push(item.url);
-    map.set(item.url, { url: item.url, note: item.note });
+    map.set(item.url, { ...item, url: item.url, note: item.note });
   }
   return { evidence: [...map.values()], added };
 }
@@ -208,6 +222,9 @@ function blankIdea(id: string, position: number, now: string): Idea {
     customerType: "",
     aibuildReason: "",
     painPoints: [],
+    secondaryCategories: [],
+    categoryHistory: [],
+    bundleFit: null,
     pipelineOrder: 0,
     position,
     updatedAt: now,
@@ -343,13 +360,27 @@ function applyIncoming(current: Idea, incoming: IncomingIdea, isNew: boolean): {
 
 export type ApplyRunOptions = {
   criteriaOrder?: readonly string[];
+  rubricVersion?: string;
+  categoryOverrides?: Record<string, CategoryOverride>;
+  bundles?: BundleRecord[];
 };
+
+function addSecondary(idea: Idea, category: string | undefined) {
+  if (!category || category === idea.category || idea.secondaryCategories.includes(category)) return;
+  idea.secondaryCategories.push(category);
+}
+
+function asBundleFit(value: { tier: string; module: string; note: string } | null | undefined): BundleFit | null | undefined {
+  if (value === undefined) return undefined;
+  if (value === null) return null;
+  return { tier: value.tier, module: value.module, note: value.note };
+}
 
 function sameHistorySlot(item: ScoreSnapshot, runNumber: number, rubricVersion: string): boolean {
   return item.run === runNumber && (item.rubricVersion || "") === (rubricVersion || "");
 }
 
-export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, runs: Run[] = [], options: ApplyRunOptions = {}): { ideas: Idea[]; run: Run; report: ImportReport } {
+export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, runs: Run[] = [], options: ApplyRunOptions = {}): { ideas: Idea[]; run: Run; report: ImportReport; categoryOverrides: Record<string, CategoryOverride>; bundles: BundleRecord[] } {
   const parsed = parseRunFile(file);
   const runNumber = parsed.run.run_number;
   if (runs.some((run) => run.runNumber === runNumber)) {
@@ -358,6 +389,8 @@ export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, ru
   const order = [...(options.criteriaOrder?.length ? options.criteriaOrder : Object.keys(weights))];
   const rubricVersion = parsed.run.rubric_version ?? "";
   const needsCustomer = Number(rubricVersion.split(".")[0] || "0") >= 2 || order.includes("aibuild");
+  const source = file as Record<string, unknown>;
+  const categoryOverrides = { ...(options.categoryOverrides ?? {}), ...overridesFromUnknown(source.category_overrides) };
 
   const ideas = inputIdeas.map((idea) => structuredClone(idea));
   const byId = new Map(ideas.map((idea) => [idea.id, idea]));
@@ -395,18 +428,56 @@ export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, ru
     if (isNew) {
       current.firstSeenRun = runNumber;
       current.scoreHistory = [];
+      current.secondaryCategories = [];
       current.status = incoming.status && isStatus(incoming.status) ? incoming.status : "candidate";
       ideas.push(current);
       byId.set(current.id, current);
     }
 
-    const change = applyIncoming(current, incoming, isNew);
+    const change = incoming.category_change;
+    const override = categoryOverrides[incoming.id];
+    const sticky = !isNew && ((Boolean(override) && !change) || (current.categoryHistory.length > 0 && !change));
+    const inbound = { ...incoming };
+    if (sticky && inbound.category && inbound.category !== current.category) {
+      addSecondary(current, inbound.category);
+      delete inbound.category;
+    }
+    if (inbound.bundle_fit === null) delete inbound.bundle_fit;
+    const applied = applyIncoming(current, inbound, isNew);
+    if (incoming.bundle_fit) current.bundleFit = asBundleFit(incoming.bundle_fit) ?? null;
+    if (isNew && override && !change && current.category !== override.category) {
+      const from = current.category;
+      current.category = override.category;
+      addSecondary(current, from);
+      current.categoryHistory = [...current.categoryHistory, {
+        run: runNumber,
+        date: parsed.run.date,
+        from,
+        to: current.category,
+        note: "auto: category_overrides",
+      }];
+      if (!current.bundleFit && override.bundleFit) current.bundleFit = override.bundleFit;
+    }
+    for (const category of incoming.secondary_categories ?? []) addSecondary(current, category);
+    if (change) {
+      addSecondary(current, change.from);
+      current.category = change.to;
+      const event: CategoryEvent = {
+        run: runNumber,
+        date: parsed.run.date,
+        from: change.from,
+        to: change.to,
+        note: change.note ?? "",
+      };
+      current.categoryHistory = [...current.categoryHistory, event];
+    }
     const snapshot: ScoreSnapshot = {
       run: runNumber,
       date: parsed.run.date,
       rubricVersion,
       total: totalOf(current.scores, weights, order),
       scores: { ...current.scores },
+      ...(incoming.history_note ? { note: incoming.history_note } : {}),
     };
     current.scoreHistory = [...current.scoreHistory.filter((item) => !sameHistorySlot(item, runNumber, rubricVersion)), snapshot];
     current.lastScoredRun = runNumber;
@@ -414,7 +485,7 @@ export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, ru
     current.total = snapshot.total;
     current.updatedAt = now;
     current.updatedBy = "import";
-    changes.push({ ...change, id: current.id, previousTotal, previousStatus, isNew });
+    changes.push({ ...applied, id: current.id, previousTotal, previousStatus, isNew });
   }
 
   recompute(ideas, weights, order);
@@ -466,9 +537,22 @@ export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, ru
     rubricVersion,
   };
 
+  for (const idea of ideas) {
+    if (!idea.secondaryCategories) idea.secondaryCategories = [];
+    if (idea.bundleFit === undefined) idea.bundleFit = null;
+  }
+
   return {
     ideas,
     run,
+    categoryOverrides,
+    bundles: mergeBundles(options.bundles ?? [], source.bundles, {
+      runNumber,
+      date: parsed.run.date,
+      weights,
+      order,
+      rubricVersion: options.rubricVersion || rubricVersion || "2.0",
+    }),
     report: {
       mode: "run",
       runNumber: run.runNumber,

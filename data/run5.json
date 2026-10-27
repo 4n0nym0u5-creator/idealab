@@ -1,0 +1,2954 @@
+{
+  "schema_version": 3,
+  "run": {
+    "run_number": 5,
+    "date": "2026-10-27",
+    "author": "Grok Bot (Run 5)",
+    "rubric_version": "2.0",
+    "focus": "Life Admin category deep dive + bundle (annual subscription) analysis",
+    "sources_swept": [
+      "Setapp pricing + family plan",
+      "Trustworthy",
+      "Everplans",
+      "Cozi",
+      "FamilyWall",
+      "Skylight/Hearth/TimeTree",
+      "HomeZada/Okoniq/HomeBeacon/Centriq",
+      "Tody/Sweepy",
+      "AnyList",
+      "Dollarbird/Honeydue",
+      "PocketSmith/Frollo",
+      "Drivvo/Fuelio/Simply Auto",
+      "Life Admin AI, NestWise, TrackEase, Stillen, Renewley, mylifeadmin.app",
+      "Critical Info, Breafly, Yellow Falcon, Safewill",
+      "Etsy household binders, Notion/Gumroad life OS templates",
+      "Etsy off-platform policy",
+      "RevenueCat renewal/trial/conversion reports",
+      "Revenue Map benchmarks",
+      "Stripe AU, Paddle, Lemon Squeezy fees",
+      "Vercel, Supabase, Resend limits",
+      "ATO (myDeductions, records, GST, lodgement)",
+      "ACCC consumer guarantees + insurance monitoring 2026",
+      "ASIC underinsurance",
+      "OAIC small business + Children's Online Privacy Code",
+      "Unfair Trading Practices Act 2026",
+      "Service NSW, OCG WWCC, Medicare, passports, Smartraveller, myGov baby checklist, StudyAssist",
+      "NSW pets, smoke alarms, energy 100-day rule, Energy Made Easy",
+      "Australia Post redirection, AEC",
+      "NSW 2027 terms + school apps",
+      "Product Safety Australia RSS",
+      "ABS Census 2021 / AIFS",
+      "pain_points.json (Run 4 corpus, read-only)"
+    ],
+    "notes": "New category Life Admin; 16 existing ideas reclassified (original category kept in secondary_categories, category_history added). Schema v3. Reddit evidence comes from pain_points.json (built by the Run 4 worker) or search summaries; not fetched directly. Search-summary facts are labelled. Revenue model numbers are scenario assumptions, not data."
+  },
+  "ideas": [
+    {
+      "id": "household-renewals-calendar",
+      "title": "Household renewals calendar (rego, passport, insurance, licences)",
+      "category": "Life Admin",
+      "platform": "Web app + .ics feed",
+      "customer_type": "consumer",
+      "problem": "Renewal dates live in emails and drawers; missed rego or passport expiry costs real money.",
+      "target_users": "Households, AU first",
+      "monetisation": "One-time unlock or small annual",
+      "price_hypothesis": "US$19-39 one-time or US$12/yr",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 5,
+        "maint": 4,
+        "distro": 4,
+        "compete": 1,
+        "defend": 3,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "evidence": [
+        {
+          "url": "https://lifeadmin.live/",
+          "note": "Life Admin AI (Perth, AU; built on base44): free-forever plan, Plus price not shown; family sharing up to 5; passports, rego, insurance, school forms, pet vaccinations, moving checklist",
+          "run": 5
+        },
+        {
+          "url": "https://www.trackease.net/",
+          "note": "TrackEase: Starter free forever (10GB, 100 reminders, 5 members, AI extraction); Pro 'coming soon'",
+          "run": 5
+        },
+        {
+          "url": "https://apps.apple.com/au/app/stillen-life-admin-assistant/id6747426003",
+          "note": "Stillen life-admin iPhone app (AU store): Pro A$59.99/yr or A$5.99/mo; 12 modules; no ratings yet",
+          "run": 5
+        },
+        {
+          "url": "https://www.service.nsw.gov.au/news/rego-reminder-texts-to-help-prevent-accidental-fines",
+          "note": "Service NSW: free rego reminders by email/app/SMS at 6 weeks, 2 weeks and 1 day after expiry",
+          "run": 5
+        },
+        {
+          "url": "https://ocg.nsw.gov.au/working-children-check/apply-wwcc/how-renew-your-wwcc",
+          "note": "NSW WWCC valid 5 years; OCG emails a reminder 90 days before expiry; screening can take up to 4 weeks",
+          "run": 5
+        },
+        {
+          "url": "https://www.servicesaustralia.gov.au/get-new-medicare-card-if-it-expires-or-lost-stolen-or-damaged?context=21796",
+          "note": "Medicare: new card sent automatically ~4-8 weeks before expiry if your address is current",
+          "run": 5
+        },
+        {
+          "url": "https://www.passports.gov.au/help/processing-times",
+          "note": "Australian passports: apply at least 6 weeks before travel; adult 10-yr, child 5-yr validity",
+          "run": 5
+        },
+        {
+          "url": "https://www.reddit.com/r/TravelHacks/comments/1w2ptls/",
+          "note": "pain_points.json documents-expiry (CFS 1.5): people rely on memory/calendar for passport/insurance expiry",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Life Admin AI (lifeadmin.live)",
+        "TrackEase",
+        "Stillen",
+        "Service NSW reminders (free)"
+      ],
+      "notes": "Renewley charges $39.99 one-time. Store dates and labels only, never ID numbers (keeps legal at 4). Calendar subscription feed needs a small server -> aibuild 4. Overlaps home-maintenance-reminders; consider merging into one 'home admin calendar'. R5: compete 2->1: free-forever all-in-ones (Life Admin AI, TrackEase) plus free issuer reminders (Service NSW rego/licence, OCG WWCC 90-day email, Medicare auto-reissue). The gap left is cross-issuer aggregation for a whole family plus lead-time logic (passport 6 weeks + 6-month validity rule).",
+      "bundle_fit": {
+        "tier": "launch",
+        "module": "Renewals & Expiry",
+        "note": "Core module #1: every other module feeds dated items into it. Absorb credentials-expiry-wallet and the passport-validity check from travel-docs-checklist-family."
+      },
+      "category_change": {
+        "from": "Household admin",
+        "to": "Life Admin",
+        "note": "Run 5: new Life Admin category; original kept in secondary_categories"
+      },
+      "history_note": "R5: reclassified Household admin -> Life Admin; re-scored"
+    },
+    {
+      "id": "subscription-tracker-local",
+      "title": "Subscription & free-trial tracker (manual, no bank link)",
+      "category": "Life Admin",
+      "platform": "Web app / PWA",
+      "customer_type": "consumer",
+      "problem": "People forget trials and renewals but won't connect a bank account.",
+      "target_users": "Everyone with subscriptions",
+      "monetisation": "Free; tiny one-time unlock",
+      "price_hypothesis": "US$3-5 one-time",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 2,
+        "recurring": 1,
+        "build": 5,
+        "maint": 5,
+        "distro": 4,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "evidence": [
+        {
+          "url": "https://findrecurring.com/",
+          "note": "Free browser-local bank-CSV subscription finders: FindRecurring, LowerMySubs, TrackSubscriptions (search summary)",
+          "run": 5
+        },
+        {
+          "url": "https://www.reddit.com/r/budget/comments/1w59icu/",
+          "note": "pain_points.json subscriptions-tracking (CFS 2.15): 'just found out I've been paying for 3 things I forgot about'; bank-linked trackers feel invasive",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "FindRecurring",
+        "LowerMySubs",
+        "TrackSubscriptions"
+      ],
+      "notes": "Feeder: Bobby sells unlocks at $0.99-2.99. Could be a free tool inside a household admin bundle. R5: several free browser-local CSV subscription finders now exist, so keep as a free feeder; the Run 4 id subscription-audit-csv covers the CSV-discovery variant.",
+      "bundle_fit": {
+        "tier": "feeder",
+        "module": "Money Dates",
+        "note": "Free no-login tool; 'add these to my renewals' is the upgrade hook into the Pass."
+      },
+      "category_change": {
+        "from": "Household admin",
+        "to": "Life Admin",
+        "note": "Run 5: new Life Admin category; original kept in secondary_categories"
+      },
+      "history_note": "R5: reclassified Household admin -> Life Admin; scores unchanged"
+    },
+    {
+      "id": "warranty-receipt-vault",
+      "title": "Warranty & receipt vault with expiry reminders (local-first)",
+      "category": "Life Admin",
+      "platform": "Web app (local-first photos)",
+      "customer_type": "consumer",
+      "problem": "Receipts fade, warranties lapse unnoticed; ACL rights need proof of purchase",
+      "target_users": "Consumers",
+      "monetisation": "One-time + optional iCloud sync",
+      "price_hypothesis": "US$9-15",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 2,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 2,
+        "defend": 4,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "evidence": [
+        {
+          "url": "https://www.accc.gov.au/consumers/buying-products-and-services/consumer-rights-and-guarantees",
+          "note": "ACCC: consumer guarantees are separate from (and can outlast) a manufacturer's warranty",
+          "run": 5
+        },
+        {
+          "url": "https://www.accc.gov.au/consumers/buying-products-and-services/receipts-bills-proof-of-purchase",
+          "note": "ACCC: proof of purchase can be a card statement, order number or photo of the receipt",
+          "run": 5
+        },
+        {
+          "url": "https://www.trackease.net/",
+          "note": "TrackEase: Starter free forever (10GB, 100 reminders, 5 members, AI extraction); Pro 'coming soon'",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "TrackEase",
+        "ATO myDeductions (tax receipts)"
+      ],
+      "notes": "Store on-device/iCloud only to avoid holding personal data. R5: redesigned as a web module: store item, store, purchase date, warranty end and an optional receipt photo kept on the device (IndexedDB), not on our server. ACCC says consumer guarantees can outlast the warranty and a card statement or photo is valid proof, so the hook is 'find proof fast + know your ACL rights', with no legal advice. Platform iOS->web: build 4->4, maint 3->3, compete 3->2 (TrackEase free), synergy 3->4, platform 4->5, aibuild 3->4.",
+      "bundle_fit": {
+        "tier": "launch",
+        "module": "Warranty & Receipts",
+        "note": "Core module #3: low data risk if photos stay local; feeds warranty-end dates into Renewals."
+      },
+      "category_change": {
+        "from": "Home & household",
+        "to": "Life Admin",
+        "note": "Run 5: new Life Admin category; original kept in secondary_categories"
+      },
+      "history_note": "R5: reclassified Home & household -> Life Admin; re-scored",
+      "aibuild_reason": "Web CRUD + optional local photo storage (IndexedDB) + reminder dates; no OCR at MVP"
+    },
+    {
+      "id": "school-holiday-leave-planner-au",
+      "title": "School holiday & leave planner for AU parents",
+      "category": "Life Admin",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Working parents juggle 12 weeks of school holidays, two employers' leave balances and grandparents; spreadsheets every term.",
+      "target_users": "AU working parents (later NZ/UK)",
+      "monetisation": "Free planner; paid 'family plan' with shared link, .ics export, leave balance tracking, holiday-program notes",
+      "price_hypothesis": "A$9-19/yr",
+      "scores": {
+        "legal": 5,
+        "pain": 4,
+        "breadth": 3,
+        "wtp": 2,
+        "recurring": 3,
+        "build": 5,
+        "maint": 4,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "evidence": [
+        {
+          "url": "https://www.reddit.com/r/Parenting/comments/1xb6ii6/",
+          "note": "pain_points.json family-calendar (CFS 2.75, rank 5/53): '77 days of non school time in 2027... How do you manage?' (134 score, 104 comments, 20 Oct 2026)",
+          "run": 5
+        },
+        {
+          "url": "https://www.education.nsw.gov.au/schooling/calendars/2027",
+          "note": "NSW 2027 term dates: Term 1 students start Wed 3 Feb (Eastern) / Mon 10 Feb (Western)",
+          "run": 5
+        }
+      ],
+      "competitors": [],
+      "notes": "Low legal (public term dates, no child names needed). Seasonal SEO 4x/yr ('NSW school holidays 2027'). Must update term dates yearly per state. Keep custody features out (see custody-holiday-calendar). R5: pain_points.json family-calendar cluster ranks 5/53; the r/Parenting '77 days of non-school time in 2027' thread (20 Oct 2026) is direct evidence. Launch timing: Dec-Jan before Term 1 2027.",
+      "bundle_fit": {
+        "tier": "launch",
+        "module": "School & Family Calendar",
+        "note": "Free planner is the SEO feeder; paid adds sharing with partner/grandparents, .ics feed and leave balances."
+      },
+      "category_change": {
+        "from": "Family calendar",
+        "to": "Life Admin",
+        "note": "Run 5: new Life Admin category; original kept in secondary_categories"
+      },
+      "history_note": "R5: reclassified Family calendar -> Life Admin; scores unchanged"
+    },
+    {
+      "id": "moving-house-checklist-au",
+      "title": "Moving-house checklist with AU address-change list",
+      "category": "Life Admin",
+      "platform": "Web",
+      "customer_type": "consumer",
+      "problem": "People forget to update rego, Medicare, electoral roll, utilities",
+      "target_users": "AU movers",
+      "monetisation": "Free tool + affiliate",
+      "price_hypothesis": "Affiliate/ads",
+      "scores": {
+        "legal": 4,
+        "pain": 4,
+        "breadth": 4,
+        "wtp": 1,
+        "recurring": 1,
+        "build": 5,
+        "maint": 4,
+        "distro": 5,
+        "compete": 3,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "evidence": [
+        {
+          "url": "https://www.reddit.com/r/adhdwomen/comments/1ozh98u/",
+          "note": "pain_points.json cluster moving-house: complaint-frequency 2.95, rank 2 of 53 clusters ('HELP! Moving house and overwhelmed... Need a list')",
+          "run": 5
+        },
+        {
+          "url": "https://auspost.com.au/disruptions-and-updates/pricing-updates/apr-pricing-update-2026",
+          "note": "Australia Post: mail redirection A$202.50 for up to 12 months from 1 Jul 2026",
+          "run": 5
+        },
+        {
+          "url": "https://aec.gov.au/enrol/update-my-details.htm",
+          "note": "AEC: update enrolment online after moving",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Updater (US)",
+        "Australia Post redirection"
+      ],
+      "notes": "Energy/utility comparison affiliates carry ACCC/disclosure obligations; monetisation weak. R5: pain 3->4 (pain_points.json moving-house cluster ranks 2/53) and synergy 3->4 (bundle shell). Still a feeder (wtp 1, recurring 1). Absorbs the 'who have I told about my new address' tracker. See also Run 4 id moving-house-hub-au.",
+      "bundle_fit": {
+        "tier": "v2",
+        "module": "Moving",
+        "note": "Free checklist + paid address-change tracker per family member inside the Pass."
+      },
+      "category_change": {
+        "from": "Home & household",
+        "to": "Life Admin",
+        "note": "Run 5: new Life Admin category; original kept in secondary_categories"
+      },
+      "history_note": "R5: reclassified Home & household -> Life Admin; re-scored"
+    },
+    {
+      "id": "moving-box-qr-labels",
+      "title": "Moving box QR labels & contents list",
+      "category": "Life Admin",
+      "platform": "Web app (offline-capable)",
+      "customer_type": "consumer",
+      "problem": "After a move nobody knows which box has the kettle; labels get vague.",
+      "target_users": "People moving house",
+      "monetisation": "Free 10 boxes; one-time unlock per move",
+      "price_hypothesis": "US$9-19 per move",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 0,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "evidence": [
+        {
+          "url": "https://www.reddit.com/r/moving/comments/1wtln7v/",
+          "note": "pain_points.json home-inventory (CFS 0.75): 'boxes we haven't unpacked: how do you track what's in each?'",
+          "run": 5
+        }
+      ],
+      "competitors": [],
+      "notes": "Pairs with moving-house-checklist-au as a bundle. Hard part: a phone scan must show contents without a server (encode contents in the QR or a static share link). R5: reclassified; pairs with the moving module.",
+      "bundle_fit": {
+        "tier": "v2",
+        "module": "Moving",
+        "note": "Paid add-on inside the moving module."
+      },
+      "category_change": {
+        "from": "Household admin",
+        "to": "Life Admin",
+        "note": "Run 5: new Life Admin category; original kept in secondary_categories"
+      },
+      "history_note": "R5: reclassified Household admin -> Life Admin; scores unchanged"
+    },
+    {
+      "id": "sec-account-recovery-planner",
+      "title": "Account recovery planner (where each recovery method and backup code lives, never the codes)",
+      "category": "Life Admin",
+      "platform": "Local-first web / iOS",
+      "customer_type": "consumer",
+      "problem": "People get locked out of Apple, Google, myGov or email after losing a phone; recovery info is scattered",
+      "target_users": "Everyone, especially families and older users",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$9-15",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 2,
+        "build": 4,
+        "maint": 5,
+        "distro": 3,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "evidence": [],
+      "competitors": [],
+      "notes": "Records locations and instructions only, never passwords or codes, so a leak isn't catastrophic. Local-first with printable output. Pairs with the legacy planner. R5: reclassified (password-free account inventory). Never store passwords or codes.",
+      "bundle_fit": {
+        "tier": "v2",
+        "module": "Household Handbook",
+        "note": "Locations and recovery steps only; printable."
+      },
+      "category_change": {
+        "from": "Security: families & creators",
+        "to": "Life Admin",
+        "note": "Run 5: new Life Admin category; original kept in secondary_categories"
+      },
+      "history_note": "R5: reclassified Security: families & creators -> Life Admin; scores unchanged"
+    },
+    {
+      "id": "sec-digital-legacy-organiser",
+      "title": "Digital legacy organiser & executor instructions",
+      "category": "Life Admin",
+      "platform": "Local-first web / iOS",
+      "customer_type": "consumer",
+      "problem": "Families can't find or close a deceased person's accounts, subscriptions or photos",
+      "target_users": "Older adults, estate planners",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$15-29",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 2,
+        "build": 4,
+        "maint": 5,
+        "distro": 3,
+        "compete": 2,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "evidence": [
+        {
+          "url": "https://criticalinfo.com.au/critical-info-platform/",
+          "note": "Critical Info (AU): digital legacy from A$10/mo; Breafly free post-death checklist; Yellow Falcon A$27 PDF; Safewill updates $15/yr (search summary)",
+          "run": 5
+        },
+        {
+          "url": "https://breafly.au/",
+          "note": "Breafly: free, private AU help after a death, no sign-up",
+          "run": 5
+        },
+        {
+          "url": "https://www.everplans.com/pricing",
+          "note": "Everplans: free up to 3 items; Premium US$99.99/yr",
+          "run": 5
+        },
+        {
+          "url": "https://www.trustworthy.com/pricing",
+          "note": "Trustworthy family OS: Free 2GB; Silver US$120/yr (5 members), Gold $240/yr (10), Platinum $480/yr; billed annually per household; 30-day money-back",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Critical Info",
+        "Breafly",
+        "Everplans",
+        "Trustworthy"
+      ],
+      "notes": "Not a will and not legal advice: link to state succession info. Very crowded. Stores no credentials. R5: reclassified. AU comparables: Critical Info from A$10/mo, Breafly free, Everplans US$99.99/yr. Not a will, no legal advice.",
+      "bundle_fit": {
+        "tier": "later",
+        "module": "Household Handbook",
+        "note": "Premium-feeling module for later; reuses the handbook data."
+      },
+      "category_change": {
+        "from": "Security: families & creators",
+        "to": "Life Admin",
+        "note": "Run 5: new Life Admin category; original kept in secondary_categories"
+      },
+      "history_note": "R5: reclassified Security: families & creators -> Life Admin; scores unchanged"
+    },
+    {
+      "id": "gift-list-budget-tracker",
+      "title": "Christmas & birthday gift list + budget tracker (year over year)",
+      "category": "Life Admin",
+      "platform": "Web app (local-first)",
+      "customer_type": "consumer",
+      "problem": "People overspend at Christmas and forget what they gave whom last year.",
+      "target_users": "Gift-givers, parents",
+      "monetisation": "One-time unlock; reminder before birthdays",
+      "price_hypothesis": "US$9-19 one-time",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 5,
+        "maint": 5,
+        "distro": 4,
+        "compete": 3,
+        "defend": 3,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "evidence": [],
+      "competitors": [],
+      "notes": "Etsy proves WTP for spreadsheets ($19 interactive tracker; FluVana web app $29). Annual history = mild lock-in. Budget tracking only, no financial advice. Extremely AI-buildable. R5: reclassified from Seasonal. Highest-scoring Life Admin idea; ship standalone for Christmas 2026, then fold into the Pass.",
+      "bundle_fit": {
+        "tier": "launch",
+        "module": "Occasions & Gifts",
+        "note": "Ship first (Nov 2026) as a local-first standalone; migrate into the Pass in 2027."
+      },
+      "category_change": {
+        "from": "Seasonal",
+        "to": "Life Admin",
+        "note": "Run 5: new Life Admin category; original kept in secondary_categories"
+      },
+      "history_note": "R5: reclassified Seasonal -> Life Admin; scores unchanged"
+    },
+    {
+      "id": "household-chore-roster",
+      "title": "Shared household/share-house chore roster",
+      "category": "Life Admin",
+      "platform": "iOS / web",
+      "customer_type": "consumer",
+      "problem": "Share-house and family chore fights; whiteboards fail",
+      "target_users": "Share-houses, families",
+      "monetisation": "Freemium",
+      "price_hypothesis": "US$2-4/mo",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 3,
+        "build": 4,
+        "maint": 3,
+        "distro": 3,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 2,
+        "platform": 4,
+        "aibuild": 3
+      },
+      "evidence": [
+        {
+          "url": "https://www.reddit.com/r/Mommit/comments/1wwwrpr/",
+          "note": "pain_points.json chores-fairness (CFS 2.6, rank 7/53): complaint is unequal load/mental load between adults",
+          "run": 5
+        }
+      ],
+      "competitors": [],
+      "notes": "R5: reclassified. Real-time multi-user sync keeps aibuild at 3. See Run 4 chore-fairness-ledger for the adult mental-load angle.",
+      "bundle_fit": {
+        "tier": "later",
+        "module": "Household Handbook",
+        "note": "Only after accounts/sharing are proven."
+      },
+      "category_change": {
+        "from": "Home & household",
+        "to": "Life Admin",
+        "note": "Run 5: new Life Admin category; original kept in secondary_categories"
+      },
+      "history_note": "R5: reclassified Home & household -> Life Admin; scores unchanged"
+    },
+    {
+      "id": "home-maintenance-reminders",
+      "title": "Home maintenance reminders (filters, gutters, smoke alarm tests, pool)",
+      "category": "Life Admin",
+      "platform": "Web app (Pass module)",
+      "customer_type": "consumer",
+      "problem": "Recurring home chores get forgotten; no simple, shared, seasonal schedule",
+      "target_users": "Homeowners and renters",
+      "monetisation": "One-time or small yearly",
+      "price_hypothesis": "US$9 one-time or US$9/yr",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 3,
+        "defend": 3,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "evidence": [
+        {
+          "url": "https://homebeacon.app/alternatives/homezada-vs-centriq",
+          "note": "Centriq consumer app shut down 31 Jan 2025 (was ~US$49/yr); HomeBeacon free for 1 home",
+          "run": 5
+        },
+        {
+          "url": "https://www.homezada.com/faq",
+          "note": "HomeZada: Essentials free; Premium US$99/yr or $15.95/mo; Deluxe $189/yr (search summary)",
+          "run": 5
+        },
+        {
+          "url": "https://okoniq.com/pricing/homeowner",
+          "note": "Okoniq Property Hub: Home US$9/mo, Home Plus $15/mo, 30-day trial (search summary)",
+          "run": 5
+        },
+        {
+          "url": "https://www.nsw.gov.au/housing-and-construction/rules/smoke-alarms-a-rental-property",
+          "note": "NSW: landlords check smoke alarms yearly, replace removable batteries yearly, replace alarms within 10 years",
+          "run": 5
+        },
+        {
+          "url": "https://www.reddit.com/r/homeowners/comments/1xb9t8g/",
+          "note": "pain_points.json home-maintenance (CFS 1.25): small, e.g. r/homeowners gutter-upkeep thread",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "HomeBeacon",
+        "Okoniq"
+      ],
+      "notes": "Reminders only; don't give safety/compliance advice. R5: wtp 2->3 (HomeZada Premium US$99/yr, Okoniq US$9/mo); platform 4->5 and synergy 3->4 as a web module. Centriq's consumer app closed Jan 2025. Seed with NSW smoke-alarm rules as reminders only, never compliance claims.",
+      "bundle_fit": {
+        "tier": "v2",
+        "module": "Home",
+        "note": "Recurring tasks reuse the Renewals engine."
+      },
+      "category_change": {
+        "from": "Home & household",
+        "to": "Life Admin",
+        "note": "Run 5: new Life Admin category; original kept in secondary_categories"
+      },
+      "history_note": "R5: reclassified Home & household -> Life Admin; re-scored"
+    },
+    {
+      "id": "home-inventory-insurance",
+      "title": "Home contents inventory for insurance claims",
+      "category": "Life Admin",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "After a burglary or flood people can't list what they owned.",
+      "target_users": "Homeowners, renters",
+      "monetisation": "Annual plan",
+      "price_hypothesis": "US$19-29/yr",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 2,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 3,
+        "defend": 3,
+        "synergy": 3,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "evidence": [
+        {
+          "url": "https://download.asic.gov.au/media/1348214/underinsurance_report.pdf",
+          "note": "ASIC: estimated 27-81% of homeowners underinsured by >=10% (search summary)",
+          "run": 5
+        },
+        {
+          "url": "https://www.accc.gov.au/about-us/publications/serial-publications/insurance-monitoring-reports/accc-insurance-monitoring-report-2026",
+          "note": "ACCC Insurance monitoring report 2026 (25 Jun 2026): affordability concerns continue; a third-party summary cites average home+contents premiums up 46.4% from 2021-22 to 2024-25 (A$1,612 to A$2,360) (not verified in the PDF)",
+          "run": 5
+        }
+      ],
+      "competitors": [],
+      "notes": "Gap after Encircle's consumer app closed (Dec 2025). Photos + values are sensitive personal data -> legal 3; never advise on cover amounts. R5: reclassified. ASIC underinsurance work supports the need. Never advise on sums insured.",
+      "bundle_fit": {
+        "tier": "later",
+        "module": "Home",
+        "note": "Photos stay local; export a PDF for claims."
+      },
+      "category_change": {
+        "from": "Household admin",
+        "to": "Life Admin",
+        "note": "Run 5: new Life Admin category; original kept in secondary_categories"
+      },
+      "history_note": "R5: reclassified Household admin -> Life Admin; scores unchanged"
+    },
+    {
+      "id": "house-sitter-handover-guide",
+      "title": "House & pet sitter handover guide builder",
+      "category": "Life Admin",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Owners rewrite the same instructions every trip.",
+      "target_users": "Pet owners, travellers",
+      "monetisation": "Free with paid print templates",
+      "price_hypothesis": "US$5-9",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 1,
+        "build": 5,
+        "maint": 5,
+        "distro": 4,
+        "compete": 3,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "evidence": [],
+      "competitors": [],
+      "notes": "Feeder; bundle with pet-care-shared-log. R5: reclassified; becomes the printable view of the Household Handbook.",
+      "bundle_fit": {
+        "tier": "v2",
+        "module": "Household Handbook",
+        "note": "Free printable feeder that upgrades to a shared handbook."
+      },
+      "category_change": {
+        "from": "Household admin",
+        "to": "Life Admin",
+        "note": "Run 5: new Life Admin category; original kept in secondary_categories"
+      },
+      "history_note": "R5: reclassified Household admin -> Life Admin; scores unchanged"
+    },
+    {
+      "id": "custody-holiday-calendar",
+      "title": "Co-parent holiday split planner",
+      "category": "Life Admin",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Separated parents need to split school holidays and special days fairly and see it on one calendar.",
+      "target_users": "Separated parents",
+      "monetisation": "Paid per family",
+      "price_hypothesis": "US$29/yr",
+      "scores": {
+        "legal": 2,
+        "pain": 4,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 4,
+        "maint": 3,
+        "distro": 3,
+        "compete": 2,
+        "defend": 3,
+        "synergy": 2,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "evidence": [],
+      "competitors": [],
+      "notes": "Pain and WTP are real (OFW charges each parent), but records can end up in family-court disputes and hold children's schedules -> legal 2. Not killed, but don't build first. R5: reclassified; legal 2 (records may be used in family-court disputes, children's schedules).",
+      "bundle_fit": {
+        "tier": "exclude",
+        "module": "-",
+        "note": "Keep out of the bundle: legal exposure would taint the brand."
+      },
+      "category_change": {
+        "from": "Family calendar",
+        "to": "Life Admin",
+        "note": "Run 5: new Life Admin category; original kept in secondary_categories"
+      },
+      "history_note": "R5: reclassified Family calendar -> Life Admin; scores unchanged"
+    },
+    {
+      "id": "pet-care-shared-log",
+      "title": "Shared pet care log (fed? walked? meds given?)",
+      "category": "Life Admin",
+      "platform": "iOS",
+      "customer_type": "consumer",
+      "problem": "Households double-feed or miss doses",
+      "target_users": "Pet owners",
+      "monetisation": "One-time or small subscription",
+      "price_hypothesis": "US$5-10",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 3,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 2,
+        "platform": 4,
+        "aibuild": 3
+      },
+      "evidence": [
+        {
+          "url": "https://www.reddit.com/r/AppIdeas/comments/1wuq6b0/",
+          "note": "pain_points.json pet-care-records: 1 mention only ('do pet owners need another pet app?')",
+          "run": 5
+        }
+      ],
+      "competitors": [],
+      "notes": "Log only; no dosing advice. R5: reclassified; see pet-admin-records for the admin (rego/vaccine) side.",
+      "bundle_fit": {
+        "tier": "later",
+        "module": "Pets",
+        "note": "Daily care log needs sync; admin dates go in pet-admin-records."
+      },
+      "category_change": {
+        "from": "Pets",
+        "to": "Life Admin",
+        "note": "Run 5: new Life Admin category; original kept in secondary_categories"
+      },
+      "history_note": "R5: reclassified Pets -> Life Admin; scores unchanged"
+    },
+    {
+      "id": "rental-condition-report",
+      "title": "Tenant entry/exit condition-report photo kit (AU states)",
+      "category": "Life Admin",
+      "platform": "iOS / web",
+      "customer_type": "consumer",
+      "problem": "Tenants lose bond disputes for lack of dated photos tied to each room/item",
+      "target_users": "AU renters (and later NZ/UK)",
+      "monetisation": "One-time per move",
+      "price_hypothesis": "A$9-15",
+      "scores": {
+        "legal": 3,
+        "pain": 4,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 1,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 4,
+        "aibuild": 3
+      },
+      "evidence": [],
+      "competitors": [],
+      "notes": "Documentation tool only; never claim legal effect or give tenancy advice. R5: reclassified (renter admin). Photo-heavy flow.",
+      "bundle_fit": {
+        "tier": "later",
+        "module": "Home",
+        "note": "Renter add-on; never claim legal effect."
+      },
+      "category_change": {
+        "from": "Home & household",
+        "to": "Life Admin",
+        "note": "Run 5: new Life Admin category; original kept in secondary_categories"
+      },
+      "history_note": "R5: reclassified Home & household -> Life Admin; scores unchanged"
+    },
+    {
+      "id": "credentials-expiry-wallet",
+      "title": "Credentials & cards expiry tracker (WWCC, first aid, RSA, licences)",
+      "category": "Life Admin",
+      "platform": "Web app (local-first, Pass module)",
+      "customer_type": "both",
+      "problem": "Parents, volunteers, coaches and casual workers hold 4-8 cards (WWCC, first aid/CPR, RSA, white card, licence, Medicare) that expire on different cycles; missing one stops you coaching or working.",
+      "target_users": "AU parents who volunteer, sports coaches, casual and gig workers",
+      "monetisation": "Free for 3 items; included in the Pass",
+      "price_hypothesis": "Included in Life Admin Pass (A$29/yr)",
+      "scores": {
+        "legal": 4,
+        "pain": 2,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 2,
+        "build": 5,
+        "maint": 5,
+        "distro": 3,
+        "compete": 3,
+        "defend": 4,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://ocg.nsw.gov.au/working-children-check/apply-wwcc/how-renew-your-wwcc",
+          "note": "NSW WWCC valid 5 years; OCG emails a reminder 90 days before expiry; screening can take up to 4 weeks",
+          "run": 5
+        },
+        {
+          "url": "https://www.service.nsw.gov.au/news/rego-reminder-texts-to-help-prevent-accidental-fines",
+          "note": "Service NSW: free rego reminders by email/app/SMS at 6 weeks, 2 weeks and 1 day after expiry",
+          "run": 5
+        },
+        {
+          "url": "https://www.servicesaustralia.gov.au/get-new-medicare-card-if-it-expires-or-lost-stolen-or-damaged?context=21796",
+          "note": "Medicare: new card sent automatically ~4-8 weeks before expiry if your address is current",
+          "run": 5
+        },
+        {
+          "url": "https://renewley.com/",
+          "note": "Renewley: expiry reminders, US$39.99 one-time",
+          "run": 5
+        },
+        {
+          "url": "https://lifeadmin.live/",
+          "note": "Life Admin AI (Perth, AU; built on base44): free-forever plan, Plus price not shown; family sharing up to 5; passports, rego, insurance, school forms, pet vaccinations, moving checklist",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Renewley",
+        "Life Admin AI",
+        "issuer emails (OCG, Service NSW)"
+      ],
+      "notes": "Store type, name, expiry date and issuer link only, never the card number or a scan (security addendum). Lead times per credential (WWCC renew 90 days out; screening up to 4 weeks).",
+      "aibuild_reason": "Same CRUD + dates engine as renewals; per-type lead-time presets",
+      "secondary_categories": [
+        "AU-specific"
+      ],
+      "bundle_fit": {
+        "tier": "launch",
+        "module": "Renewals & Expiry",
+        "note": "Preset pack inside Renewals, not a separate app."
+      }
+    },
+    {
+      "id": "document-vault-cloud",
+      "title": "Cloud vault for family ID documents (passport/licence/Medicare scans)",
+      "category": "Life Admin",
+      "platform": "Web/mobile app (cloud storage)",
+      "customer_type": "consumer",
+      "problem": "Families want copies of passports, birth certificates and Medicare cards in one place when they need them.",
+      "target_users": "Families",
+      "monetisation": "Subscription",
+      "price_hypothesis": "US$5/mo",
+      "scores": {
+        "legal": 1,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 2,
+        "maint": 2,
+        "distro": 3,
+        "compete": 1,
+        "defend": 4,
+        "synergy": 2,
+        "platform": 5,
+        "aibuild": 1
+      },
+      "kill_flags": [
+        "identity-document custody (security addendum)"
+      ],
+      "evidence": [
+        {
+          "url": "https://www.trustworthy.com/pricing",
+          "note": "Trustworthy family OS: Free 2GB; Silver US$120/yr (5 members), Gold $240/yr (10), Platinum $480/yr; billed annually per household; 30-day money-back",
+          "run": 5
+        },
+        {
+          "url": "https://www.cve.org/CVERecord?id=CVE-2025-48757",
+          "note": "CVE-2025-48757: AI-built apps without Supabase RLS leaked data",
+          "run": 5
+        },
+        {
+          "url": "https://news.ycombinator.com/item?id=29161110",
+          "note": "pain_points.json file-docs-organisation (CFS 2.2): Ask HN 'How do you manage your personal documents?' (261 pts, 179 comments)",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Trustworthy",
+        "Apple/Google wallets",
+        "Dropbox"
+      ],
+      "notes": "KILLED: holding ID-document scans makes a vibecoded app an identity-theft honeypot (security addendum: credential/ID custody = legal 0-1; CVE-2025-48757 shows how AI-built Supabase apps leak). Pattern for the bundle instead: 'dates, not documents'.",
+      "aibuild_reason": "Encryption, key management and breach response are security-critical",
+      "secondary_categories": [
+        "Security: consumer privacy"
+      ],
+      "bundle_fit": {
+        "tier": "exclude",
+        "module": "-",
+        "note": "Killed. The bundle stores metadata only."
+      }
+    },
+    {
+      "id": "bills-calendar-household",
+      "title": "Household bills calendar (due dates, amounts, who pays)",
+      "category": "Life Admin",
+      "platform": "Web app (local-first, Pass module)",
+      "customer_type": "consumer",
+      "problem": "Quarterly energy, water, council rates, insurance, rego and school fees land on different cycles; couples lose track of who pays what and when.",
+      "target_users": "AU couples and families, share houses",
+      "monetisation": "Free list; Pass adds reminders, partner sharing, .ics feed and yearly cost view",
+      "price_hypothesis": "Included in Pass",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 2,
+        "defend": 4,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://apps.apple.com/us/app/dollarbird-budget-calendar/id1214299218",
+          "note": "Dollarbird bill/budget calendar: Pro US$59.99/yr, Pro Unlimited $79.99/yr (search summary)",
+          "run": 5
+        },
+        {
+          "url": "https://support.honeydue.com/en/articles/3179714-how-does-honeydue-earn-money",
+          "note": "Honeydue couples bills app: free, ads + optional $0.99-9.99/mo tips",
+          "run": 5
+        },
+        {
+          "url": "https://my.pocketsmith.com/plans",
+          "note": "PocketSmith (NZ/AU): Foundation A$9.99/mo annual; Frollo free via CDR open banking (search summary)",
+          "run": 5
+        },
+        {
+          "url": "https://www.reddit.com/r/roommates/comments/1w4u137/",
+          "note": "pain_points.json shared-bills-split (CFS 1.75): 'who's paid which bill without it all landing on one person?'",
+          "run": 5
+        },
+        {
+          "url": "https://www.energy.nsw.gov.au/households/bills/plans",
+          "note": "NSW: retailers must tell you about a better offer at least every 100 days (Better Bills Guideline)",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Dollarbird",
+        "Honeydue",
+        "PocketSmith",
+        "bank apps"
+      ],
+      "notes": "Manual entry, no bank connection (avoids CDR and money handling). Never recommends plans. AU seed: council rates quarterly instalments, water quarterly, energy quarterly or monthly.",
+      "aibuild_reason": "Accounts + RLS + recurrence + cron emails (one tricky area)",
+      "secondary_categories": [
+        "Personal finance tools"
+      ],
+      "bundle_fit": {
+        "tier": "launch",
+        "module": "Money Dates",
+        "note": "Core module #2 with insurance-premium-creep-log and utility-plan-review-reminders as views."
+      }
+    },
+    {
+      "id": "faulty-product-claim-letter",
+      "title": "Faulty product claim letter builder (ACL wording)",
+      "category": "Life Admin",
+      "platform": "Web app (client-side)",
+      "customer_type": "consumer",
+      "problem": "People don't know what to say when something breaks just after the warranty; the ACCC says the consumer guarantee may still apply.",
+      "target_users": "AU consumers",
+      "monetisation": "Free (feeder)",
+      "price_hypothesis": "Free",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 0,
+        "build": 5,
+        "maint": 4,
+        "distro": 4,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.accc.gov.au/consumers/buying-products-and-services/consumer-rights-and-guarantees",
+          "note": "ACCC: consumer guarantees are separate from (and can outlast) a manufacturer's warranty",
+          "run": 5
+        },
+        {
+          "url": "https://www.accc.gov.au/consumers/buying-products-and-services/receipts-bills-proof-of-purchase",
+          "note": "ACCC: proof of purchase can be a card statement, order number or photo of the receipt",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "ACCC sample letters",
+        "CHOICE templates"
+      ],
+      "notes": "Fills ACCC-published wording with the user's facts; must say 'general information, not legal advice'. legal 3 (output people act on near a regulated area, but wording is from the regulator).",
+      "aibuild_reason": "Form to template to PDF, client-side",
+      "secondary_categories": [
+        "Shopping"
+      ],
+      "bundle_fit": {
+        "tier": "feeder",
+        "module": "Warranty & Receipts",
+        "note": "SEO feeder ('refund after warranty Australia'); CTA: track all your warranties."
+      }
+    },
+    {
+      "id": "car-service-rego-log",
+      "title": "Car rego, CTP, service & tyre log",
+      "category": "Life Admin",
+      "platform": "Web app (local-first, Pass module)",
+      "customer_type": "consumer",
+      "problem": "Rego, green slip/CTP, insurance, service intervals and tyre rotation on 1-3 family cars are tracked from memory and the sticker on the windscreen.",
+      "target_users": "AU families with 1-3 cars",
+      "monetisation": "Included in Pass; free single car",
+      "price_hypothesis": "Included in Pass",
+      "scores": {
+        "legal": 4,
+        "pain": 2,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 1,
+        "defend": 3,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.drivvo.com/en-US/pricing/",
+          "note": "Drivvo: free up to 2 vehicles; Individual US$24.90/yr; PRO $49.90/yr; Fuelio Pro $17.99/yr; Simply Auto $9.99 (search summary)",
+          "run": 5
+        },
+        {
+          "url": "https://www.service.nsw.gov.au/news/rego-reminder-texts-to-help-prevent-accidental-fines",
+          "note": "Service NSW: free rego reminders by email/app/SMS at 6 weeks, 2 weeks and 1 day after expiry",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Drivvo",
+        "Fuelio",
+        "Simply Auto",
+        "Service NSW rego reminders"
+      ],
+      "notes": "Crowded with cheap apps and free issuer reminders (compete 1); value is in the family bundle, not standalone.",
+      "aibuild_reason": "CRUD + recurrence by date or km",
+      "secondary_categories": [
+        "Home & household"
+      ],
+      "bundle_fit": {
+        "tier": "v2",
+        "module": "Vehicles",
+        "note": "Module in 2027 H1."
+      }
+    },
+    {
+      "id": "pet-admin-records",
+      "title": "Pet admin: vaccinations, council permits, worming, insurance",
+      "category": "Life Admin",
+      "platform": "Web app (local-first, Pass module)",
+      "customer_type": "consumer",
+      "problem": "Vaccine boosters, flea/worming cycles, NSW annual permits for non-desexed cats or restricted dogs, pet insurance renewal and microchip details are scattered.",
+      "target_users": "Pet-owning households",
+      "monetisation": "Included in Pass",
+      "price_hypothesis": "Included in Pass",
+      "scores": {
+        "legal": 4,
+        "pain": 2,
+        "breadth": 5,
+        "wtp": 2,
+        "recurring": 3,
+        "build": 5,
+        "maint": 5,
+        "distro": 3,
+        "compete": 2,
+        "defend": 4,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.olg.nsw.gov.au/pets/nsw-pet-registry/registration-and-permit-fees/pet-registration-fees",
+          "note": "NSW pets: one-off lifetime registration (from 1 Jul 2026 dog $84, cat $74); annual permits for non-desexed cats ($104) and restricted dogs ($247) (search summary)",
+          "run": 5
+        },
+        {
+          "url": "https://www.reddit.com/r/AppIdeas/comments/1wuq6b0/",
+          "note": "pain_points.json pet-care-records: 1 mention only ('do pet owners need another pet app?')",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Pet apps (11pets, PetDesk)",
+        "vet reminders"
+      ],
+      "notes": "Never gives vet or dosing advice (kill rule 2); reminders are user-entered dates. Thin forum pain (pain_points 0.75).",
+      "aibuild_reason": "Same dates engine with pet profile",
+      "secondary_categories": [
+        "Pets"
+      ],
+      "bundle_fit": {
+        "tier": "v2",
+        "module": "Pets",
+        "note": "Cheap to add once Renewals exists."
+      }
+    },
+    {
+      "id": "school-year-admin-checklist-nsw",
+      "title": "School-year admin checklist (NSW): forms, fees, uniforms, permission notes",
+      "category": "Life Admin",
+      "platform": "Web app (local-first, Pass module)",
+      "customer_type": "consumer",
+      "problem": "Every term brings notes across Compass, Sentral and School Bytes, fee deadlines, excursions, uniforms and book lists; parents with 3 kids at different schools miss things.",
+      "target_users": "NSW parents with school-age kids",
+      "monetisation": "Free term checklist; Pass adds per-child reminders",
+      "price_hypothesis": "Included in Pass",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 2,
+        "recurring": 3,
+        "build": 4,
+        "maint": 3,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://macfields-h.schools.nsw.gov.au/news/2023/5/school-bytes--a-new-system-for-permission-notes-and-school-fees.html",
+          "note": "NSW public school: School Bytes for permission notes and fees alongside Sentral; other schools moving to Compass from 2026",
+          "run": 5
+        },
+        {
+          "url": "https://www.education.nsw.gov.au/schooling/calendars/2027",
+          "note": "NSW 2027 term dates: Term 1 students start Wed 3 Feb (Eastern) / Mon 10 Feb (Western)",
+          "run": 5
+        },
+        {
+          "url": "https://www.oaic.gov.au/privacy/privacy-registers/privacy-codes/childrens-online-privacy-code",
+          "note": "OAIC Children's Online Privacy Code: exposure draft, must be registered by 10 Dec 2026; applies to services likely to be accessed by children",
+          "run": 5
+        },
+        {
+          "url": "https://www.reddit.com/r/Parenting/comments/1xb6ii6/",
+          "note": "pain_points.json family-calendar (CFS 2.75, rank 5/53): '77 days of non school time in 2027... How do you manage?' (134 score, 104 comments, 20 Oct 2026)",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Compass",
+        "Sentral",
+        "School Bytes",
+        "Life Admin AI"
+      ],
+      "notes": "Parent-only account, kids as nicknames, no school logins or scraping (kill rule 5), no child photos. Children's Online Privacy Code (register by 10 Dec 2026) applies to services likely accessed by children: keep marketing to parents.",
+      "aibuild_reason": "Checklists + reminders; yearly term-date data refresh",
+      "secondary_categories": [
+        "Family calendar",
+        "Education admin"
+      ],
+      "bundle_fit": {
+        "tier": "v2",
+        "module": "School & Family Calendar",
+        "note": "Adds to the school-holiday module for Term 1 2027."
+      }
+    },
+    {
+      "id": "kids-sizes-tracker",
+      "title": "Kids' clothes & shoe sizes tracker for gift-givers",
+      "category": "Life Admin",
+      "platform": "Web app (client-side)",
+      "customer_type": "consumer",
+      "problem": "Grandparents ask 'what size is she now?' before every birthday.",
+      "target_users": "Parents, grandparents",
+      "monetisation": "Free (feeder)",
+      "price_hypothesis": "Free",
+      "scores": {
+        "legal": 3,
+        "pain": 2,
+        "breadth": 4,
+        "wtp": 1,
+        "recurring": 1,
+        "build": 5,
+        "maint": 5,
+        "distro": 3,
+        "compete": 3,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.etsy.com/market/household_management_template_life_management?page=2",
+          "note": "Etsy household binders: e.g. 170-page bundle $13.52 with 38.7k shop reviews; binders $3-6 (search summary)",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Notes apps"
+      ],
+      "notes": "Store nickname + sizes only. Feeder for the gift tracker.",
+      "aibuild_reason": "Simple local-first list + share link",
+      "secondary_categories": [
+        "Family"
+      ],
+      "bundle_fit": {
+        "tier": "feeder",
+        "module": "Occasions & Gifts",
+        "note": "Share link drives gift-tracker signups."
+      }
+    },
+    {
+      "id": "carpool-sport-pickup-roster",
+      "title": "Carpool & sport pickup roster",
+      "category": "Life Admin",
+      "platform": "Web app (shared)",
+      "customer_type": "consumer",
+      "problem": "Parents coordinate weekly sport and school pickups in group chats.",
+      "target_users": "Parents in sport teams",
+      "monetisation": "Freemium",
+      "price_hypothesis": "A$2/mo",
+      "scores": {
+        "legal": 2,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 1,
+        "recurring": 2,
+        "build": 3,
+        "maint": 3,
+        "distro": 2,
+        "compete": 2,
+        "defend": 3,
+        "synergy": 5,
+        "platform": 5,
+        "aibuild": 3
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.oaic.gov.au/privacy/privacy-registers/privacy-codes/childrens-online-privacy-code",
+          "note": "OAIC Children's Online Privacy Code: exposure draft, must be registered by 10 Dec 2026; applies to services likely to be accessed by children",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "TeamApp",
+        "Spond",
+        "WhatsApp groups"
+      ],
+      "notes": "legal 2: stores children's whereabouts and schedules (near kill rule 4). Exclude from the bundle.",
+      "aibuild_reason": "Shared realtime schedule + notifications",
+      "secondary_categories": [
+        "Family calendar"
+      ],
+      "bundle_fit": {
+        "tier": "exclude",
+        "module": "-",
+        "note": "Children's location data; keep out."
+      }
+    },
+    {
+      "id": "shared-household-lists",
+      "title": "Shared household lists (groceries, to-dos)",
+      "category": "Life Admin",
+      "platform": "Web/mobile app (realtime)",
+      "customer_type": "consumer",
+      "problem": "Couples want one shared list.",
+      "target_users": "Couples, families",
+      "monetisation": "Freemium",
+      "price_hypothesis": "US$15/yr",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 2,
+        "recurring": 3,
+        "build": 3,
+        "maint": 3,
+        "distro": 2,
+        "compete": 1,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 5,
+        "aibuild": 3
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.anylist.com/complete",
+          "note": "AnyList Complete US$14.99/yr per household",
+          "run": 5
+        },
+        {
+          "url": "https://www.cozi.com/compare-plans/",
+          "note": "Cozi: Free; Gold US$39/yr; Max US$79/yr; annual only, one upgrade covers the family",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "AnyList",
+        "Cozi",
+        "Apple Reminders",
+        "Google Keep"
+      ],
+      "notes": "Saturated by free platform apps; realtime sync is hard for a non-engineer.",
+      "aibuild_reason": "Realtime sync + offline conflicts",
+      "secondary_categories": [
+        "Home & household"
+      ],
+      "bundle_fit": {
+        "tier": "exclude",
+        "module": "-",
+        "note": "Commodity; don't compete."
+      }
+    },
+    {
+      "id": "ice-emergency-info-sheet",
+      "title": "Family emergency info sheet (ICE contacts, allergies, meds) - printable",
+      "category": "Life Admin",
+      "platform": "Web app (client-side, no storage)",
+      "customer_type": "consumer",
+      "problem": "In an emergency, babysitters and grandparents need contacts, allergies and medications on one page.",
+      "target_users": "Parents, carers",
+      "monetisation": "Free (feeder)",
+      "price_hypothesis": "Free",
+      "scores": {
+        "legal": 4,
+        "pain": 2,
+        "breadth": 5,
+        "wtp": 1,
+        "recurring": 0,
+        "build": 5,
+        "maint": 5,
+        "distro": 4,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.oaic.gov.au/privacy/privacy-guidance-for-organisations-and-government-agencies/organisations/small-business",
+          "note": "OAIC: small businesses (<=A$3m turnover) generally exempt from the Privacy Act, but not if they provide a health service and hold health information",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Red Cross templates",
+        "phone medical ID"
+      ],
+      "notes": "Health info never leaves the device (generate PDF client-side, no server copy): avoids the OAIC health-information trap. No medical advice.",
+      "aibuild_reason": "Form to PDF in the browser",
+      "secondary_categories": [
+        "Health",
+        "Family"
+      ],
+      "bundle_fit": {
+        "tier": "feeder",
+        "module": "Household Handbook",
+        "note": "Top-of-funnel; links to the Pass handbook."
+      }
+    },
+    {
+      "id": "eofy-receipt-bundle-au",
+      "title": "EOFY receipts & records pack (AU)",
+      "category": "Life Admin",
+      "platform": "Web app (local-first, Pass module)",
+      "customer_type": "consumer",
+      "problem": "In June people dig through email for work-from-home, donation and work-expense receipts and don't know what the ATO wants kept.",
+      "target_users": "AU employees, side hustlers",
+      "monetisation": "Pass feature: tag receipts by category, export a dated ZIP/CSV for your accountant",
+      "price_hypothesis": "Included in Pass; seasonal upsell",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 2,
+        "defend": 4,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.ato.gov.au/online-services/online-services-for-individuals-and-sole-traders/ato-app/mydeductions",
+          "note": "ATO myDeductions: free receipt record-keeping in the ATO app, data stored on device",
+          "run": 5
+        },
+        {
+          "url": "https://www.ato.gov.au/individuals-and-families/income-deductions-offsets-and-records/records-you-need-to-keep",
+          "note": "ATO: keep records 5 years from lodgement",
+          "run": 5
+        },
+        {
+          "url": "https://www.ato.gov.au/media-centre/the-final-countdown-ato-reminds-taxpayers-to-lodge-now",
+          "note": "ATO: 2025-26 self-lodgers due Mon 2 Nov 2026 (31 Oct falls on a weekend)",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "ATO myDeductions (free)",
+        "Shoeboxed",
+        "accountants' portals"
+      ],
+      "notes": "Record-keeping only: no 'is this deductible?' answers (TASA tax-agent services; kill rule 2). Links to ATO pages. ATO's own app is free, so position as a family organiser that exports. Receipts stay local.",
+      "aibuild_reason": "Tagging + local file storage + ZIP export",
+      "secondary_categories": [
+        "Personal finance tools",
+        "AU-specific"
+      ],
+      "bundle_fit": {
+        "tier": "v2",
+        "module": "Warranty & Receipts",
+        "note": "Ship for May-June 2027 EOFY."
+      }
+    },
+    {
+      "id": "utility-plan-review-reminders",
+      "title": "Energy/internet/insurance plan review reminders",
+      "category": "Life Admin",
+      "platform": "Web app (local-first, Pass module)",
+      "customer_type": "consumer",
+      "problem": "Retailers move people onto worse rates; the NSW 100-day better-offer notices are ignored.",
+      "target_users": "AU households",
+      "monetisation": "Pass feature",
+      "price_hypothesis": "Included in Pass",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 1,
+        "recurring": 2,
+        "build": 5,
+        "maint": 4,
+        "distro": 3,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.energymadeeasy.gov.au/",
+          "note": "Energy Made Easy: free government energy plan comparison (NSW, ACT, QLD, SA, TAS)",
+          "run": 5
+        },
+        {
+          "url": "https://www.energy.nsw.gov.au/households/bills/plans",
+          "note": "NSW: retailers must tell you about a better offer at least every 100 days (Better Bills Guideline)",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Energy Made Easy",
+        "comparison sites (affiliate)"
+      ],
+      "notes": "Reminder + links to the free government comparator; no affiliate deals or plan recommendations (financial-product advice risk for insurance).",
+      "aibuild_reason": "Recurring reminders only",
+      "secondary_categories": [
+        "Personal finance tools"
+      ],
+      "bundle_fit": {
+        "tier": "launch",
+        "module": "Money Dates",
+        "note": "A view inside Money Dates."
+      }
+    },
+    {
+      "id": "recurring-checkups-tracker",
+      "title": "Family recurring check-ups tracker (dentist, eyes, skin checks)",
+      "category": "Life Admin",
+      "platform": "Web app (local-first, Pass module)",
+      "customer_type": "consumer",
+      "problem": "Families lose track of when each person last saw the dentist or optometrist.",
+      "target_users": "Families",
+      "monetisation": "Pass feature",
+      "price_hypothesis": "Included in Pass",
+      "scores": {
+        "legal": 3,
+        "pain": 2,
+        "breadth": 5,
+        "wtp": 2,
+        "recurring": 2,
+        "build": 5,
+        "maint": 5,
+        "distro": 2,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.oaic.gov.au/privacy/privacy-guidance-for-organisations-and-government-agencies/organisations/small-business",
+          "note": "OAIC: small businesses (<=A$3m turnover) generally exempt from the Privacy Act, but not if they provide a health service and hold health information",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Health fund apps",
+        "practice SMS reminders"
+      ],
+      "notes": "Store only 'last visit' dates, no clinical notes; health info rules make cloud storage of details risky. Keep it local or date-only.",
+      "aibuild_reason": "Date tracking only",
+      "secondary_categories": [
+        "Health"
+      ],
+      "bundle_fit": {
+        "tier": "later",
+        "module": "Renewals & Expiry",
+        "note": "Optional preset pack; keep to dates."
+      }
+    },
+    {
+      "id": "occasion-reminders-cards",
+      "title": "Birthdays & anniversaries reminder with card-posting lead time",
+      "category": "Life Admin",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "People remember birthdays on the day, too late to post a card.",
+      "target_users": "Adults with big families",
+      "monetisation": "Free (feeder)",
+      "price_hypothesis": "Free",
+      "scores": {
+        "legal": 4,
+        "pain": 2,
+        "breadth": 5,
+        "wtp": 1,
+        "recurring": 1,
+        "build": 5,
+        "maint": 5,
+        "distro": 2,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://stackoverflow.com/questions/67140258/is-ics-file-valarm-section-works-with-google-calendar",
+          "note": "Google Calendar ignores VALARM alarms in subscribed .ics feeds: lead-time reminders must be separate events",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Google Calendar",
+        "Facebook",
+        "Moonpig"
+      ],
+      "notes": "pain_points birthdays-dates CFS 0 (no forum pain): feeder only.",
+      "aibuild_reason": "ICS export with lead-time events",
+      "secondary_categories": [
+        "Events & occasions"
+      ],
+      "bundle_fit": {
+        "tier": "feeder",
+        "module": "Occasions & Gifts",
+        "note": "Feeds the gift tracker."
+      }
+    },
+    {
+      "id": "travel-docs-checklist-family",
+      "title": "Family travel docs checklist (passport validity, visas, insurance)",
+      "category": "Life Admin",
+      "platform": "Web app (local-first, Pass module)",
+      "customer_type": "consumer",
+      "problem": "Families find out at check-in that a child's 5-year passport expires within 6 months of the trip.",
+      "target_users": "AU families travelling overseas",
+      "monetisation": "Pass feature",
+      "price_hypothesis": "Included in Pass",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 2,
+        "recurring": 2,
+        "build": 5,
+        "maint": 3,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.passports.gov.au/help/processing-times",
+          "note": "Australian passports: apply at least 6 weeks before travel; adult 10-yr, child 5-yr validity",
+          "run": 5
+        },
+        {
+          "url": "https://www.smartraveller.gov.au/travel-essentials/essentials-checklist",
+          "note": "Smartraveller free 'before you go' checklist; many countries require 6 months passport validity beyond the trip",
+          "run": 5
+        },
+        {
+          "url": "https://www.reddit.com/r/onebag/comments/1wpogzj/",
+          "note": "pain_points.json travel-itinerary-docs: 'How do you guys organize all your travel documents?' (37 score, 100 comments)",
+          "run": 5
+        },
+        {
+          "url": "https://www.reddit.com/r/TravelHacks/comments/1w2ptls/",
+          "note": "pain_points.json documents-expiry (CFS 1.5): people rely on memory/calendar for passport/insurance expiry",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Smartraveller",
+        "TripIt",
+        "airline apps"
+      ],
+      "notes": "Checks dates the user enters against the trip; links to Smartraveller and the destination's official rules instead of stating visa rules (avoid acting-on-output risk). legal 3.",
+      "aibuild_reason": "Date maths + checklist",
+      "secondary_categories": [
+        "Travel"
+      ],
+      "bundle_fit": {
+        "tier": "launch",
+        "module": "Renewals & Expiry",
+        "note": "'Trip check' inside Renewals."
+      }
+    },
+    {
+      "id": "leaving-home-adulting-kit-au",
+      "title": "Leaving home / adulting admin kit (AU)",
+      "category": "Life Admin",
+      "platform": "Web app (client-side)",
+      "customer_type": "consumer",
+      "problem": "Young adults moving out or starting uni must set up a TFN, Medicare card, myGov, bank, enrolment and bills.",
+      "target_users": "AU 17-22 year olds and their parents",
+      "monetisation": "Free (feeder)",
+      "price_hypothesis": "Free",
+      "scores": {
+        "legal": 3,
+        "pain": 2,
+        "breadth": 3,
+        "wtp": 1,
+        "recurring": 0,
+        "build": 5,
+        "maint": 4,
+        "distro": 3,
+        "compete": 3,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://aec.gov.au/enrol/update-my-details.htm",
+          "note": "AEC: update enrolment online after moving",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "myGov",
+        "Services Australia guides"
+      ],
+      "notes": "Links to official sources; no financial advice. Audience is 17+, marketed to parents.",
+      "aibuild_reason": "Checklist content site",
+      "secondary_categories": [
+        "Students"
+      ],
+      "bundle_fit": {
+        "tier": "feeder",
+        "module": "-",
+        "note": "SEO feeder; parents buy the Pass."
+      }
+    },
+    {
+      "id": "bin-day-council-reminders",
+      "title": "Bin day reminders by council",
+      "category": "Life Admin",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Which bin goes out this week?",
+      "target_users": "AU households",
+      "monetisation": "Free",
+      "price_hypothesis": "Free",
+      "scores": {
+        "legal": 5,
+        "pain": 2,
+        "breadth": 4,
+        "wtp": 1,
+        "recurring": 1,
+        "build": 4,
+        "maint": 2,
+        "distro": 3,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 3,
+        "platform": 4,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [],
+      "competitors": [
+        "Council apps",
+        "Recycle Mate"
+      ],
+      "notes": "Council data varies and changes; many councils have apps. Feeder only.",
+      "aibuild_reason": "Needs per-council data upkeep",
+      "secondary_categories": [
+        "AU-specific"
+      ],
+      "bundle_fit": {
+        "tier": "feeder",
+        "module": "-",
+        "note": "Low priority."
+      }
+    },
+    {
+      "id": "insurance-premium-creep-log",
+      "title": "Insurance premium creep log (home, contents, car, health)",
+      "category": "Life Admin",
+      "platform": "Web app (local-first, Pass module)",
+      "customer_type": "consumer",
+      "problem": "Renewal premiums climb year on year and people auto-renew without comparing; nobody keeps last year's figure.",
+      "target_users": "AU households",
+      "monetisation": "Pass feature: log each renewal's premium and excess, alert at renewal with year-on-year change",
+      "price_hypothesis": "Included in Pass",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 2,
+        "recurring": 3,
+        "build": 5,
+        "maint": 5,
+        "distro": 3,
+        "compete": 4,
+        "defend": 3,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.accc.gov.au/about-us/publications/serial-publications/insurance-monitoring-reports/accc-insurance-monitoring-report-2026",
+          "note": "ACCC Insurance monitoring report 2026 (25 Jun 2026): affordability concerns continue; a third-party summary cites average home+contents premiums up 46.4% from 2021-22 to 2024-25 (A$1,612 to A$2,360) (not verified in the PDF)",
+          "run": 5
+        },
+        {
+          "url": "https://download.asic.gov.au/media/1348214/underinsurance_report.pdf",
+          "note": "ASIC: estimated 27-81% of homeowners underinsured by >=10% (search summary)",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Insurer apps",
+        "comparison sites"
+      ],
+      "notes": "Shows the user's own numbers only; never recommends a policy or sum insured (general advice under financial services law).",
+      "aibuild_reason": "CRUD + simple chart",
+      "secondary_categories": [
+        "Personal finance tools"
+      ],
+      "bundle_fit": {
+        "tier": "launch",
+        "module": "Money Dates",
+        "note": "Distinctive hook inside Money Dates."
+      }
+    },
+    {
+      "id": "uni-census-date-planner-au",
+      "title": "Uni census date planner (AU)",
+      "category": "Life Admin",
+      "platform": "Web app (client-side)",
+      "customer_type": "consumer",
+      "problem": "Students miss the census date to drop a unit and get a HELP debt for it.",
+      "target_users": "AU uni students and parents",
+      "monetisation": "Free (feeder)",
+      "price_hypothesis": "Free",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 1,
+        "recurring": 1,
+        "build": 5,
+        "maint": 3,
+        "distro": 3,
+        "compete": 3,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.studyassist.gov.au/managing-and-repaying-your-loan/withdrawing-study",
+          "note": "Study Assist: withdraw formally on or before census date to avoid a HELP debt for that unit",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Uni portals"
+      ],
+      "notes": "Per-uni dates must be entered by the user or linked; never 'you can withdraw'. Feeder.",
+      "aibuild_reason": "Simple date planner",
+      "secondary_categories": [
+        "Students"
+      ],
+      "bundle_fit": {
+        "tier": "feeder",
+        "module": "School & Family Calendar",
+        "note": "Parents of uni kids."
+      }
+    },
+    {
+      "id": "sinking-fund-calculator",
+      "title": "Sinking fund calculator for annual bills",
+      "category": "Life Admin",
+      "platform": "Web app (client-side)",
+      "customer_type": "consumer",
+      "problem": "Annual bills (rego, insurance, school fees) hit the same month; people want to put aside a set amount per pay.",
+      "target_users": "AU households",
+      "monetisation": "Free (feeder)",
+      "price_hypothesis": "Free",
+      "scores": {
+        "legal": 4,
+        "pain": 2,
+        "breadth": 5,
+        "wtp": 1,
+        "recurring": 1,
+        "build": 5,
+        "maint": 5,
+        "distro": 4,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://my.pocketsmith.com/plans",
+          "note": "PocketSmith (NZ/AU): Foundation A$9.99/mo annual; Frollo free via CDR open banking (search summary)",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Bank savings 'pots'",
+        "spreadsheets"
+      ],
+      "notes": "Arithmetic only, no savings product advice.",
+      "aibuild_reason": "Client-side calculator",
+      "secondary_categories": [
+        "Personal finance tools"
+      ],
+      "bundle_fit": {
+        "tier": "feeder",
+        "module": "Money Dates",
+        "note": "Imports into Money Dates."
+      }
+    },
+    {
+      "id": "new-baby-admin-checklist-au",
+      "title": "New baby admin checklist (AU)",
+      "category": "Life Admin",
+      "platform": "Web app (client-side)",
+      "customer_type": "consumer",
+      "problem": "New parents must register the birth, add baby to Medicare, claim payments and update health insurance in the first weeks.",
+      "target_users": "AU expecting parents",
+      "monetisation": "Free (feeder)",
+      "price_hypothesis": "Free",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 2,
+        "recurring": 0,
+        "build": 5,
+        "maint": 4,
+        "distro": 3,
+        "compete": 3,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://my.gov.au/en/services/raising-kids/having-a-baby/when-your-baby-is-born/when-your-baby-arrives-checklist",
+          "note": "myGov free 'When your baby arrives' checklist (birth registration, payments, Medicare enrolment)",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "myGov checklist (free)"
+      ],
+      "notes": "myGov already publishes this checklist free, so compete 3 and feeder only; adds private health fund and employer steps with links.",
+      "aibuild_reason": "Checklist site",
+      "secondary_categories": [
+        "Family"
+      ],
+      "bundle_fit": {
+        "tier": "feeder",
+        "module": "-",
+        "note": "Feeder."
+      }
+    },
+    {
+      "id": "parent-care-admin-binder",
+      "title": "Ageing parent care admin binder",
+      "category": "Life Admin",
+      "platform": "Web app (local-first, Pass module)",
+      "customer_type": "consumer",
+      "problem": "Adult children managing a parent's appointments, aged-care forms, POA papers and contacts across siblings.",
+      "target_users": "Adults 40-65 caring for parents",
+      "monetisation": "Pass feature, sibling sharing",
+      "price_hypothesis": "Included in Pass (or A$49 tier)",
+      "scores": {
+        "legal": 3,
+        "pain": 4,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 3,
+        "defend": 4,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.trustworthy.com/pricing",
+          "note": "Trustworthy family OS: Free 2GB; Silver US$120/yr (5 members), Gold $240/yr (10), Platinum $480/yr; billed annually per household; 30-day money-back",
+          "run": 5
+        },
+        {
+          "url": "https://www.everplans.com/pricing",
+          "note": "Everplans: free up to 3 items; Premium US$99.99/yr",
+          "run": 5
+        },
+        {
+          "url": "https://www.oaic.gov.au/privacy/privacy-guidance-for-organisations-and-government-agencies/organisations/small-business",
+          "note": "OAIC: small businesses (<=A$3m turnover) generally exempt from the Privacy Act, but not if they provide a health service and hold health information",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Trustworthy",
+        "Everplans",
+        "My Aged Care"
+      ],
+      "notes": "Third parties' data and possibly health info: legal 3; store contacts and dates, not medical records. Strong sibling-sharing hook.",
+      "aibuild_reason": "Sharing + RLS across households",
+      "secondary_categories": [
+        "Family"
+      ],
+      "bundle_fit": {
+        "tier": "later",
+        "module": "Household Handbook",
+        "note": "Candidate for an A$49 'plus' tier."
+      }
+    },
+    {
+      "id": "rental-application-pack-au",
+      "title": "Rental application pack builder (AU)",
+      "category": "Life Admin",
+      "platform": "Web app (client-side PDF)",
+      "customer_type": "consumer",
+      "problem": "Renters re-assemble ID, payslips and references for every application.",
+      "target_users": "AU renters",
+      "monetisation": "Free; one-time export",
+      "price_hypothesis": "A$9 one-time",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 2,
+        "recurring": 1,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 3,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [],
+      "competitors": [
+        "2Apply",
+        "Snug",
+        "agent portals"
+      ],
+      "notes": "Assembles and watermarks files locally with pdf-lib; nothing uploaded to us. Agents' platforms dominate.",
+      "aibuild_reason": "Client-side PDF merge + watermark",
+      "secondary_categories": [
+        "Home & household"
+      ],
+      "bundle_fit": {
+        "tier": "feeder",
+        "module": "-",
+        "note": "One-off; feeder."
+      }
+    },
+    {
+      "id": "id-copy-watermarker",
+      "title": "ID copy watermarker ('for rental application only')",
+      "category": "Life Admin",
+      "platform": "Web app (client-side)",
+      "customer_type": "consumer",
+      "problem": "People email full ID scans to agents; a watermark limits misuse.",
+      "target_users": "AU renters, job seekers",
+      "monetisation": "Free (feeder)",
+      "price_hypothesis": "Free",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 1,
+        "recurring": 0,
+        "build": 5,
+        "maint": 5,
+        "distro": 4,
+        "compete": 3,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [],
+      "competitors": [
+        "Phone markup tools"
+      ],
+      "notes": "Processes images in the browser only. Trust-building feeder that embodies the 'dates, not documents' message.",
+      "aibuild_reason": "Canvas/PDF in-browser",
+      "secondary_categories": [
+        "Security: consumer privacy"
+      ],
+      "bundle_fit": {
+        "tier": "feeder",
+        "module": "-",
+        "note": "Privacy-brand feeder."
+      }
+    },
+    {
+      "id": "family-calendar-feed-merger",
+      "title": "Family calendar feed merger (school, sport, work .ics into one feed)",
+      "category": "Life Admin",
+      "platform": "Web app (server-side feeds)",
+      "customer_type": "consumer",
+      "problem": "School, club and work calendars come as separate .ics links; parents want one merged view to share.",
+      "target_users": "Parents",
+      "monetisation": "Pass feature",
+      "price_hypothesis": "Included in Pass",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 3,
+        "maint": 3,
+        "distro": 3,
+        "compete": 2,
+        "defend": 3,
+        "synergy": 3,
+        "platform": 4,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://myskylight.com/products/the-skylight-calendar-2-classic-white-with-plus-plan",
+          "note": "Skylight Calendar Plus US$79/yr; Hearth Family Membership $86.40/yr; TimeTree Premium $44.99/yr (search summary)",
+          "run": 5
+        },
+        {
+          "url": "https://www.cozi.com/compare-plans/",
+          "note": "Cozi: Free; Gold US$39/yr; Max US$79/yr; annual only, one upgrade covers the family",
+          "run": 5
+        },
+        {
+          "url": "https://www.reddit.com/r/Parenting/comments/1xb6ii6/",
+          "note": "pain_points.json family-calendar (CFS 2.75, rank 5/53): '77 days of non school time in 2027... How do you manage?' (134 score, 104 comments, 20 Oct 2026)",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Cozi",
+        "Skylight",
+        "TimeTree",
+        "Google Calendar"
+      ],
+      "notes": "Server fetches public feeds; no OAuth. Crowded (Skylight US$79/yr, Cozi Gold US$39/yr) but proves WTP.",
+      "aibuild_reason": "Server-side ICS fetch/merge + caching",
+      "secondary_categories": [
+        "Family calendar"
+      ],
+      "bundle_fit": {
+        "tier": "later",
+        "module": "School & Family Calendar",
+        "note": "After v1; heavier infra."
+      }
+    },
+    {
+      "id": "life-admin-email-parser",
+      "title": "AI inbox parser for bills and renewals (forward an email)",
+      "category": "Life Admin",
+      "platform": "Web app + inbound email + LLM",
+      "customer_type": "consumer",
+      "problem": "Bills and renewal notices arrive by email; typing them in is the friction that kills manual trackers.",
+      "target_users": "Busy households",
+      "monetisation": "Pass Plus feature",
+      "price_hypothesis": "A$49/yr tier",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 3,
+        "maint": 3,
+        "distro": 3,
+        "compete": 2,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 4,
+        "aibuild": 3
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.trackease.net/",
+          "note": "TrackEase: Starter free forever (10GB, 100 reminders, 5 members, AI extraction); Pro 'coming soon'",
+          "run": 5
+        },
+        {
+          "url": "https://lifeadmin.live/",
+          "note": "Life Admin AI (Perth, AU; built on base44): free-forever plan, Plus price not shown; family sharing up to 5; passports, rego, insurance, school forms, pet vaccinations, moving checklist",
+          "run": 5
+        },
+        {
+          "url": "https://www.trustworthy.com/pricing",
+          "note": "Trustworthy family OS: Free 2GB; Silver US$120/yr (5 members), Gold $240/yr (10), Platinum $480/yr; billed annually per household; 30-day money-back",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "TrackEase",
+        "Life Admin AI",
+        "Trustworthy"
+      ],
+      "notes": "Forwarding-address design avoids Gmail restricted scopes (CASA). But stores email content and LLM errors in dates matter: aibuild 3.",
+      "aibuild_reason": "Inbound email webhook + LLM extraction users rely on",
+      "secondary_categories": [
+        "Productivity"
+      ],
+      "bundle_fit": {
+        "tier": "later",
+        "module": "Money Dates",
+        "note": "Evaluate for the A$49 tier once v1 retains."
+      }
+    },
+    {
+      "id": "paperwork-keep-or-shred-guide",
+      "title": "How long to keep paperwork (AU) - keep/shred guide",
+      "category": "Life Admin",
+      "platform": "Web app (content)",
+      "customer_type": "consumer",
+      "problem": "People don't know how long to keep tax, insurance and medical paperwork.",
+      "target_users": "AU households",
+      "monetisation": "Free (feeder)",
+      "price_hypothesis": "Free",
+      "scores": {
+        "legal": 3,
+        "pain": 2,
+        "breadth": 4,
+        "wtp": 1,
+        "recurring": 0,
+        "build": 5,
+        "maint": 4,
+        "distro": 2,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.ato.gov.au/individuals-and-families/income-deductions-offsets-and-records/records-you-need-to-keep",
+          "note": "ATO: keep records 5 years from lodgement",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "ATO pages",
+        "CHOICE articles"
+      ],
+      "notes": "Quotes official periods with links (ATO 5 years); no advice beyond the source.",
+      "aibuild_reason": "Content + checklist",
+      "secondary_categories": [
+        "Home & household"
+      ],
+      "bundle_fit": {
+        "tier": "feeder",
+        "module": "Warranty & Receipts",
+        "note": "SEO feeder."
+      }
+    },
+    {
+      "id": "au-life-admin-year-ics",
+      "title": "Australian life-admin year calendar (.ics): tax, EOFY, school terms",
+      "category": "Life Admin",
+      "platform": "Web app (static ICS)",
+      "customer_type": "consumer",
+      "problem": "Key national dates (tax lodgement, EOFY, term dates, daylight saving) aren't in one subscribable calendar.",
+      "target_users": "AU households",
+      "monetisation": "Free (feeder)",
+      "price_hypothesis": "Free",
+      "scores": {
+        "legal": 4,
+        "pain": 2,
+        "breadth": 4,
+        "wtp": 1,
+        "recurring": 1,
+        "build": 5,
+        "maint": 4,
+        "distro": 3,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 4,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.ato.gov.au/media-centre/the-final-countdown-ato-reminds-taxpayers-to-lodge-now",
+          "note": "ATO: 2025-26 self-lodgers due Mon 2 Nov 2026 (31 Oct falls on a weekend)",
+          "run": 5
+        },
+        {
+          "url": "https://www.education.nsw.gov.au/schooling/calendars/2027",
+          "note": "NSW 2027 term dates: Term 1 students start Wed 3 Feb (Eastern) / Mon 10 Feb (Western)",
+          "run": 5
+        },
+        {
+          "url": "https://stackoverflow.com/questions/67140258/is-ics-file-valarm-section-works-with-google-calendar",
+          "note": "Google Calendar ignores VALARM alarms in subscribed .ics feeds: lead-time reminders must be separate events",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Public holiday ICS feeds"
+      ],
+      "notes": "Static feeds rebuilt each year; reminders are separate lead-time events because Google ignores VALARM in subscriptions.",
+      "aibuild_reason": "Static ICS generation",
+      "secondary_categories": [
+        "AU-specific"
+      ],
+      "bundle_fit": {
+        "tier": "feeder",
+        "module": "School & Family Calendar",
+        "note": "Every subscriber is a reachable lead."
+      }
+    },
+    {
+      "id": "life-admin-audit-quiz",
+      "title": "Life admin audit quiz ('what are you forgetting?')",
+      "category": "Life Admin",
+      "platform": "Web app (client-side)",
+      "customer_type": "consumer",
+      "problem": "People don't know what dates and documents they should be tracking.",
+      "target_users": "AU households",
+      "monetisation": "Free (feeder)",
+      "price_hypothesis": "Free",
+      "scores": {
+        "legal": 5,
+        "pain": 2,
+        "breadth": 5,
+        "wtp": 1,
+        "recurring": 0,
+        "build": 5,
+        "maint": 5,
+        "distro": 3,
+        "compete": 4,
+        "defend": 1,
+        "synergy": 5,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://news.ycombinator.com/item?id=29161110",
+          "note": "pain_points.json file-docs-organisation (CFS 2.2): Ask HN 'How do you manage your personal documents?' (261 pts, 179 comments)",
+          "run": 5
+        },
+        {
+          "url": "https://www.reddit.com/r/TravelHacks/comments/1w2ptls/",
+          "note": "pain_points.json documents-expiry (CFS 1.5): people rely on memory/calendar for passport/insurance expiry",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "None direct"
+      ],
+      "notes": "Quiz produces a personalised list of what to track that pre-fills the Pass. Shareable in parents' groups.",
+      "aibuild_reason": "Quiz + results page",
+      "secondary_categories": [
+        "Productivity"
+      ],
+      "bundle_fit": {
+        "tier": "feeder",
+        "module": "-",
+        "note": "The main bundle funnel."
+      }
+    },
+    {
+      "id": "tradie-job-history-log",
+      "title": "Home tradie & job history log",
+      "category": "Life Admin",
+      "platform": "Web app (local-first, Pass module)",
+      "customer_type": "consumer",
+      "problem": "Homeowners forget who fixed the hot water system, when, and what warranty they gave.",
+      "target_users": "Homeowners",
+      "monetisation": "Pass feature",
+      "price_hypothesis": "Included in Pass",
+      "scores": {
+        "legal": 4,
+        "pain": 2,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 2,
+        "build": 5,
+        "maint": 5,
+        "distro": 2,
+        "compete": 3,
+        "defend": 3,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.homezada.com/faq",
+          "note": "HomeZada: Essentials free; Premium US$99/yr or $15.95/mo; Deluxe $189/yr (search summary)",
+          "run": 5
+        },
+        {
+          "url": "https://okoniq.com/pricing/homeowner",
+          "note": "Okoniq Property Hub: Home US$9/mo, Home Plus $15/mo, 30-day trial (search summary)",
+          "run": 5
+        },
+        {
+          "url": "https://homebeacon.app/alternatives/homezada-vs-centriq",
+          "note": "Centriq consumer app shut down 31 Jan 2025 (was ~US$49/yr); HomeBeacon free for 1 home",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "HomeZada",
+        "Okoniq",
+        "HomeBeacon"
+      ],
+      "notes": "Feeds warranty-end dates into Renewals.",
+      "aibuild_reason": "CRUD + attachments local",
+      "secondary_categories": [
+        "Home & household"
+      ],
+      "bundle_fit": {
+        "tier": "later",
+        "module": "Home",
+        "note": "Pairs with home-maintenance-reminders."
+      }
+    },
+    {
+      "id": "product-recall-watch-au",
+      "title": "Product recall watch for things you own (AU)",
+      "category": "Life Admin",
+      "platform": "Web app + RSS",
+      "customer_type": "consumer",
+      "problem": "People never hear that the car seat or heater they bought was recalled.",
+      "target_users": "AU households",
+      "monetisation": "Pass feature",
+      "price_hypothesis": "Included in Pass",
+      "scores": {
+        "legal": 3,
+        "pain": 2,
+        "breadth": 5,
+        "wtp": 1,
+        "recurring": 2,
+        "build": 4,
+        "maint": 3,
+        "distro": 3,
+        "compete": 4,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 4,
+        "aibuild": 3
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.productsafety.gov.au/about-us/product-safety-news/subscribe-to-rss-feeds",
+          "note": "Product Safety Australia: official recall RSS feed (latest 100 recalls) and saved-search RSS",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Product Safety Australia RSS/email (free)"
+      ],
+      "notes": "Matches the user's warranty register against the official recall feed and links to the notice; never says a product is 'safe' (safety-critical output). Matching errors matter: aibuild 3.",
+      "aibuild_reason": "RSS polling + fuzzy matching + emails",
+      "secondary_categories": [
+        "Shopping"
+      ],
+      "bundle_fit": {
+        "tier": "later",
+        "module": "Warranty & Receipts",
+        "note": "Strong differentiator later."
+      }
+    },
+    {
+      "id": "bank-linked-subscription-cancel",
+      "title": "Bank-linked subscription finder & cancel-for-me service",
+      "category": "Life Admin",
+      "platform": "Web/mobile app (open banking)",
+      "customer_type": "consumer",
+      "problem": "People want subscriptions found and cancelled automatically.",
+      "target_users": "AU consumers",
+      "monetisation": "Subscription",
+      "price_hypothesis": "A$5/mo",
+      "scores": {
+        "legal": 1,
+        "pain": 4,
+        "breadth": 5,
+        "wtp": 2,
+        "recurring": 4,
+        "build": 2,
+        "maint": 3,
+        "distro": 2,
+        "compete": 3,
+        "defend": 3,
+        "synergy": 3,
+        "platform": 5,
+        "aibuild": 1
+      },
+      "kill_flags": [
+        "CDR accreditation / credential custody"
+      ],
+      "evidence": [
+        {
+          "url": "https://help.frollo.com.au/hc/en-au/articles/16335574675343-Is-there-a-cost-to-use-Frollo",
+          "note": "Frollo: free AU budgeting app using CDR open-banking connections",
+          "run": 5
+        },
+        {
+          "url": "https://my.pocketsmith.com/plans",
+          "note": "PocketSmith (NZ/AU): Foundation A$9.99/mo annual; Frollo free via CDR open banking (search summary)",
+          "run": 5
+        },
+        {
+          "url": "https://www.reddit.com/r/budget/comments/1w59icu/",
+          "note": "pain_points.json subscriptions-tracking (CFS 2.15): 'just found out I've been paying for 3 things I forgot about'; bank-linked trackers feel invasive",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "Frollo",
+        "bank apps",
+        "Rocket Money (US)"
+      ],
+      "notes": "KILLED: needs CDR accreditation or an intermediary for bank data, and cancelling on someone's behalf means acting as their agent with credentials. Use local CSV upload instead (subscription-tracker-local).",
+      "aibuild_reason": "Open banking integration + credential custody",
+      "secondary_categories": [
+        "Personal finance tools"
+      ],
+      "bundle_fit": {
+        "tier": "exclude",
+        "module": "-",
+        "note": "Killed."
+      }
+    },
+    {
+      "id": "tax-deduction-finder-ai",
+      "title": "AI 'what can I claim?' tax deduction finder",
+      "category": "Life Admin",
+      "platform": "Web app + LLM",
+      "customer_type": "consumer",
+      "problem": "People want to know what they can claim at tax time.",
+      "target_users": "AU taxpayers",
+      "monetisation": "Subscription",
+      "price_hypothesis": "A$29/yr",
+      "scores": {
+        "legal": 1,
+        "pain": 4,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 3,
+        "maint": 5,
+        "distro": 3,
+        "compete": 3,
+        "defend": 3,
+        "synergy": 3,
+        "platform": 5,
+        "aibuild": 3
+      },
+      "kill_flags": [
+        "tax advice (kill rule 2)"
+      ],
+      "evidence": [
+        {
+          "url": "https://www.ato.gov.au/online-services/online-services-for-individuals-and-sole-traders/ato-app/mydeductions",
+          "note": "ATO myDeductions: free receipt record-keeping in the ATO app, data stored on device",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "ATO myDeductions",
+        "tax agents",
+        "H&R Block"
+      ],
+      "notes": "KILLED: kill rule 2 (tax advice; tax agent services need TPB registration).",
+      "aibuild_reason": "LLM correctness users rely on",
+      "secondary_categories": [
+        "Personal finance tools"
+      ],
+      "bundle_fit": {
+        "tier": "exclude",
+        "module": "-",
+        "note": "Killed."
+      }
+    },
+    {
+      "id": "family-health-records-hub",
+      "title": "Family health records hub (cloud)",
+      "category": "Life Admin",
+      "platform": "Web/mobile app (cloud)",
+      "customer_type": "consumer",
+      "problem": "Parents want vaccination records, allergy notes and specialist letters for 5 people in one place.",
+      "target_users": "Families",
+      "monetisation": "Subscription",
+      "price_hypothesis": "A$5/mo",
+      "scores": {
+        "legal": 2,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 2,
+        "recurring": 4,
+        "build": 3,
+        "maint": 3,
+        "distro": 3,
+        "compete": 2,
+        "defend": 3,
+        "synergy": 3,
+        "platform": 5,
+        "aibuild": 3
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.oaic.gov.au/privacy/privacy-guidance-for-organisations-and-government-agencies/organisations/small-business",
+          "note": "OAIC: small businesses (<=A$3m turnover) generally exempt from the Privacy Act, but not if they provide a health service and hold health information",
+          "run": 5
+        }
+      ],
+      "competitors": [
+        "My Health Record",
+        "health fund apps"
+      ],
+      "notes": "legal 2: holding health information removes the OAIC small-business exemption, so Privacy Act obligations apply in full. Not killed; excluded from the bundle (use recurring-checkups-tracker dates instead).",
+      "aibuild_reason": "Health data + sharing + security",
+      "secondary_categories": [
+        "Health"
+      ],
+      "bundle_fit": {
+        "tier": "exclude",
+        "module": "-",
+        "note": "Health data custody."
+      }
+    }
+  ],
+  "bundles": [
+    {
+      "id": "life-admin-pass",
+      "title": "Life Admin Pass (AU household bundle)",
+      "category": "Life Admin",
+      "customer_type": "consumer",
+      "price": {
+        "recommended": "A$29/yr per household (up to 6 members), annual only, 30-day free trial",
+        "later_tier": "A$49/yr 'Plus' (AI email parser, parent-care sharing) once v1 renewals are known",
+        "rejected": "monthly plan; separate family plan; A$19 (needs 53% more subscribers for the same revenue)"
+      },
+      "launch_modules": [
+        "Renewals & Expiry (household-renewals-calendar + credentials-expiry-wallet + travel-docs passport check)",
+        "Money Dates (bills-calendar-household + insurance-premium-creep-log + utility-plan-review-reminders)",
+        "Warranty & Receipts (warranty-receipt-vault)",
+        "School & Family Calendar (school-holiday-leave-planner-au)",
+        "Occasions & Gifts (gift-list-budget-tracker)"
+      ],
+      "members": [
+        "household-renewals-calendar",
+        "warranty-receipt-vault",
+        "school-holiday-leave-planner-au",
+        "moving-house-checklist-au",
+        "moving-box-qr-labels",
+        "sec-account-recovery-planner",
+        "sec-digital-legacy-organiser",
+        "gift-list-budget-tracker",
+        "household-chore-roster",
+        "home-maintenance-reminders",
+        "home-inventory-insurance",
+        "house-sitter-handover-guide",
+        "pet-care-shared-log",
+        "rental-condition-report",
+        "credentials-expiry-wallet",
+        "bills-calendar-household",
+        "car-service-rego-log",
+        "pet-admin-records",
+        "school-year-admin-checklist-nsw",
+        "eofy-receipt-bundle-au",
+        "utility-plan-review-reminders",
+        "recurring-checkups-tracker",
+        "travel-docs-checklist-family",
+        "insurance-premium-creep-log",
+        "parent-care-admin-binder",
+        "family-calendar-feed-merger",
+        "life-admin-email-parser",
+        "tradie-job-history-log",
+        "product-recall-watch-au"
+      ],
+      "feeders": [
+        "subscription-tracker-local",
+        "faulty-product-claim-letter",
+        "kids-sizes-tracker",
+        "ice-emergency-info-sheet",
+        "occasion-reminders-cards",
+        "leaving-home-adulting-kit-au",
+        "bin-day-council-reminders",
+        "uni-census-date-planner-au",
+        "sinking-fund-calculator",
+        "new-baby-admin-checklist-au",
+        "rental-application-pack-au",
+        "id-copy-watermarker",
+        "paperwork-keep-or-shred-guide",
+        "au-life-admin-year-ics",
+        "life-admin-audit-quiz"
+      ],
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 3,
+        "maint": 3,
+        "distro": 3,
+        "compete": 3,
+        "defend": 4,
+        "synergy": 5,
+        "platform": 5,
+        "aibuild": 3
+      },
+      "score_reasons": {
+        "legal": "3: holds third parties' (family members') dates and minors' data indirectly; mitigated by 'dates, not documents'",
+        "pain": "3: real but low-intensity pains (pain_points clusters moving 2.95, family calendar 2.75, docs 2.2, subscriptions 2.15)",
+        "breadth": "5: ~3.1m AU families with dependent children; every household has renewals",
+        "wtp": "3: paid comparables US$15-120/yr exist, but strong free options",
+        "recurring": "4: annual by design; renewal is the risk",
+        "build": "3: accounts, sharing, RLS, cron emails and Stripe webhook in one app",
+        "maint": "3: yearly AU date data (terms, tax dates, fees) and email deliverability",
+        "distro": "3: no built-in channel; free SEO feeders, seasonal peaks (Christmas, school holidays, EOFY) and parents' groups",
+        "compete": "3: no AU paid bundle focused on dates-not-documents; free all-in-ones exist (Life Admin AI, TrackEase)",
+        "defend": "4: switching cost grows with every date stored; household sharing",
+        "synergy": "5: every module reuses one dates engine",
+        "platform": "5: web app, no app-store gate",
+        "aibuild": "3: RLS + webhooks + cron are where AI-built apps break (CVE-2025-48757)"
+      },
+      "notes": "Scored as a whole on rubric v2.0 (not in the idea shortlist). Recommended: freemium hybrid (free no-login tools -> one paid annual Pass)."
+    }
+  ],
+  "category_overrides": {
+    "share-house-ledger-roster": {
+      "category": "Life Admin",
+      "run": 5,
+      "note": "Run 5: Life Admin reclassification set before this Run 4 id was merged; the incoming category is kept in secondary_categories",
+      "bundle_fit": {
+        "tier": "later",
+        "module": "Money Dates",
+        "note": "Run 4 pain-first idea; set by Run 5 category_overrides (check against the matching Run 5 module when merged)"
+      }
+    },
+    "chore-fairness-ledger": {
+      "category": "Life Admin",
+      "run": 5,
+      "note": "Run 5: Life Admin reclassification set before this Run 4 id was merged; the incoming category is kept in secondary_categories",
+      "bundle_fit": {
+        "tier": "later",
+        "module": "Household Handbook",
+        "note": "Run 4 pain-first idea; set by Run 5 category_overrides (check against the matching Run 5 module when merged)"
+      }
+    },
+    "subscription-audit-csv": {
+      "category": "Life Admin",
+      "run": 5,
+      "note": "Run 5: Life Admin reclassification set before this Run 4 id was merged; the incoming category is kept in secondary_categories",
+      "bundle_fit": {
+        "tier": "feeder",
+        "module": "Money Dates",
+        "note": "Run 4 pain-first idea; set by Run 5 category_overrides (check against the matching Run 5 module when merged)"
+      }
+    },
+    "moving-house-hub-au": {
+      "category": "Life Admin",
+      "run": 5,
+      "note": "Run 5: Life Admin reclassification set before this Run 4 id was merged; the incoming category is kept in secondary_categories",
+      "bundle_fit": {
+        "tier": "v2",
+        "module": "Moving",
+        "note": "Run 4 pain-first idea; set by Run 5 category_overrides (check against the matching Run 5 module when merged)"
+      }
+    },
+    "household-docs-index": {
+      "category": "Life Admin",
+      "run": 5,
+      "note": "Run 5: Life Admin reclassification set before this Run 4 id was merged; the incoming category is kept in secondary_categories",
+      "bundle_fit": {
+        "tier": "v2",
+        "module": "Household Handbook",
+        "note": "Run 4 pain-first idea; set by Run 5 category_overrides (check against the matching Run 5 module when merged)"
+      }
+    },
+    "gift-budget-tracker-pain": {
+      "category": "Life Admin",
+      "run": 5,
+      "note": "Run 5: Life Admin reclassification set before this Run 4 id was merged; the incoming category is kept in secondary_categories",
+      "bundle_fit": {
+        "tier": "launch",
+        "module": "Occasions & Gifts",
+        "note": "Run 4 pain-first idea; set by Run 5 category_overrides (check against the matching Run 5 module when merged)"
+      }
+    },
+    "school-holiday-care-planner": {
+      "category": "Life Admin",
+      "run": 5,
+      "note": "Run 5: Life Admin reclassification set before this Run 4 id was merged; the incoming category is kept in secondary_categories",
+      "bundle_fit": {
+        "tier": "launch",
+        "module": "School & Family Calendar",
+        "note": "Run 4 pain-first idea; set by Run 5 category_overrides (check against the matching Run 5 module when merged)"
+      }
+    },
+    "school-notice-digest": {
+      "category": "Life Admin",
+      "run": 5,
+      "note": "Run 5: Life Admin reclassification set before this Run 4 id was merged; the incoming category is kept in secondary_categories",
+      "bundle_fit": {
+        "tier": "later",
+        "module": "School & Family Calendar",
+        "note": "Run 4 pain-first idea; set by Run 5 category_overrides (check against the matching Run 5 module when merged)"
+      }
+    },
+    "home-maintenance-log-pain": {
+      "category": "Life Admin",
+      "run": 5,
+      "note": "Run 5: Life Admin reclassification set before this Run 4 id was merged; the incoming category is kept in secondary_categories",
+      "bundle_fit": {
+        "tier": "v2",
+        "module": "Home",
+        "note": "Run 4 pain-first idea; set by Run 5 category_overrides (check against the matching Run 5 module when merged)"
+      }
+    },
+    "receipt-shoebox-warranty": {
+      "category": "Life Admin",
+      "run": 5,
+      "note": "Run 5: Life Admin reclassification set before this Run 4 id was merged; the incoming category is kept in secondary_categories",
+      "bundle_fit": {
+        "tier": "launch",
+        "module": "Warranty & Receipts",
+        "note": "Run 4 pain-first idea; set by Run 5 category_overrides (check against the matching Run 5 module when merged)"
+      }
+    }
+  }
+}

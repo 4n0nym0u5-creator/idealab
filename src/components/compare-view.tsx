@@ -7,6 +7,7 @@ import { liabilitySentences } from "@/lib/format";
 import { workingScores } from "@/lib/scoring";
 import type { Idea } from "@/lib/types";
 import { ScoreRadar, SERIES_COLORS } from "./charts";
+import { tierLabel } from "@/lib/bundles";
 import { CustomerBadge, StatusBadge } from "./ui";
 
 export function CompareView({ ideas, initialIds, criteriaOrder }: { ideas: Idea[]; initialIds: string[]; criteriaOrder?: string[] }) {
@@ -76,7 +77,11 @@ export function CompareView({ ideas, initialIds, criteriaOrder }: { ideas: Idea[
                 </tr>
                 <tr>
                   <td>Category</td>
-                  {selected.map((idea) => <td key={idea.id}>{idea.category}</td>)}
+                  {selected.map((idea) => <td key={idea.id}>{idea.category}{idea.secondaryCategories.length ? <div className="small faint">{idea.secondaryCategories.join(", ")}</div> : null}</td>)}
+                </tr>
+                <tr>
+                  <td>Bundle fit</td>
+                  {selected.map((idea) => <td key={idea.id}>{idea.bundleFit ? `${tierLabel(idea.bundleFit.tier)} · ${idea.bundleFit.module}` : "—"}</td>)}
                 </tr>
                 <tr>
                   <td>Price</td>

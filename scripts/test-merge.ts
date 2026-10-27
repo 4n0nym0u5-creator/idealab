@@ -55,6 +55,9 @@ function canonicalFromFile(idea: Record<string, unknown>) {
     ...(Array.isArray(idea.pain_points) && idea.pain_points.length ? { pain_points: idea.pain_points } : {}),
     ...(Array.isArray(idea.avoid_flags) && idea.avoid_flags.length ? { avoid_flags: idea.avoid_flags } : {}),
     ...(idea.liability_notes ? { liability_notes: idea.liability_notes } : {}),
+    ...(Array.isArray(idea.secondary_categories) && idea.secondary_categories.length ? { secondary_categories: idea.secondary_categories } : {}),
+    ...(Array.isArray(idea.category_history) && idea.category_history.length ? { category_history: idea.category_history } : {}),
+    ...(idea.bundle_fit ? { bundle_fit: idea.bundle_fit } : {}),
   };
 }
 
@@ -207,7 +210,7 @@ test("rescore plus run 3 matches the v2 research database", async () => {
     assert.match(portfolio.runs[2].focus, /Consumer/);
     assert.equal(portfolio.settings.rubricHistory.length, 2);
 
-    const merged = JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", "ideas.json"), "utf8")) as { ideas: Record<string, unknown>[] };
+    const merged = JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", "ideas-v2.json"), "utf8")) as { ideas: Record<string, unknown>[] };
     const byId = new Map(portfolio.ideas.map((idea) => [idea.id, canonicalIdea(idea)]));
     for (const raw of merged.ideas) {
       assert.deepEqual(byId.get(String(raw.id)), canonicalFromFile(raw), String(raw.id));
@@ -270,12 +273,17 @@ test("production upgrade preserves notes, statuses and overrides", async () => {
     }, "test");
     const upgraded = await seedIfEmpty("migrate-v2");
     assert.equal(upgraded.skipped, false);
-    assert.equal(upgraded.ideas, 135);
+    assert.equal(upgraded.ideas, 170);
     const portfolio = await loadPortfolio();
-    assert.equal(portfolio.ideas.length, 135);
-    assert.equal(portfolio.runs.length, 3);
+    assert.equal(portfolio.ideas.length, 170);
+    assert.equal(portfolio.runs.length, 4);
     assert.equal(portfolio.settings.rubricVersion, "2.0");
-    assert.equal(portfolio.settings.schemaVersion, "2");
+    assert.equal(portfolio.settings.schemaVersion, "3");
+    assert.equal(portfolio.bundles.length, 1);
+    assert.equal(portfolio.bundles[0]?.id, "life-admin-pass");
+    assert.equal(portfolio.bundles[0]?.total, 68.8);
+    assert.ok(portfolio.bundles[0]?.revenueScenarios.base);
+    assert.equal(portfolio.ideas.filter((idea) => idea.category === "Life Admin").length, 51);
     const kept = portfolio.ideas.find((idea) => idea.id === "mac-quicklook-data-viewer");
     assert.equal(kept?.status, "building");
     assert.equal(kept?.statusLocked, true);
@@ -289,7 +297,92 @@ test("production upgrade preserves notes, statuses and overrides", async () => {
     await seedIfEmpty("migrate-v2");
     const after = await loadPortfolio();
     assert.equal(after.ideas.find((idea) => idea.id === "mac-quicklook-data-viewer")?.userNotes, "Edited after the upgrade.");
-    assert.equal(after.ideas.length, 135);
+    assert.equal(after.ideas.length, 170);
+    assert.equal(after.bundles[0]?.revenueScenarios.base?.monthly.length, 36);
+  } finally {
+    await closeDb();
+  }
+});
+
+test("run 5 import matches the v3 research database and keeps category overrides sticky", async () => {
+  const { closeDb } = await import("../src/lib/db");
+  const { migrate } = await import("../src/lib/migrate");
+  const { readResearchFile, replacePortfolio, commitImport, loadPortfolio, canonicalIdea, previewImport } = await import("../src/lib/store");
+  const { canonicalBundle, canonicalOverrides } = await import("../src/lib/bundles");
+  try {
+    await migrate();
+    const v2 = readResearchFile(path.join(process.cwd(), "data", "ideas-v2.json"));
+    await replacePortfolio(v2, "test");
+    const run5Text = fs.readFileSync(path.join(process.cwd(), "data", "run5.json"), "utf8");
+    const preview = await previewImport(run5Text);
+    assert.equal(preview.ideasAdded, 35);
+    assert.equal(preview.ideasRescored, 16);
+    await commitImport(run5Text, "test");
+    const portfolio = await loadPortfolio();
+    const golden = JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", "ideas.json"), "utf8")) as {
+      ideas: Record<string, unknown>[];
+      bundles: Record<string, unknown>[];
+      category_overrides: Record<string, unknown>;
+    };
+    const byId = new Map(portfolio.ideas.map((idea) => [idea.id, canonicalIdea(idea)]));
+    assert.equal(portfolio.ideas.length, golden.ideas.length);
+    for (const raw of golden.ideas) {
+      assert.deepEqual(byId.get(String(raw.id)), canonicalFromFile(raw), String(raw.id));
+    }
+    assert.equal(portfolio.runs.length, 4);
+    assert.deepEqual(canonicalBundle(portfolio.bundles[0]), golden.bundles[0]);
+    assert.deepEqual(canonicalOverrides(portfolio.settings.categoryOverrides), golden.category_overrides);
+    assert.ok(portfolio.bundles[0]?.revenueScenarios.low);
+    assert.ok(portfolio.ideas.some((idea) => idea.categoryHistory.some((event) => event.note.length > 0)));
+    assert.ok(portfolio.ideas.some((idea) => idea.scoreHistory.some((item) => item.run === 5 && item.note)));
+
+    const moved = portfolio.ideas.find((idea) => idea.categoryHistory.length > 0);
+    assert.ok(moved);
+    const sampleScores = moved.scores;
+    await commitImport(JSON.stringify({
+      run: { run_number: 6, date: "2026-11-04", author: "Test", rubric_version: "2.0" },
+      ideas: [
+        {
+          id: "share-house-ledger-roster",
+          title: "Share-house ledger",
+          category: "Household",
+          platform: "Web",
+          problem: "Who paid for the shared house this month.",
+          target_users: "Share houses",
+          monetisation: "Free feeder",
+          price_hypothesis: "A$0",
+          customer_type: "consumer",
+          scores: sampleScores,
+        },
+        {
+          id: moved.id,
+          category: "Incoming only",
+          scores: sampleScores,
+        },
+      ],
+    }), "test");
+    const sticky = await loadPortfolio();
+    const overrideIdea = sticky.ideas.find((idea) => idea.id === "share-house-ledger-roster");
+    assert.equal(overrideIdea?.category, "Life Admin");
+    assert.deepEqual(overrideIdea?.secondaryCategories, ["Household"]);
+    assert.equal(overrideIdea?.categoryHistory.at(-1)?.note, "auto: category_overrides");
+    const held = sticky.ideas.find((idea) => idea.id === moved.id);
+    assert.equal(held?.category, moved.category);
+    assert.ok(held?.secondaryCategories.includes("Incoming only"));
+
+    await commitImport(JSON.stringify({
+      run: { run_number: 7, date: "2026-11-05", author: "Test", rubric_version: "2.0" },
+      ideas: [{
+        id: moved.id,
+        category: "Pets",
+        category_change: { from: moved.category, to: "Pets", note: "explicit move" },
+        scores: sampleScores,
+      }],
+    }), "test");
+    const changed = (await loadPortfolio()).ideas.find((idea) => idea.id === moved.id);
+    assert.equal(changed?.category, "Pets");
+    assert.ok(changed?.secondaryCategories.includes(moved.category));
+    assert.equal(changed?.categoryHistory.at(-1)?.note, "explicit move");
   } finally {
     await closeDb();
   }

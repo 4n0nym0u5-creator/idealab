@@ -7,18 +7,20 @@ import { DEFAULT_ORDER, criteriaInOrder, type CriterionKey } from "@/lib/criteri
 import { cn } from "@/lib/format";
 import { statusRank, workingScores } from "@/lib/scoring";
 import { THEMES } from "@/lib/themes";
-import { STATUS_META, type Idea, type Status } from "@/lib/types";
+import { BUNDLE_TIERS, STATUS_META, type Idea, type Status } from "@/lib/types";
+import { tierLabel } from "@/lib/bundles";
 import { CustomerBadge, ScoreMeter, StatusBadge } from "./ui";
 
 const COMPARE_KEY = "idealab-compare";
 
-export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme, initialRun, initialCustomer, initialLens, criteriaOrder }: { ideas: Idea[]; initialQuery?: string; initialStatus?: string; initialTheme?: string; initialRun?: string; initialCustomer?: string; initialLens?: string; criteriaOrder?: string[] }) {
+export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme, initialRun, initialCustomer, initialLens, initialCategory, initialTier, criteriaOrder }: { ideas: Idea[]; initialQuery?: string; initialStatus?: string; initialTheme?: string; initialRun?: string; initialCustomer?: string; initialLens?: string; initialCategory?: string; initialTier?: string; criteriaOrder?: string[] }) {
   const criteria = criteriaInOrder(criteriaOrder?.length ? criteriaOrder : DEFAULT_ORDER);
   const [query, setQuery] = useState(initialQuery ?? "");
   const [statuses, setStatuses] = useState<string[]>(initialStatus ? [initialStatus] : []);
   const [customer, setCustomer] = useState(initialCustomer ?? "");
   const [lens, setLens] = useState(initialLens ?? "");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(initialCategory ?? "");
+  const [tier, setTier] = useState(initialTier ?? "");
   const [theme, setTheme] = useState(initialTheme ?? "");
   const [run, setRun] = useState(initialRun ?? "");
   const [minScore, setMinScore] = useState(0);
@@ -37,7 +39,8 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
       if (statuses.length && !statuses.includes(idea.status)) return false;
       if (customer && idea.customerType !== customer) return false;
       if (lens === "starters" && (idea.status === "killed" || idea.status === "avoid")) return false;
-      if (category && idea.category !== category) return false;
+      if (category && idea.category !== category && !idea.secondaryCategories.includes(category)) return false;
+      if (tier && idea.bundleFit?.tier !== tier) return false;
       if (theme && idea.themeId !== theme) return false;
       if (idea.total < minScore) return false;
       if (run) {
@@ -47,7 +50,7 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
       }
       if (criterion && workingScores(idea)[criterion] < criterionMin) return false;
       if (needle) {
-        const hay = [idea.title, idea.id, idea.problem, idea.category, idea.platform, idea.notes, idea.targetUsers, idea.monetisation, idea.liabilityNotes, idea.customerType, idea.aibuildReason, ...idea.competitors, ...idea.killFlags, ...idea.avoidFlags].join(" ").toLowerCase();
+        const hay = [idea.title, idea.id, idea.problem, idea.category, idea.platform, idea.notes, idea.targetUsers, idea.monetisation, idea.liabilityNotes, idea.customerType, idea.aibuildReason, idea.bundleFit?.module, idea.bundleFit?.tier, ...idea.secondaryCategories, ...idea.competitors, ...idea.killFlags, ...idea.avoidFlags].join(" ").toLowerCase();
         if (!hay.includes(needle)) return false;
       }
       return true;
@@ -67,7 +70,7 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
       return (a.rank ?? 999) - (b.rank ?? 999) || b.total - a.total;
     });
     return rows;
-  }, [ideas, query, statuses, customer, lens, category, theme, run, minScore, criterion, criterionMin, sort, criteria]);
+  }, [ideas, query, statuses, customer, lens, category, tier, theme, run, minScore, criterion, criterionMin, sort, criteria]);
 
   function toggleStatus(status: string) {
     setStatuses((current) => current.includes(status) ? current.filter((item) => item !== status) : [...current, status]);
@@ -92,7 +95,7 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
             <button className="icon-btn" type="button" aria-label="Table view" onClick={() => setView("table")}><Table2 size={16} /></button>
           </div>
         </div>
-        <p className="lede">{filtered.length} of {ideas.length} ideas. Filter by customer, the cybersecurity theme, a criterion, or the run that last scored them.</p>
+        <p className="lede">{filtered.length} of {ideas.length} ideas. Filter by customer, bundle tier, category, or the run that last scored them.</p>
       </header>
       {lens === "starters" ? (
         <section className="callout stack">
@@ -137,6 +140,9 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
           {["consumer", "business", "both"].map((type) => (
             <button key={type} type="button" className="chip" data-on={customer === type} onClick={() => setCustomer((current) => current === type ? "" : type)}>{type === "both" ? "Consumer and business" : type[0].toUpperCase() + type.slice(1)}</button>
           ))}
+          {BUNDLE_TIERS.map((item) => (
+            <button key={item} type="button" className="chip" data-on={tier === item} onClick={() => setTier((current) => current === item ? "" : item)}>{tierLabel(item)}</button>
+          ))}
         </div>
         <div className="filters">
           <label className="small muted">Minimum total {minScore}
@@ -151,7 +157,7 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
               <input type="range" min={0} max={5} value={criterionMin} onChange={(event) => setCriterionMin(Number(event.target.value))} />
             </label>
           ) : null}
-          <button className="btn btn-ghost" type="button" onClick={() => { setQuery(""); setStatuses([]); setCustomer(""); setLens(""); setCategory(""); setTheme(""); setRun(""); setMinScore(0); setCriterion(""); setSort("rank"); }}>Clear</button>
+          <button className="btn btn-ghost" type="button" onClick={() => { setQuery(""); setStatuses([]); setCustomer(""); setLens(""); setCategory(""); setTier(""); setTheme(""); setRun(""); setMinScore(0); setCriterion(""); setSort("rank"); }}>Clear</button>
         </div>
       </div>
 
@@ -171,6 +177,8 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
                 <CustomerBadge type={idea.customerType} />
                 <span className="badge">AI {workingScores(idea).aibuild ?? "—"}/5</span>
                 <span className="badge">{idea.category}</span>
+                {idea.secondaryCategories.map((tag) => <span key={tag} className="badge badge-tag">{tag}</span>)}
+                {idea.bundleFit ? <span className={`badge badge-${idea.bundleFit.tier}`}>{tierLabel(idea.bundleFit.tier)}</span> : null}
               </div>
             </article>
           ))}
@@ -184,6 +192,7 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
                 <th>Rank</th>
                 <th>Idea</th>
                 <th>Category</th>
+                <th>Bundle</th>
                 <th>Status</th>
                 <th>Customer</th>
                 <th>AI</th>
@@ -202,7 +211,8 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
                     <td><input type="checkbox" aria-label={`Compare ${idea.title}`} checked={picked.includes(idea.id)} onChange={() => togglePick(idea.id)} /></td>
                     <td className="num">{idea.rank ?? "—"}</td>
                     <td><Link href={`/ideas/${idea.id}`}><strong>{idea.title}</strong></Link><div className="small faint">{idea.platform}</div></td>
-                    <td>{idea.category}</td>
+                    <td>{idea.category}{idea.secondaryCategories.length ? <div className="small faint">{idea.secondaryCategories.join(", ")}</div> : null}</td>
+                    <td>{idea.bundleFit ? <span className={`badge badge-${idea.bundleFit.tier}`}>{tierLabel(idea.bundleFit.tier)}</span> : "—"}</td>
                     <td><StatusBadge status={idea.status as Status} /></td>
                     <td><CustomerBadge type={idea.customerType} /></td>
                     <td className="num">{scores.aibuild ?? "—"}</td>

@@ -1,0 +1,1212 @@
+{
+  "run": 5,
+  "date": "2026-10-27",
+  "bundle": {
+    "id": "life-admin-pass",
+    "title": "Life Admin Pass (AU household bundle)",
+    "category": "Life Admin",
+    "customer_type": "consumer",
+    "price": {
+      "recommended": "A$29/yr per household (up to 6 members), annual only, 30-day free trial",
+      "later_tier": "A$49/yr 'Plus' (AI email parser, parent-care sharing) once v1 renewals are known",
+      "rejected": "monthly plan; separate family plan; A$19 (needs 53% more subscribers for the same revenue)"
+    },
+    "launch_modules": [
+      "Renewals & Expiry (household-renewals-calendar + credentials-expiry-wallet + travel-docs passport check)",
+      "Money Dates (bills-calendar-household + insurance-premium-creep-log + utility-plan-review-reminders)",
+      "Warranty & Receipts (warranty-receipt-vault)",
+      "School & Family Calendar (school-holiday-leave-planner-au)",
+      "Occasions & Gifts (gift-list-budget-tracker)"
+    ],
+    "members": [
+      "household-renewals-calendar",
+      "warranty-receipt-vault",
+      "school-holiday-leave-planner-au",
+      "moving-house-checklist-au",
+      "moving-box-qr-labels",
+      "sec-account-recovery-planner",
+      "sec-digital-legacy-organiser",
+      "gift-list-budget-tracker",
+      "household-chore-roster",
+      "home-maintenance-reminders",
+      "home-inventory-insurance",
+      "house-sitter-handover-guide",
+      "pet-care-shared-log",
+      "rental-condition-report",
+      "credentials-expiry-wallet",
+      "bills-calendar-household",
+      "car-service-rego-log",
+      "pet-admin-records",
+      "school-year-admin-checklist-nsw",
+      "eofy-receipt-bundle-au",
+      "utility-plan-review-reminders",
+      "recurring-checkups-tracker",
+      "travel-docs-checklist-family",
+      "insurance-premium-creep-log",
+      "parent-care-admin-binder",
+      "family-calendar-feed-merger",
+      "life-admin-email-parser",
+      "tradie-job-history-log",
+      "product-recall-watch-au"
+    ],
+    "feeders": [
+      "subscription-tracker-local",
+      "faulty-product-claim-letter",
+      "kids-sizes-tracker",
+      "ice-emergency-info-sheet",
+      "occasion-reminders-cards",
+      "leaving-home-adulting-kit-au",
+      "bin-day-council-reminders",
+      "uni-census-date-planner-au",
+      "sinking-fund-calculator",
+      "new-baby-admin-checklist-au",
+      "rental-application-pack-au",
+      "id-copy-watermarker",
+      "paperwork-keep-or-shred-guide",
+      "au-life-admin-year-ics",
+      "life-admin-audit-quiz"
+    ],
+    "scores": {
+      "legal": 3,
+      "pain": 3,
+      "breadth": 5,
+      "wtp": 3,
+      "recurring": 4,
+      "build": 3,
+      "maint": 3,
+      "distro": 3,
+      "compete": 3,
+      "defend": 4,
+      "synergy": 5,
+      "platform": 5,
+      "aibuild": 3
+    },
+    "score_reasons": {
+      "legal": "3: holds third parties' (family members') dates and minors' data indirectly; mitigated by 'dates, not documents'",
+      "pain": "3: real but low-intensity pains (pain_points clusters moving 2.95, family calendar 2.75, docs 2.2, subscriptions 2.15)",
+      "breadth": "5: ~3.1m AU families with dependent children; every household has renewals",
+      "wtp": "3: paid comparables US$15-120/yr exist, but strong free options",
+      "recurring": "4: annual by design; renewal is the risk",
+      "build": "3: accounts, sharing, RLS, cron emails and Stripe webhook in one app",
+      "maint": "3: yearly AU date data (terms, tax dates, fees) and email deliverability",
+      "distro": "3: no built-in channel; free SEO feeders, seasonal peaks (Christmas, school holidays, EOFY) and parents' groups",
+      "compete": "3: no AU paid bundle focused on dates-not-documents; free all-in-ones exist (Life Admin AI, TrackEase)",
+      "defend": "4: switching cost grows with every date stored; household sharing",
+      "synergy": "5: every module reuses one dates engine",
+      "platform": "5: web app, no app-store gate",
+      "aibuild": "3: RLS + webhooks + cron are where AI-built apps break (CVE-2025-48757)"
+    },
+    "notes": "Scored as a whole on rubric v2.0 (not in the idea shortlist). Recommended: freemium hybrid (free no-login tools -> one paid annual Pass)."
+  },
+  "revenue_scenarios": {
+    "low": {
+      "assumptions": {
+        "visitors": 3000,
+        "v2f": 0.03,
+        "f2p": 0.02,
+        "renew": 0.25
+      },
+      "year_net_revenue_aud": [
+        333,
+        686,
+        779
+      ],
+      "active_paid_m12": 12,
+      "active_paid_m24": 25,
+      "active_paid_m36": 28,
+      "hosting_cost_per_year_aud": 831,
+      "year3_profit_before_tax_and_time": -52,
+      "ltv_net_aud": 37.4,
+      "monthly": [
+        {
+          "month": 1,
+          "visitors": 250,
+          "new_free": 8,
+          "new_paid": 0.1,
+          "renewals": 0,
+          "active_paid": 0,
+          "net_revenue_cum": 4
+        },
+        {
+          "month": 2,
+          "visitors": 500,
+          "new_free": 15,
+          "new_paid": 0.3,
+          "renewals": 0,
+          "active_paid": 0,
+          "net_revenue_cum": 13
+        },
+        {
+          "month": 3,
+          "visitors": 750,
+          "new_free": 22,
+          "new_paid": 0.5,
+          "renewals": 0,
+          "active_paid": 1,
+          "net_revenue_cum": 25
+        },
+        {
+          "month": 4,
+          "visitors": 1000,
+          "new_free": 30,
+          "new_paid": 0.6,
+          "renewals": 0,
+          "active_paid": 2,
+          "net_revenue_cum": 42
+        },
+        {
+          "month": 5,
+          "visitors": 1250,
+          "new_free": 38,
+          "new_paid": 0.8,
+          "renewals": 0,
+          "active_paid": 2,
+          "net_revenue_cum": 63
+        },
+        {
+          "month": 6,
+          "visitors": 1500,
+          "new_free": 45,
+          "new_paid": 0.9,
+          "renewals": 0,
+          "active_paid": 3,
+          "net_revenue_cum": 88
+        },
+        {
+          "month": 7,
+          "visitors": 1750,
+          "new_free": 52,
+          "new_paid": 1.1,
+          "renewals": 0,
+          "active_paid": 4,
+          "net_revenue_cum": 118
+        },
+        {
+          "month": 8,
+          "visitors": 2000,
+          "new_free": 60,
+          "new_paid": 1.2,
+          "renewals": 0,
+          "active_paid": 5,
+          "net_revenue_cum": 151
+        },
+        {
+          "month": 9,
+          "visitors": 2250,
+          "new_free": 68,
+          "new_paid": 1.4,
+          "renewals": 0,
+          "active_paid": 7,
+          "net_revenue_cum": 189
+        },
+        {
+          "month": 10,
+          "visitors": 2500,
+          "new_free": 75,
+          "new_paid": 1.5,
+          "renewals": 0,
+          "active_paid": 8,
+          "net_revenue_cum": 231
+        },
+        {
+          "month": 11,
+          "visitors": 2750,
+          "new_free": 82,
+          "new_paid": 1.7,
+          "renewals": 0,
+          "active_paid": 10,
+          "net_revenue_cum": 277
+        },
+        {
+          "month": 12,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0,
+          "active_paid": 12,
+          "net_revenue_cum": 328
+        },
+        {
+          "month": 13,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.0,
+          "active_paid": 13,
+          "net_revenue_cum": 379
+        },
+        {
+          "month": 14,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.1,
+          "active_paid": 15,
+          "net_revenue_cum": 432
+        },
+        {
+          "month": 15,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.1,
+          "active_paid": 16,
+          "net_revenue_cum": 485
+        },
+        {
+          "month": 16,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.1,
+          "active_paid": 18,
+          "net_revenue_cum": 540
+        },
+        {
+          "month": 17,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.2,
+          "active_paid": 19,
+          "net_revenue_cum": 596
+        },
+        {
+          "month": 18,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.2,
+          "active_paid": 20,
+          "net_revenue_cum": 652
+        },
+        {
+          "month": 19,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.3,
+          "active_paid": 21,
+          "net_revenue_cum": 710
+        },
+        {
+          "month": 20,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.3,
+          "active_paid": 22,
+          "net_revenue_cum": 769
+        },
+        {
+          "month": 21,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.3,
+          "active_paid": 23,
+          "net_revenue_cum": 829
+        },
+        {
+          "month": 22,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.4,
+          "active_paid": 24,
+          "net_revenue_cum": 890
+        },
+        {
+          "month": 23,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.4,
+          "active_paid": 24,
+          "net_revenue_cum": 952
+        },
+        {
+          "month": 24,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.5,
+          "active_paid": 25,
+          "net_revenue_cum": 1015
+        },
+        {
+          "month": 25,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.5,
+          "active_paid": 25,
+          "net_revenue_cum": 1078
+        },
+        {
+          "month": 26,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.5,
+          "active_paid": 25,
+          "net_revenue_cum": 1142
+        },
+        {
+          "month": 27,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.5,
+          "active_paid": 26,
+          "net_revenue_cum": 1206
+        },
+        {
+          "month": 28,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.5,
+          "active_paid": 26,
+          "net_revenue_cum": 1270
+        },
+        {
+          "month": 29,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.5,
+          "active_paid": 26,
+          "net_revenue_cum": 1334
+        },
+        {
+          "month": 30,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.5,
+          "active_paid": 27,
+          "net_revenue_cum": 1399
+        },
+        {
+          "month": 31,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.5,
+          "active_paid": 27,
+          "net_revenue_cum": 1464
+        },
+        {
+          "month": 32,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.5,
+          "active_paid": 27,
+          "net_revenue_cum": 1529
+        },
+        {
+          "month": 33,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.5,
+          "active_paid": 27,
+          "net_revenue_cum": 1594
+        },
+        {
+          "month": 34,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.5,
+          "active_paid": 27,
+          "net_revenue_cum": 1660
+        },
+        {
+          "month": 35,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.6,
+          "active_paid": 28,
+          "net_revenue_cum": 1726
+        },
+        {
+          "month": 36,
+          "visitors": 3000,
+          "new_free": 90,
+          "new_paid": 1.8,
+          "renewals": 0.6,
+          "active_paid": 28,
+          "net_revenue_cum": 1792
+        }
+      ]
+    },
+    "base": {
+      "assumptions": {
+        "visitors": 10000,
+        "v2f": 0.05,
+        "f2p": 0.035,
+        "renew": 0.35
+      },
+      "year_net_revenue_aud": [
+        3189,
+        6999,
+        8336
+      ],
+      "active_paid_m12": 114,
+      "active_paid_m24": 250,
+      "active_paid_m36": 297,
+      "hosting_cost_per_year_aud": 831,
+      "year3_profit_before_tax_and_time": 7505,
+      "ltv_net_aud": 43.1,
+      "monthly": [
+        {
+          "month": 1,
+          "visitors": 833,
+          "new_free": 42,
+          "new_paid": 1.5,
+          "renewals": 0,
+          "active_paid": 1,
+          "net_revenue_cum": 41
+        },
+        {
+          "month": 2,
+          "visitors": 1667,
+          "new_free": 83,
+          "new_paid": 2.9,
+          "renewals": 0,
+          "active_paid": 4,
+          "net_revenue_cum": 123
+        },
+        {
+          "month": 3,
+          "visitors": 2500,
+          "new_free": 125,
+          "new_paid": 4.4,
+          "renewals": 0,
+          "active_paid": 9,
+          "net_revenue_cum": 245
+        },
+        {
+          "month": 4,
+          "visitors": 3333,
+          "new_free": 167,
+          "new_paid": 5.8,
+          "renewals": 0,
+          "active_paid": 15,
+          "net_revenue_cum": 409
+        },
+        {
+          "month": 5,
+          "visitors": 4167,
+          "new_free": 208,
+          "new_paid": 7.3,
+          "renewals": 0,
+          "active_paid": 22,
+          "net_revenue_cum": 613
+        },
+        {
+          "month": 6,
+          "visitors": 5000,
+          "new_free": 250,
+          "new_paid": 8.8,
+          "renewals": 0,
+          "active_paid": 31,
+          "net_revenue_cum": 858
+        },
+        {
+          "month": 7,
+          "visitors": 5833,
+          "new_free": 292,
+          "new_paid": 10.2,
+          "renewals": 0,
+          "active_paid": 41,
+          "net_revenue_cum": 1144
+        },
+        {
+          "month": 8,
+          "visitors": 6667,
+          "new_free": 333,
+          "new_paid": 11.7,
+          "renewals": 0,
+          "active_paid": 53,
+          "net_revenue_cum": 1471
+        },
+        {
+          "month": 9,
+          "visitors": 7500,
+          "new_free": 375,
+          "new_paid": 13.1,
+          "renewals": 0,
+          "active_paid": 66,
+          "net_revenue_cum": 1839
+        },
+        {
+          "month": 10,
+          "visitors": 8333,
+          "new_free": 417,
+          "new_paid": 14.6,
+          "renewals": 0,
+          "active_paid": 80,
+          "net_revenue_cum": 2247
+        },
+        {
+          "month": 11,
+          "visitors": 9167,
+          "new_free": 458,
+          "new_paid": 16.0,
+          "renewals": 0,
+          "active_paid": 96,
+          "net_revenue_cum": 2697
+        },
+        {
+          "month": 12,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 0,
+          "active_paid": 114,
+          "net_revenue_cum": 3187
+        },
+        {
+          "month": 13,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 0.5,
+          "active_paid": 130,
+          "net_revenue_cum": 3692
+        },
+        {
+          "month": 14,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 1.0,
+          "active_paid": 146,
+          "net_revenue_cum": 4211
+        },
+        {
+          "month": 15,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 1.5,
+          "active_paid": 161,
+          "net_revenue_cum": 4744
+        },
+        {
+          "month": 16,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 2.0,
+          "active_paid": 174,
+          "net_revenue_cum": 5291
+        },
+        {
+          "month": 17,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 2.6,
+          "active_paid": 187,
+          "net_revenue_cum": 5853
+        },
+        {
+          "month": 18,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 3.1,
+          "active_paid": 199,
+          "net_revenue_cum": 6429
+        },
+        {
+          "month": 19,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 3.6,
+          "active_paid": 210,
+          "net_revenue_cum": 7020
+        },
+        {
+          "month": 20,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 4.1,
+          "active_paid": 220,
+          "net_revenue_cum": 7625
+        },
+        {
+          "month": 21,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 4.6,
+          "active_paid": 229,
+          "net_revenue_cum": 8244
+        },
+        {
+          "month": 22,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 5.1,
+          "active_paid": 237,
+          "net_revenue_cum": 8877
+        },
+        {
+          "month": 23,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 5.6,
+          "active_paid": 244,
+          "net_revenue_cum": 9525
+        },
+        {
+          "month": 24,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 6.1,
+          "active_paid": 250,
+          "net_revenue_cum": 10186
+        },
+        {
+          "month": 25,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 6.3,
+          "active_paid": 256,
+          "net_revenue_cum": 10853
+        },
+        {
+          "month": 26,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 6.5,
+          "active_paid": 261,
+          "net_revenue_cum": 11525
+        },
+        {
+          "month": 27,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 6.7,
+          "active_paid": 266,
+          "net_revenue_cum": 12202
+        },
+        {
+          "month": 28,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 6.8,
+          "active_paid": 271,
+          "net_revenue_cum": 12884
+        },
+        {
+          "month": 29,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 7.0,
+          "active_paid": 275,
+          "net_revenue_cum": 13571
+        },
+        {
+          "month": 30,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 7.2,
+          "active_paid": 280,
+          "net_revenue_cum": 14263
+        },
+        {
+          "month": 31,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 7.4,
+          "active_paid": 283,
+          "net_revenue_cum": 14960
+        },
+        {
+          "month": 32,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 7.6,
+          "active_paid": 287,
+          "net_revenue_cum": 15662
+        },
+        {
+          "month": 33,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 7.7,
+          "active_paid": 290,
+          "net_revenue_cum": 16369
+        },
+        {
+          "month": 34,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 7.9,
+          "active_paid": 293,
+          "net_revenue_cum": 17081
+        },
+        {
+          "month": 35,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 8.1,
+          "active_paid": 295,
+          "net_revenue_cum": 17798
+        },
+        {
+          "month": 36,
+          "visitors": 10000,
+          "new_free": 500,
+          "new_paid": 17.5,
+          "renewals": 8.3,
+          "active_paid": 297,
+          "net_revenue_cum": 18520
+        }
+      ]
+    },
+    "high": {
+      "assumptions": {
+        "visitors": 30000,
+        "v2f": 0.08,
+        "f2p": 0.05,
+        "renew": 0.475
+      },
+      "year_net_revenue_aud": [
+        21854,
+        50727,
+        64443
+      ],
+      "active_paid_m12": 780,
+      "active_paid_m24": 1810,
+      "active_paid_m36": 2300,
+      "hosting_cost_per_year_aud": 831,
+      "year3_profit_before_tax_and_time": 63612,
+      "ltv_net_aud": 53.4,
+      "monthly": [
+        {
+          "month": 1,
+          "visitors": 2500,
+          "new_free": 200,
+          "new_paid": 10.0,
+          "renewals": 0,
+          "active_paid": 10,
+          "net_revenue_cum": 280
+        },
+        {
+          "month": 2,
+          "visitors": 5000,
+          "new_free": 400,
+          "new_paid": 20.0,
+          "renewals": 0,
+          "active_paid": 30,
+          "net_revenue_cum": 841
+        },
+        {
+          "month": 3,
+          "visitors": 7500,
+          "new_free": 600,
+          "new_paid": 30.0,
+          "renewals": 0,
+          "active_paid": 60,
+          "net_revenue_cum": 1681
+        },
+        {
+          "month": 4,
+          "visitors": 10000,
+          "new_free": 800,
+          "new_paid": 40.0,
+          "renewals": 0,
+          "active_paid": 100,
+          "net_revenue_cum": 2802
+        },
+        {
+          "month": 5,
+          "visitors": 12500,
+          "new_free": 1000,
+          "new_paid": 50.0,
+          "renewals": 0,
+          "active_paid": 150,
+          "net_revenue_cum": 4203
+        },
+        {
+          "month": 6,
+          "visitors": 15000,
+          "new_free": 1200,
+          "new_paid": 60.0,
+          "renewals": 0,
+          "active_paid": 210,
+          "net_revenue_cum": 5884
+        },
+        {
+          "month": 7,
+          "visitors": 17500,
+          "new_free": 1400,
+          "new_paid": 70.0,
+          "renewals": 0,
+          "active_paid": 280,
+          "net_revenue_cum": 7845
+        },
+        {
+          "month": 8,
+          "visitors": 20000,
+          "new_free": 1600,
+          "new_paid": 80.0,
+          "renewals": 0,
+          "active_paid": 360,
+          "net_revenue_cum": 10087
+        },
+        {
+          "month": 9,
+          "visitors": 22500,
+          "new_free": 1800,
+          "new_paid": 90.0,
+          "renewals": 0,
+          "active_paid": 450,
+          "net_revenue_cum": 12608
+        },
+        {
+          "month": 10,
+          "visitors": 25000,
+          "new_free": 2000,
+          "new_paid": 100.0,
+          "renewals": 0,
+          "active_paid": 550,
+          "net_revenue_cum": 15410
+        },
+        {
+          "month": 11,
+          "visitors": 27500,
+          "new_free": 2200,
+          "new_paid": 110.0,
+          "renewals": 0,
+          "active_paid": 660,
+          "net_revenue_cum": 18492
+        },
+        {
+          "month": 12,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 0,
+          "active_paid": 780,
+          "net_revenue_cum": 21854
+        },
+        {
+          "month": 13,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 4.8,
+          "active_paid": 895,
+          "net_revenue_cum": 25350
+        },
+        {
+          "month": 14,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 9.5,
+          "active_paid": 1004,
+          "net_revenue_cum": 28978
+        },
+        {
+          "month": 15,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 14.2,
+          "active_paid": 1108,
+          "net_revenue_cum": 32740
+        },
+        {
+          "month": 16,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 19.0,
+          "active_paid": 1208,
+          "net_revenue_cum": 36634
+        },
+        {
+          "month": 17,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 23.8,
+          "active_paid": 1301,
+          "net_revenue_cum": 40662
+        },
+        {
+          "month": 18,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 28.5,
+          "active_paid": 1390,
+          "net_revenue_cum": 44823
+        },
+        {
+          "month": 19,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 33.2,
+          "active_paid": 1473,
+          "net_revenue_cum": 49116
+        },
+        {
+          "month": 20,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 38.0,
+          "active_paid": 1551,
+          "net_revenue_cum": 53543
+        },
+        {
+          "month": 21,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 42.8,
+          "active_paid": 1624,
+          "net_revenue_cum": 58103
+        },
+        {
+          "month": 22,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 47.5,
+          "active_paid": 1691,
+          "net_revenue_cum": 62796
+        },
+        {
+          "month": 23,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 52.2,
+          "active_paid": 1754,
+          "net_revenue_cum": 67623
+        },
+        {
+          "month": 24,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 57.0,
+          "active_paid": 1810,
+          "net_revenue_cum": 72582
+        },
+        {
+          "month": 25,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 59.3,
+          "active_paid": 1865,
+          "net_revenue_cum": 77604
+        },
+        {
+          "month": 26,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 61.5,
+          "active_paid": 1917,
+          "net_revenue_cum": 82690
+        },
+        {
+          "month": 27,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 63.8,
+          "active_paid": 1967,
+          "net_revenue_cum": 87839
+        },
+        {
+          "month": 28,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 66.0,
+          "active_paid": 2014,
+          "net_revenue_cum": 93051
+        },
+        {
+          "month": 29,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 68.3,
+          "active_paid": 2058,
+          "net_revenue_cum": 98327
+        },
+        {
+          "month": 30,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 70.5,
+          "active_paid": 2100,
+          "net_revenue_cum": 103665
+        },
+        {
+          "month": 31,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 72.8,
+          "active_paid": 2140,
+          "net_revenue_cum": 109067
+        },
+        {
+          "month": 32,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 75.0,
+          "active_paid": 2177,
+          "net_revenue_cum": 114532
+        },
+        {
+          "month": 33,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 77.3,
+          "active_paid": 2211,
+          "net_revenue_cum": 120060
+        },
+        {
+          "month": 34,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 79.6,
+          "active_paid": 2243,
+          "net_revenue_cum": 125652
+        },
+        {
+          "month": 35,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 81.8,
+          "active_paid": 2273,
+          "net_revenue_cum": 131306
+        },
+        {
+          "month": 36,
+          "visitors": 30000,
+          "new_free": 2400,
+          "new_paid": 120.0,
+          "renewals": 84.1,
+          "active_paid": 2300,
+          "net_revenue_cum": 137024
+        }
+      ]
+    }
+  },
+  "price_breakeven": {
+    "19": {
+      "net_per_sub": 18.25,
+      "subs_for_A$10k_net": 548,
+      "subs_for_A$50k_net": 2739
+    },
+    "29": {
+      "net_per_sub": 28.02,
+      "subs_for_A$10k_net": 357,
+      "subs_for_A$50k_net": 1785
+    },
+    "49": {
+      "net_per_sub": 47.55,
+      "subs_for_A$10k_net": 210,
+      "subs_for_A$50k_net": 1052
+    }
+  },
+  "assumption_labels": {
+    "visitors": "ASSUMPTION (no data): steady monthly visitors to free tools, reached by month 12",
+    "v2f": "ASSUMPTION: share of visitors who create a free account",
+    "f2p": "Anchored: RevenueCat median D35 download-to-paid 2.0%; Revenue Map 2-5% freemium",
+    "renew": "Anchored: RevenueCat annual first renewal Utilities 35%, low-price 36%, 17-32-day trial 47.5%, short trial 18.3%; later renewals assumed equal to first (conservative)",
+    "fees": "Stripe AU 1.65% + A$0.30 + Billing 0.7%",
+    "fx": "ASSUMPTION A$1 = US$0.65 for USD hosting",
+    "excluded": "GST (register at A$75k turnover), founder time, ads, Resend paid tier, domain"
+  },
+  "net_per_A$29": 28.02,
+  "evidence": [
+    {
+      "url": "https://www.revenuecat.com/blog/growth/average-subscription-renewal-rates-by-app-category",
+      "note": "RevenueCat 2026: annual first-renewal medians Utilities 35%, Productivity 23%, Social & Lifestyle 25%; monthly first renewal 54-57%",
+      "run": 5
+    },
+    {
+      "url": "https://www.revenuecat.com/state-of-subscription-apps/",
+      "note": "RevenueCat State of Subscription Apps 2026: median D35 download-to-paid 2.0%; low-priced apps renew annual at 36% vs 26% mid / 23% high",
+      "run": 5
+    },
+    {
+      "url": "https://www.revenuecat.com/blog/growth/free-trial-length",
+      "note": "RevenueCat: annual first renewal 18.3% after <=4-day trials vs 47.5% after 17-32-day trials; no-trial annual 26.6%",
+      "run": 5
+    },
+    {
+      "url": "https://revenuemap.app/benchmarks/subscription-app-benchmarks",
+      "note": "Revenue Map: consumer freemium-to-paid typically 2-5% (search summary)",
+      "run": 5
+    },
+    {
+      "url": "https://stripe.com/au/pricing",
+      "note": "Stripe AU: domestic online cards 1.65% + A$0.30 (from 1 Oct 2026); Billing 0.7% of recurring volume (search summary)",
+      "run": 5
+    },
+    {
+      "url": "https://vercel.com/docs/limits/fair-use-guidelines",
+      "note": "Vercel Hobby is non-commercial only (payments = commercial); Pro US$20/mo incl. one seat",
+      "run": 5
+    },
+    {
+      "url": "https://supabase.com/pricing",
+      "note": "Supabase: Free tier pauses after 1 week inactivity; Pro from US$25/mo; Sydney region (ap-southeast-2) available",
+      "run": 5
+    },
+    {
+      "url": "https://resend.com/pricing",
+      "note": "Resend free: 3,000 emails/month, 100/day cap",
+      "run": 5
+    },
+    {
+      "url": "https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/registering-for-gst/",
+      "note": "ATO: register for GST at A$75,000 turnover",
+      "run": 5
+    }
+  ]
+}

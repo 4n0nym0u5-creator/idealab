@@ -8,6 +8,7 @@ import { saveTrackingAction } from "@/lib/actions";
 import { buildBrief } from "@/lib/brief";
 import { domainOf, formatDate } from "@/lib/format";
 import { contribution, workingScores } from "@/lib/scoring";
+import { tierLabel } from "@/lib/bundles";
 import { STATUS_META, type Idea, type Status } from "@/lib/types";
 import type { Weights } from "@/lib/criteria";
 import { ScoreRadar } from "./charts";
@@ -70,6 +71,8 @@ export function IdeaDetail({ idea, weights, neighbors, criteriaOrder }: { idea: 
             <StatusBadge status={idea.status} />
             <CustomerBadge type={idea.customerType} />
             {brief.security ? <span className="badge badge-security">Cybersecurity · {brief.subtype}</span> : <span className="badge">{idea.category}</span>}
+            {idea.secondaryCategories.map((tag) => <span key={tag} className="badge badge-tag">{tag}</span>)}
+            {idea.bundleFit ? <Link className={`badge badge-${idea.bundleFit.tier}`} href="/bundles">{tierLabel(idea.bundleFit.tier)} · {idea.bundleFit.module}</Link> : null}
             <span className="badge">{idea.platform}</span>
             <span className="badge">Seen in run {idea.firstSeenRun}</span>
             <span className="badge">Scored in run {idea.lastScoredRun}</span>
@@ -97,6 +100,24 @@ export function IdeaDetail({ idea, weights, neighbors, criteriaOrder }: { idea: 
           <p className="faint small">Weight {weights.aibuild ?? 0}. A high score means the mistakes are visible and the stack is ordinary web software.</p>
         </div>
       </section>
+
+      {idea.categoryHistory.length || idea.bundleFit ? (
+        <section className="panel stack">
+          <h2>Category and bundle fit</h2>
+          {idea.bundleFit ? <p>{idea.bundleFit.note} <Link href="/bundles">Open the bundle</Link></p> : null}
+          {idea.secondaryCategories.length ? <p className="small muted">Also tagged: {idea.secondaryCategories.join(", ")}</p> : null}
+          {idea.categoryHistory.length ? (
+            <div className="list">
+              {idea.categoryHistory.map((event, index) => (
+                <div key={`${event.run}-${index}`} className="row">
+                  <span className="badge">Run {event.run}</span>
+                  <span><strong>{event.from} → {event.to}</strong><div className="small faint">{event.date}{event.note ? ` · ${event.note}` : ""}</div></span>
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </section>
+      ) : null}
 
       {brief.security ? (
         <section className="panel stack">
