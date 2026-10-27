@@ -64,6 +64,15 @@ function canonicalFromFile(idea: Record<string, unknown>) {
     ...(Array.isArray(idea.merged_ids) && idea.merged_ids.length ? { merged_ids: idea.merged_ids } : {}),
     ...(Array.isArray(idea.related_ids) && idea.related_ids.length ? { related_ids: idea.related_ids } : {}),
     ...(Array.isArray(idea.run4_merge) && idea.run4_merge.length ? { run4_merge: idea.run4_merge } : {}),
+    ...(idea.portfolio_fit ? { portfolio_fit: idea.portfolio_fit } : {}),
+    ...(idea.tier ? { tier: idea.tier } : {}),
+    ...(idea.family ? { family: idea.family } : {}),
+    ...(idea.privacy_class ? { privacy_class: idea.privacy_class } : {}),
+    ...(idea.privacy_notes ? { privacy_notes: idea.privacy_notes } : {}),
+    ...(idea.third_party_personal_data_api ? { third_party_personal_data_api: idea.third_party_personal_data_api } : {}),
+    ...(typeof idea.client_side_path === "boolean" ? { client_side_path: idea.client_side_path } : {}),
+    ...(idea.portfolio_monetisation ? { portfolio_monetisation: idea.portfolio_monetisation } : {}),
+    ...(idea.roadmap_slot != null ? { roadmap_slot: idea.roadmap_slot } : {}),
   };
 }
 
@@ -282,9 +291,13 @@ test("production upgrade preserves notes, statuses and overrides", async () => {
     assert.equal(upgraded.ideas, 187);
     const portfolio = await loadPortfolio();
     assert.equal(portfolio.ideas.length, 187);
-    assert.equal(portfolio.runs.length, 5);
+    assert.equal(portfolio.runs.length, 6);
     assert.equal(portfolio.settings.rubricVersion, "2.0");
-    assert.equal(portfolio.settings.schemaVersion, "4");
+    assert.equal(portfolio.settings.schemaVersion, "5");
+    assert.equal(portfolio.settings.portfolio?.roadmap.length, 8);
+    assert.equal(portfolio.settings.portfolio?.lens.rubricTotalsUnchanged, true);
+    assert.equal(portfolio.ideas.find((idea) => idea.id === "gift-list-budget-tracker")?.tier, "Build now");
+    assert.equal(portfolio.ideas.find((idea) => idea.id === "ai-symptom-checker")?.portfolioFit, null);
     assert.equal(portfolio.bundles.length, 1);
     assert.equal(portfolio.bundles[0]?.id, "life-admin-pass");
     assert.equal(portfolio.bundles[0]?.total, 68.8);
@@ -414,7 +427,7 @@ test("run 4 import matches the v4 research database and redirects aliases", asyn
     assert.equal(preview.ideasRescored, 32);
     await commitImport(run4Text, "test");
     const portfolio = await loadPortfolio();
-    const golden = JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", "ideas.json"), "utf8")) as {
+    const golden = JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", "ideas-v4.json"), "utf8")) as {
       ideas: Record<string, unknown>[];
       bundles: Record<string, unknown>[];
       category_overrides: Record<string, unknown>;
@@ -466,6 +479,59 @@ test("run 4 import matches the v4 research database and redirects aliases", asyn
     assert.equal(after.ideas.some((idea) => idea.id === "notion-local-backup"), false);
     assert.match(after.ideas.find((idea) => idea.id === "saas-bulk-exporter-pattern")?.notes ?? "", /Alias redirect check/);
     assert.equal(after.ideas.find((idea) => idea.id === "clean-recipe-box")?.complaintFrequency, sample.complaintFrequency);
+  } finally {
+    await closeDb();
+  }
+});
+
+test("run 6 portfolio annotations match schema v5 without changing rubric totals", async () => {
+  const { closeDb } = await import("../src/lib/db");
+  const { migrate } = await import("../src/lib/migrate");
+  const { readResearchFile, replacePortfolio, commitImport, loadPortfolio, canonicalIdea } = await import("../src/lib/store");
+  const { canonicalPortfolio } = await import("../src/lib/portfolio");
+  try {
+    await migrate();
+    const v4 = readResearchFile(path.join(process.cwd(), "data", "ideas-v4.json"));
+    await replacePortfolio(v4, "test");
+    const before = await loadPortfolio();
+    const beforeHistory = new Map(before.ideas.map((idea) => [idea.id, idea.scoreHistory.length]));
+    const beforeTotals = new Map(before.ideas.map((idea) => [idea.id, idea.researchTotal]));
+    const run6Text = fs.readFileSync(path.join(process.cwd(), "data", "run6.json"), "utf8");
+    const committed = await commitImport(run6Text, "test");
+    assert.equal(committed.report.ideasAdded, 0);
+    assert.equal(committed.report.ideasRescored, 0);
+    const portfolio = await loadPortfolio();
+    const golden = JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", "ideas.json"), "utf8")) as {
+      ideas: Record<string, unknown>[];
+      portfolio: Record<string, unknown>;
+    };
+    const byId = new Map(portfolio.ideas.map((idea) => [idea.id, canonicalIdea(idea)]));
+    assert.equal(portfolio.ideas.length, golden.ideas.length);
+    for (const raw of golden.ideas) {
+      assert.deepEqual(byId.get(String(raw.id)), canonicalFromFile(raw), String(raw.id));
+      assert.equal(portfolio.ideas.find((idea) => idea.id === raw.id)?.scoreHistory.length, beforeHistory.get(String(raw.id)));
+      assert.equal(portfolio.ideas.find((idea) => idea.id === raw.id)?.researchTotal, beforeTotals.get(String(raw.id)));
+    }
+    assert.deepEqual(canonicalPortfolio(portfolio.settings.portfolio), golden.portfolio);
+    assert.equal(portfolio.settings.schemaVersion, "5");
+    assert.equal(portfolio.runs.map((run) => run.runNumber).join(","), "1,2,3,4,5,6");
+    const run = portfolio.runs.find((item) => item.runNumber === 6);
+    assert.equal(run?.ideasAdded, 0);
+    assert.equal(run?.ideasRescored, 0);
+    assert.match(run?.focus ?? "", /Portfolio lens/);
+    assert.equal(portfolio.ideas.find((idea) => idea.id === "school-notice-digest")?.privacyClass, "");
+    assert.equal(portfolio.ideas.find((idea) => idea.id === "xero-invoice-chaser-lite")?.privacyClass, "C-disq");
+    await assert.rejects(
+      () => commitImport(JSON.stringify({
+        run: { run_number: 7, date: "2026-10-28", focus: "bad" },
+        annotations: [{ id: "missing-idea", fields: { tier: "Park" } }],
+      }), "test"),
+      /not in the database/,
+    );
+    await assert.rejects(() => commitImport(run6Text, "test"), /already in the database/);
+    const again = await loadPortfolio();
+    assert.equal(again.ideas.find((idea) => idea.id === "gift-list-budget-tracker")?.scoreHistory.length, beforeHistory.get("gift-list-budget-tracker"));
+    assert.equal(again.ideas.find((idea) => idea.id === "gift-list-budget-tracker")?.researchTotal, beforeTotals.get("gift-list-budget-tracker"));
   } finally {
     await closeDb();
   }

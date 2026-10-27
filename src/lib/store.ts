@@ -9,6 +9,7 @@ import { migrationApplied, migrate, recordMigration } from "./migrate";
 import { applyRubricRescore, rubricHistoryFromRescore, type RescoreFile } from "./rescore";
 import { applyBundleAnalysis, bundleFromUnknown, canonicalBundle, canonicalOverrides, overridesFromUnknown, readStoredBundle } from "./bundles";
 import { aliasesFromUnknown, canonicalCluster, canonicalMethod, canonicalRun4Merge, clustersFromUnknown, methodFromUnknown, run4MergeFromUnknown } from "./pain";
+import { canonicalPortfolio, portfolioFieldsFromIdea, portfolioFitFromUnknown, monetisationFromUnknown, portfolioFromUnknown, roadmapSlotFromUnknown } from "./portfolio";
 import { backups, bundles, ideas, painClusters, rubricChangelog, runs, settings } from "./schema";
 import { assertWeights, assignPresentation, bumpVersion, recompute, sanitizeOverrides, totalOf } from "./scoring";
 import { themeForCategory } from "./themes";
@@ -110,6 +111,7 @@ function asRubricHistory(value: unknown): RubricVersionRecord[] {
 const DATA_MIGRATION = "0002_rubric_v2_data";
 const DATA_MIGRATION_V3 = "0003_schema_v3_data";
 const DATA_MIGRATION_V4 = "0004_schema_v4_data";
+const DATA_MIGRATION_V5 = "0005_schema_v5_data";
 
 function rowToIdea(row: IdeaRow): Idea {
   const theme = themeForCategory(row.category);
@@ -157,6 +159,15 @@ function rowToIdea(row: IdeaRow): Idea {
     mergedIds: parseJson<string[]>(row.mergedIds, []),
     relatedIds: parseJson<string[]>(row.relatedIds, []),
     run4Merge: parseJson<Run4Merge[]>(row.run4Merge, []),
+    portfolioFit: portfolioFitFromUnknown(parseJson(row.portfolioFit, null)),
+    tier: row.tier ?? "",
+    family: row.family ?? "",
+    privacyClass: row.privacyClass ?? "",
+    privacyNotes: row.privacyNotes ?? "",
+    thirdPartyPersonalDataApi: row.thirdPartyPersonalDataApi ?? "",
+    clientSidePath: parseJson<boolean | null>(row.clientSidePath, null),
+    portfolioMonetisation: monetisationFromUnknown(parseJson(row.portfolioMonetisation, null)),
+    roadmapSlot: roadmapSlotFromUnknown(parseJson(row.roadmapSlot, null)),
     pipelineOrder: row.pipelineOrder,
     position: row.position,
     updatedAt: row.updatedAt,
@@ -208,6 +219,22 @@ function ideaToRow(idea: Idea) {
     mergedIds: JSON.stringify(idea.mergedIds ?? []),
     relatedIds: JSON.stringify(idea.relatedIds ?? []),
     run4Merge: JSON.stringify(idea.run4Merge ?? []),
+    portfolioFit: JSON.stringify(idea.portfolioFit ? {
+      score: idea.portfolioFit.score,
+      rank: idea.portfolioFit.rank,
+      viability: idea.portfolioFit.viability,
+      opportunity: idea.portfolioFit.opportunity,
+      pre_privacy: idea.portfolioFit.prePrivacy,
+      subscores: idea.portfolioFit.subscores,
+    } : null),
+    tier: idea.tier ?? "",
+    family: idea.family ?? "",
+    privacyClass: idea.privacyClass ?? "",
+    privacyNotes: idea.privacyNotes ?? "",
+    thirdPartyPersonalDataApi: idea.thirdPartyPersonalDataApi ?? "",
+    clientSidePath: JSON.stringify(idea.clientSidePath ?? null),
+    portfolioMonetisation: JSON.stringify(idea.portfolioMonetisation ?? null),
+    roadmapSlot: JSON.stringify(idea.roadmapSlot ?? null),
     pipelineOrder: idea.pipelineOrder,
     position: idea.position,
     updatedAt: idea.updatedAt,
@@ -254,6 +281,7 @@ export async function loadPortfolio(): Promise<Portfolio> {
       categoryOverrides: overridesFromUnknown(parseJson(settingsRow.categoryOverrides, {})),
       idAliases: aliasesFromUnknown(parseJson(settingsRow.idAliases, {})),
       painMethod: methodFromUnknown(parseJson(settingsRow.painMethod, null)),
+      portfolio: portfolioFromUnknown(parseJson(settingsRow.portfolio, null)),
     },
     runs: loadedRuns,
     ideas: assignPresentation(loadedIdeas),
@@ -320,6 +348,7 @@ async function persistSettings(db: Db, next: Settings): Promise<void> {
     categoryOverrides: JSON.stringify(canonicalOverrides(next.categoryOverrides ?? {})),
     idAliases: JSON.stringify(next.idAliases ?? {}),
     painMethod: JSON.stringify(next.painMethod ? canonicalMethod(next.painMethod) : null),
+    portfolio: JSON.stringify(canonicalPortfolio(next.portfolio)),
   };
   await db.insert(settings).values(values).onConflictDoUpdate({
     target: settings.id,
@@ -333,6 +362,7 @@ async function persistSettings(db: Db, next: Settings): Promise<void> {
       categoryOverrides: values.categoryOverrides,
       idAliases: values.idAliases,
       painMethod: values.painMethod,
+      portfolio: values.portfolio,
     },
   });
 }
@@ -385,6 +415,15 @@ type RawIdea = {
   merged_ids?: string[];
   related_ids?: string[];
   run4_merge?: unknown;
+  portfolio_fit?: unknown;
+  tier?: string;
+  family?: string;
+  privacy_class?: string;
+  privacy_notes?: string;
+  third_party_personal_data_api?: string;
+  client_side_path?: boolean;
+  portfolio_monetisation?: unknown;
+  roadmap_slot?: number | string | null;
   kill_flags?: string[];
   avoid_flags?: string[];
   evidence?: Evidence[];
@@ -397,7 +436,8 @@ type RawIdea = {
   _idealab?: RawApp;
 };
 export type ResearchDocument = {
-  schema_version?: string;
+  schema_version?: string | number;
+  portfolio?: unknown;
   rubric_version?: string;
   weights?: Weights;
   criteria_order?: CriterionKey[];
@@ -465,6 +505,7 @@ export function ideaFromDocument(raw: RawIdea, index: number, now: string): Idea
     mergedIds: raw.merged_ids ?? [],
     relatedIds: raw.related_ids ?? [],
     run4Merge: run4MergeFromUnknown(raw.run4_merge),
+    ...portfolioFieldsFromIdea(raw as unknown as Record<string, unknown>),
     pipelineOrder: app.pipeline_order ?? 0,
     position: app.position ?? index,
     updatedAt: app.updated_at ?? now,
@@ -516,6 +557,24 @@ export function canonicalIdea(idea: Idea) {
     ...(idea.mergedIds.length ? { merged_ids: idea.mergedIds } : {}),
     ...(idea.relatedIds.length ? { related_ids: idea.relatedIds } : {}),
     ...(idea.run4Merge.length ? { run4_merge: canonicalRun4Merge(idea.run4Merge) } : {}),
+    ...(idea.portfolioFit ? {
+      portfolio_fit: {
+        score: idea.portfolioFit.score,
+        rank: idea.portfolioFit.rank,
+        viability: idea.portfolioFit.viability,
+        opportunity: idea.portfolioFit.opportunity,
+        pre_privacy: idea.portfolioFit.prePrivacy,
+        subscores: idea.portfolioFit.subscores,
+      },
+    } : {}),
+    ...(idea.tier ? { tier: idea.tier } : {}),
+    ...(idea.family ? { family: idea.family } : {}),
+    ...(idea.privacyClass ? { privacy_class: idea.privacyClass } : {}),
+    ...(idea.privacyNotes ? { privacy_notes: idea.privacyNotes } : {}),
+    ...(idea.thirdPartyPersonalDataApi ? { third_party_personal_data_api: idea.thirdPartyPersonalDataApi } : {}),
+    ...(idea.clientSidePath != null ? { client_side_path: idea.clientSidePath } : {}),
+    ...(idea.portfolioMonetisation ? { portfolio_monetisation: idea.portfolioMonetisation } : {}),
+    ...(idea.roadmapSlot != null ? { roadmap_slot: idea.roadmapSlot } : {}),
   };
 }
 
@@ -551,6 +610,7 @@ export async function exportDocument(portfolio?: Portfolio) {
     ...(Object.keys(source.settings.idAliases).length ? { id_aliases: source.settings.idAliases } : {}),
     ...(source.painClusters.length ? { pain_clusters: source.painClusters.map((cluster) => canonicalCluster(cluster)) } : {}),
     ...(source.settings.painMethod ? { pain_method: canonicalMethod(source.settings.painMethod) } : {}),
+    ...(source.settings.portfolio ? { portfolio: canonicalPortfolio(source.settings.portfolio) } : {}),
     ...(source.bundles.length ? { bundles: source.bundles.map((bundle) => canonicalBundle(bundle)) } : {}),
     ideas: [...source.ideas]
       .sort((a, b) => a.position - b.position || a.id.localeCompare(b.id))
@@ -678,6 +738,7 @@ export async function replacePortfolio(
       categoryOverrides: overridesFromUnknown(doc.category_overrides),
       idAliases: aliasesFromUnknown(doc.id_aliases),
       painMethod: methodFromUnknown(doc.pain_method),
+      portfolio: portfolioFromUnknown(doc.portfolio),
     });
     for (const run of loadedRuns) await persistRun(tx, run);
     for (const bundle of withAnalysis(bundlesFromDocument(doc))) await persistBundle(tx, bundle);
@@ -710,6 +771,7 @@ function contextFromImport(portfolio: Portfolio, value: unknown): Settings & { c
   const categoryOverrides = portfolio.settings.categoryOverrides;
   const idAliases = portfolio.settings.idAliases;
   const painMethod = portfolio.settings.painMethod;
+  let strategy = portfolio.settings.portfolio;
   let changed = false;
   const nextWeights = weightsFromUnknown(record.weights);
   if (nextWeights) {
@@ -738,6 +800,11 @@ function contextFromImport(portfolio: Portfolio, value: unknown): Settings & { c
       changed = true;
     }
   }
+  const nextPortfolio = portfolioFromUnknown(record.portfolio);
+  if (nextPortfolio) {
+    strategy = nextPortfolio;
+    changed = true;
+  }
   if (typeof record.schema_version === "string" || typeof record.schema_version === "number") {
     const nextSchema = String(record.schema_version);
     if (Number(nextSchema) > Number(schemaVersion)) {
@@ -748,7 +815,7 @@ function contextFromImport(portfolio: Portfolio, value: unknown): Settings & { c
   for (const key of criteriaOrder) {
     if (weights[key] === undefined && !isOptionalCriterion(key)) weights[key] = 0;
   }
-  return { schemaVersion, rubricVersion, criteriaOrder, weights, rubricHistory, customerTypes, categoryOverrides, idAliases, painMethod, changed };
+  return { schemaVersion, rubricVersion, criteriaOrder, weights, rubricHistory, customerTypes, categoryOverrides, idAliases, painMethod, portfolio: strategy, changed };
 }
 
 export async function previewImport(text: string): Promise<ImportReport> {
@@ -822,17 +889,20 @@ export async function commitImport(text: string, actor: string): Promise<{ repor
         categoryOverrides: result.categoryOverrides,
         idAliases: result.idAliases,
         painMethod: result.painMethod,
+        portfolio: result.portfolio ?? context.portfolio,
       });
     } else if (
       JSON.stringify(result.categoryOverrides) !== JSON.stringify(portfolio.settings.categoryOverrides)
       || JSON.stringify(result.idAliases) !== JSON.stringify(portfolio.settings.idAliases)
       || JSON.stringify(result.painMethod) !== JSON.stringify(portfolio.settings.painMethod)
+      || JSON.stringify(canonicalPortfolio(result.portfolio)) !== JSON.stringify(canonicalPortfolio(portfolio.settings.portfolio))
     ) {
       await persistSettings(tx, {
         ...portfolio.settings,
         categoryOverrides: result.categoryOverrides,
         idAliases: result.idAliases,
         painMethod: result.painMethod,
+        portfolio: result.portfolio ?? portfolio.settings.portfolio,
       });
     }
     for (const bundle of withAnalysis(result.bundles)) await persistBundle(tx, bundle);
@@ -962,17 +1032,20 @@ export async function seedIfEmpty(actor = "seed"): Promise<{ ideas: number; runs
       await recordMigration(DATA_MIGRATION);
       await recordMigration(DATA_MIGRATION_V3);
       await recordMigration(DATA_MIGRATION_V4);
+      await recordMigration(DATA_MIGRATION_V5);
       return result;
     }
   }
   const needsV2 = !(await migrationApplied(DATA_MIGRATION));
   const needsV3 = !(await migrationApplied(DATA_MIGRATION_V3));
   const needsV4 = !(await migrationApplied(DATA_MIGRATION_V4));
-  if (needsV2 || needsV3 || needsV4) {
+  const needsV5 = !(await migrationApplied(DATA_MIGRATION_V5));
+  if (needsV2 || needsV3 || needsV4 || needsV5) {
     const upgraded = await upgradeResearchData(readResearchFile(), actor);
     if (needsV2) await recordMigration(DATA_MIGRATION);
     if (needsV3) await recordMigration(DATA_MIGRATION_V3);
     if (needsV4) await recordMigration(DATA_MIGRATION_V4);
+    if (needsV5) await recordMigration(DATA_MIGRATION_V5);
     return { ideas: upgraded.ideas, runs: upgraded.runs, skipped: false };
   }
   const [{ n: after }] = await db.select({ n: count() }).from(ideas);
@@ -1002,6 +1075,7 @@ export async function commitRescore(file: RescoreFile, actor = "rescore"): Promi
       categoryOverrides: portfolio.settings.categoryOverrides,
       idAliases: portfolio.settings.idAliases,
       painMethod: portfolio.settings.painMethod,
+      portfolio: portfolio.settings.portfolio,
     });
     await persistIdeas(tx, nextIdeas);
   });
@@ -1081,6 +1155,7 @@ export async function upgradeResearchData(doc: ResearchDocument, actor = "migrat
       categoryOverrides: overridesFromUnknown(doc.category_overrides),
       idAliases: aliasesFromUnknown(doc.id_aliases),
       painMethod: methodFromUnknown(doc.pain_method),
+      portfolio: portfolioFromUnknown(doc.portfolio),
     });
     for (const run of loadedRuns) await persistRun(tx, run);
     for (const bundle of withAnalysis(bundlesFromDocument(doc))) await persistBundle(tx, bundle);

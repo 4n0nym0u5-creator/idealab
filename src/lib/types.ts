@@ -153,6 +153,61 @@ export type Run4Merge = {
   note: string;
 };
 
+export type PortfolioFit = {
+  score: number;
+  rank: number;
+  viability: number;
+  opportunity: number;
+  prePrivacy: number;
+  subscores: Record<string, number>;
+};
+
+export type PortfolioMonetisation = {
+  model: string;
+  reasoning: string;
+};
+
+export type RoadmapSlot = {
+  slot: number;
+  id: string;
+  name: string;
+  start: string;
+  weeks: string;
+  launch: string;
+  price: string;
+  model: string;
+  why: string;
+  metrics: string;
+  kill: string;
+};
+
+export type PortfolioStrategy = {
+  lens: {
+    version: string;
+    run: number;
+    formula: string;
+    viability: string;
+    opportunity: string;
+    privacyFactor: Record<string, number>;
+    audienceFactor: Record<string, number>;
+    privacyClasses: Record<string, string>;
+    tiers: string;
+    rubricTotalsUnchanged: boolean;
+  };
+  roadmap: RoadmapSlot[];
+  scenarios: {
+    months: string[];
+    monthlyNetAud: Record<string, number[]>;
+    cumulativeNetAud: Record<string, number[]>;
+    assumptions: string[];
+    apps: Array<{ name: string; launch: string; priceAud: number; kind: string; visitors: number[]; conversion: number[] }>;
+  };
+  families: Record<string, string[]>;
+  disqualified: Array<{ id: string; title: string; reason: string }>;
+  redesign: Array<{ id: string; title: string; path: string }>;
+  run: number;
+};
+
 export type BundlePrice = {
   recommended: string;
   laterTier: string;
@@ -255,6 +310,15 @@ export type Idea = {
   mergedIds: string[];
   relatedIds: string[];
   run4Merge: Run4Merge[];
+  portfolioFit: PortfolioFit | null;
+  tier: string;
+  family: string;
+  privacyClass: string;
+  privacyNotes: string;
+  thirdPartyPersonalDataApi: string;
+  clientSidePath: boolean | null;
+  portfolioMonetisation: PortfolioMonetisation | null;
+  roadmapSlot: number | string | null;
   pipelineOrder: number;
   position: number;
   updatedAt: string;
@@ -294,6 +358,7 @@ export type Settings = {
   categoryOverrides: Record<string, CategoryOverride>;
   idAliases: Record<string, string>;
   painMethod: PainMethod | null;
+  portfolio: PortfolioStrategy | null;
 };
 
 export type RubricChange = {

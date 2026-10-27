@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart, ResponsiveContainer, BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
+import { PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart, ResponsiveContainer, BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine } from "recharts";
 import { DEFAULT_ORDER, criteriaInOrder, type Criterion, type Scores } from "@/lib/criteria";
 
 export function useDark() {
@@ -90,3 +90,29 @@ export function RevenueChart({ points }: { points: { month: number; revenue: num
 }
 
 export const SERIES_COLORS = ["#1e6b4a", "#a15a32", "#315f8a", "#9a7420"];
+
+export function ScenarioChart({ points }: { points: { month: string; net: number; cumulative: number; mark?: string }[] }) {
+  const dark = useDark();
+  const ink = dark ? "#8fd4b0" : "#1e6b4a";
+  const clay = dark ? "#e0b089" : "#a15a32";
+  return (
+    <ClientOnly height={300}>
+      <div style={{ width: "100%", height: 300 }} aria-label="Portfolio revenue scenario">
+        <ResponsiveContainer>
+          <LineChart data={points}>
+            <CartesianGrid stroke={dark ? "#322f29" : "#ddd4c6"} />
+            <XAxis dataKey="month" tick={{ fill: dark ? "#8d867b" : "#8a8175", fontSize: 11 }} />
+            <YAxis yAxisId="net" tick={{ fill: dark ? "#8d867b" : "#8a8175", fontSize: 11 }} width={52} />
+            <YAxis yAxisId="cumulative" orientation="right" tick={{ fill: dark ? "#8d867b" : "#8a8175", fontSize: 11 }} width={56} />
+            <Tooltip contentStyle={{ background: "var(--elev)", border: "1px solid var(--line)", borderRadius: 12 }} />
+            {points.filter((point) => point.mark).map((point) => (
+              <ReferenceLine key={point.month} x={point.month} stroke={dark ? "#5c564c" : "#c9bfb0"} label={{ value: point.mark, fill: dark ? "#c9bfb0" : "#5c564c", fontSize: 11 }} />
+            ))}
+            <Line yAxisId="net" type="monotone" dataKey="net" name="Net revenue per month (A$)" stroke={ink} strokeWidth={2} dot={false} />
+            <Line yAxisId="cumulative" type="monotone" dataKey="cumulative" name="Cumulative net (A$)" stroke={clay} strokeWidth={2} dot={false} />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </ClientOnly>
+  );
+}

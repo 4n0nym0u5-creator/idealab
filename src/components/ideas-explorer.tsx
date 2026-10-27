@@ -9,11 +9,12 @@ import { statusRank, workingScores } from "@/lib/scoring";
 import { THEMES } from "@/lib/themes";
 import { BUNDLE_TIERS, STATUS_META, type Idea, type Status } from "@/lib/types";
 import { tierLabel } from "@/lib/bundles";
+import { monetisationLabel, privacyClassName, privacyLabel } from "@/lib/portfolio";
 import { CustomerBadge, ScoreMeter, StatusBadge } from "./ui";
 
 const COMPARE_KEY = "idealab-compare";
 
-export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme, initialRun, initialCustomer, initialLens, initialCategory, initialTier, initialEvidence, criteriaOrder }: { ideas: Idea[]; initialQuery?: string; initialStatus?: string; initialTheme?: string; initialRun?: string; initialCustomer?: string; initialLens?: string; initialCategory?: string; initialTier?: string; initialEvidence?: string; criteriaOrder?: string[] }) {
+export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme, initialRun, initialCustomer, initialLens, initialCategory, initialTier, initialEvidence, initialFitTier, initialFamily, initialPrivacy, initialModel, criteriaOrder }: { ideas: Idea[]; initialQuery?: string; initialStatus?: string; initialTheme?: string; initialRun?: string; initialCustomer?: string; initialLens?: string; initialCategory?: string; initialTier?: string; initialEvidence?: string; initialFitTier?: string; initialFamily?: string; initialPrivacy?: string; initialModel?: string; criteriaOrder?: string[] }) {
   const criteria = criteriaInOrder(criteriaOrder?.length ? criteriaOrder : DEFAULT_ORDER);
   const [query, setQuery] = useState(initialQuery ?? "");
   const [statuses, setStatuses] = useState<string[]>(initialStatus ? [initialStatus] : []);
@@ -22,6 +23,10 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
   const [category, setCategory] = useState(initialCategory ?? "");
   const [tier, setTier] = useState(initialTier ?? "");
   const [evidenceOnly, setEvidenceOnly] = useState(initialEvidence === "1");
+  const [fitTier, setFitTier] = useState(initialFitTier ?? "");
+  const [family, setFamily] = useState(initialFamily ?? "");
+  const [privacy, setPrivacy] = useState(initialPrivacy ?? "");
+  const [model, setModel] = useState(initialModel ?? "");
   const [theme, setTheme] = useState(initialTheme ?? "");
   const [run, setRun] = useState(initialRun ?? "");
   const [minScore, setMinScore] = useState(0);
@@ -32,6 +37,8 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
   const [picked, setPicked] = useState<string[]>([]);
 
   const categories = useMemo(() => [...new Set(ideas.map((idea) => idea.category))].sort(), [ideas]);
+  const families = useMemo(() => [...new Set(ideas.map((idea) => idea.family).filter(Boolean))].sort(), [ideas]);
+  const fitTiers = useMemo(() => [...new Set(ideas.map((idea) => idea.tier).filter(Boolean))], [ideas]);
   const runs = useMemo(() => [...new Set(ideas.flatMap((idea) => [idea.firstSeenRun, idea.lastScoredRun]))].sort((a, b) => a - b), [ideas]);
 
   const filtered = useMemo(() => {
@@ -42,6 +49,10 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
       if (lens === "starters" && (idea.status === "killed" || idea.status === "avoid")) return false;
       if (category && idea.category !== category && !idea.secondaryCategories.includes(category)) return false;
       if (tier && idea.bundleFit?.tier !== tier) return false;
+      if (fitTier && idea.tier !== fitTier) return false;
+      if (family && idea.family !== family) return false;
+      if (privacy && idea.privacyClass !== privacy) return false;
+      if (model && idea.portfolioMonetisation?.model !== model) return false;
       if (evidenceOnly && idea.complaintFrequency == null) return false;
       if (theme && idea.themeId !== theme) return false;
       if (idea.total < minScore) return false;
@@ -52,7 +63,7 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
       }
       if (criterion && workingScores(idea)[criterion] < criterionMin) return false;
       if (needle) {
-        const hay = [idea.title, idea.id, idea.problem, idea.category, idea.platform, idea.notes, idea.targetUsers, idea.monetisation, idea.liabilityNotes, idea.customerType, idea.aibuildReason, idea.bundleFit?.module, idea.bundleFit?.tier, ...idea.secondaryCategories, ...idea.mergedIds, ...idea.painClusterIds, ...idea.competitors, ...idea.killFlags, ...idea.avoidFlags].join(" ").toLowerCase();
+        const hay = [idea.title, idea.id, idea.problem, idea.category, idea.platform, idea.notes, idea.targetUsers, idea.monetisation, idea.liabilityNotes, idea.customerType, idea.aibuildReason, idea.bundleFit?.module, idea.bundleFit?.tier, idea.tier, idea.family, idea.privacyClass, idea.portfolioMonetisation?.model, ...idea.secondaryCategories, ...idea.mergedIds, ...idea.painClusterIds, ...idea.competitors, ...idea.killFlags, ...idea.avoidFlags].join(" ").toLowerCase();
         if (!hay.includes(needle)) return false;
       }
       return true;
@@ -66,6 +77,7 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
       if (sort === "starters") return (scoresOf(b).aibuild ?? 0) - (scoresOf(a).aibuild ?? 0) || b.total - a.total;
       if (sort === "seen") return b.firstSeenRun - a.firstSeenRun || b.total - a.total;
       if (sort === "complaints") return (b.complaintFrequency ?? -1) - (a.complaintFrequency ?? -1) || b.total - a.total;
+      if (sort === "fit") return (b.portfolioFit?.score ?? -1) - (a.portfolioFit?.score ?? -1) || b.total - a.total;
       if (criteria.some((item) => item.key === sort)) {
         const key = sort as CriterionKey;
         return scoresOf(b)[key] - scoresOf(a)[key] || b.total - a.total;
@@ -73,7 +85,7 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
       return (a.rank ?? 999) - (b.rank ?? 999) || b.total - a.total;
     });
     return rows;
-  }, [ideas, query, statuses, customer, lens, category, tier, evidenceOnly, theme, run, minScore, criterion, criterionMin, sort, criteria]);
+  }, [ideas, query, statuses, customer, lens, category, tier, fitTier, family, privacy, model, evidenceOnly, theme, run, minScore, criterion, criterionMin, sort, criteria]);
 
   function toggleStatus(status: string) {
     setStatuses((current) => current.includes(status) ? current.filter((item) => item !== status) : [...current, status]);
@@ -134,6 +146,7 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
             <option value="status">Sort by status</option>
             <option value="seen">Sort by first seen</option>
             <option value="complaints">Sort by complaint frequency (evidence, not scored)</option>
+            <option value="fit">Sort by portfolio fit</option>
             {criteria.map((item) => <option key={item.key} value={item.key}>Sort by {item.short}</option>)}
           </select>
         </div>
@@ -148,6 +161,21 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
             <button key={item} type="button" className="chip" data-on={tier === item} onClick={() => setTier((current) => current === item ? "" : item)}>{tierLabel(item)}</button>
           ))}
           <button type="button" className="chip" data-on={evidenceOnly} onClick={() => setEvidenceOnly((current) => !current)}>Complaint evidence, not scored</button>
+          {fitTiers.map((item) => (
+            <button key={item} type="button" className="chip" data-on={fitTier === item} onClick={() => setFitTier((current) => current === item ? "" : item)}>{item}</button>
+          ))}
+          {["A", "B", "C-redesign", "C-disq"].map((item) => (
+            <button key={item} type="button" className="chip" data-on={privacy === item} onClick={() => setPrivacy((current) => current === item ? "" : item)}>{privacyLabel(item)}</button>
+          ))}
+          {["one-time", "subscription", "both"].map((item) => (
+            <button key={item} type="button" className="chip" data-on={model === item} onClick={() => setModel((current) => current === item ? "" : item)}>{monetisationLabel(item)}</button>
+          ))}
+        </div>
+        <div className="filters">
+          <select className="control" value={family} onChange={(event) => setFamily(event.target.value)} aria-label="Family">
+            <option value="">All families</option>
+            {families.map((item) => <option key={item} value={item}>{item}</option>)}
+          </select>
         </div>
         <div className="filters">
           <label className="small muted">Minimum total {minScore}
@@ -184,6 +212,11 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
                 <span className="badge">{idea.category}</span>
                 {idea.secondaryCategories.map((tag) => <span key={tag} className="badge badge-tag">{tag}</span>)}
                 {idea.bundleFit ? <span className={`badge badge-${idea.bundleFit.tier}`}>{tierLabel(idea.bundleFit.tier)}</span> : null}
+                {idea.tier ? <span className="badge">{idea.tier}</span> : null}
+                {idea.family ? <span className="badge badge-tag">{idea.family}</span> : null}
+                {idea.privacyClass ? <span className={privacyClassName(idea.privacyClass)}>{privacyLabel(idea.privacyClass)}</span> : null}
+                {idea.portfolioMonetisation ? <span className="badge">{monetisationLabel(idea.portfolioMonetisation.model)}</span> : null}
+                {idea.portfolioFit ? <span className="badge">Fit {idea.portfolioFit.score.toFixed(1)}</span> : null}
                 {idea.complaintFrequency != null ? <span className="badge badge-evidence">CFS {idea.complaintFrequency.toFixed(2)} · evidence</span> : null}
               </div>
             </article>
@@ -199,6 +232,9 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
                 <th>Idea</th>
                 <th>Category</th>
                 <th>Bundle</th>
+                <th>Tier</th>
+                <th>Privacy</th>
+                <th>Fit</th>
                 <th>CFS <span className="faint">evidence</span></th>
                 <th>Status</th>
                 <th>Customer</th>
@@ -220,6 +256,9 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
                     <td><Link href={`/ideas/${idea.id}`}><strong>{idea.title}</strong></Link><div className="small faint">{idea.platform}</div></td>
                     <td>{idea.category}{idea.secondaryCategories.length ? <div className="small faint">{idea.secondaryCategories.join(", ")}</div> : null}</td>
                     <td>{idea.bundleFit ? <span className={`badge badge-${idea.bundleFit.tier}`}>{tierLabel(idea.bundleFit.tier)}</span> : "—"}</td>
+                    <td>{idea.tier || "—"}{idea.family ? <div className="small faint">{idea.family}</div> : null}</td>
+                    <td>{idea.privacyClass ? <span className={privacyClassName(idea.privacyClass)}>{privacyLabel(idea.privacyClass)}</span> : "—"}</td>
+                    <td className="num">{idea.portfolioFit ? idea.portfolioFit.score.toFixed(1) : "—"}</td>
                     <td className="num">{idea.complaintFrequency == null ? "—" : idea.complaintFrequency.toFixed(2)}</td>
                     <td><StatusBadge status={idea.status as Status} /></td>
                     <td><CustomerBadge type={idea.customerType} /></td>

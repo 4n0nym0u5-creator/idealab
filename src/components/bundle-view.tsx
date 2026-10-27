@@ -31,7 +31,8 @@ export function BundleView({ bundle, ideas }: { bundle: BundleRecord; ideas: Ide
       <header className="stack">
         <p className="kicker">Bundle · scored as one product · not on the idea shortlist</p>
         <h1>{bundle.title}</h1>
-        <p className="lede">{bundle.notes}</p>
+        <p className="lede">Device-only household pass. No accounts, no Supabase, and no reminder emails. Dates stay in local storage on the household’s device. Reminders are .ics files with alarms that their own calendar fires. A licence key is checked from the browser against a merchant of record. A$29/yr per household (launch A$19 for people who already bought a module). Includes GiftLedger and HolidayPlanner; standalone buyers get credit.</p>
+        <p className="small muted">{bundle.notes}</p>
         <div className="chips">
           <CustomerBadge type={bundle.customerType} />
           <span className="badge">{bundle.category}</span>
@@ -42,7 +43,7 @@ export function BundleView({ bundle, ideas }: { bundle: BundleRecord; ideas: Ide
       <section className="feature">
         <div className="stack">
           <p className="kicker">Rubric v2.0 total</p>
-          <p>{bundle.price.recommended}</p>
+          <p>A$29/yr per household. Launch A$19 for existing buyers. Licence keys via a merchant of record.</p>
           <p className="small muted">{members.length} member ideas · {feeders.length} free feeders · {bundle.launchModules.length} launch modules</p>
         </div>
         <div>
@@ -93,12 +94,14 @@ export function BundleView({ bundle, ideas }: { bundle: BundleRecord; ideas: Ide
       <section className="grid-2">
         <article className="panel stack">
           <h2>Pricing</h2>
+          <p className="small">Current design (Run 6): local storage, .ics alarms, merchant-of-record licence keys. A$29/yr per household, launch A$19 for existing buyers.</p>
           <table>
             <tbody>
-              <tr><td>Recommended</td><td>{bundle.price.recommended}</td></tr>
+              <tr><td>Current price</td><td>A$29/yr per household (launch A$19 for existing buyers)</td></tr>
+              <tr><td>Superseded Run 5 price</td><td>{bundle.price.recommended}</td></tr>
               <tr><td>Later tier</td><td>{bundle.price.laterTier || "—"}</td></tr>
               <tr><td>Rejected</td><td>{bundle.price.rejected || "—"}</td></tr>
-              {bundle.netPerAud != null ? <tr><td>Net per A$29</td><td>A${bundle.netPerAud.toFixed(2)} after Stripe AU fees</td></tr> : null}
+              {bundle.netPerAud != null ? <tr><td>Superseded Run 5 net</td><td>A${bundle.netPerAud.toFixed(2)} after Stripe AU fees. Stripe direct breaks the no-server rule, so the current plan uses a merchant of record.</td></tr> : null}
             </tbody>
           </table>
           {Object.keys(bundle.priceBreakeven).length ? (
@@ -119,14 +122,15 @@ export function BundleView({ bundle, ideas }: { bundle: BundleRecord; ideas: Ide
             {bundle.price.rejected ? <li><strong>Pricing.</strong> Rejected: {bundle.price.rejected}</li> : null}
             {bundle.revenueScenarios.low && bundle.revenueScenarios.low.year3ProfitBeforeTaxAndTime < 0 ? <li><strong>Low scenario.</strong> Year-3 profit before tax and time is A${bundle.revenueScenarios.low.year3ProfitBeforeTaxAndTime.toFixed(0)}.</li> : null}
           </ul>
-          <p className="small muted">Dates, not documents. Store an expiry and a nickname, never an ID number or a scan. No tax, insurance, or energy-plan advice. Bundles are scored once, on the hardest shared piece: accounts, sharing, billing, and reminder email.</p>
+          <p className="small muted">Dates, not documents. Store an expiry and a nickname, never an ID number or a scan. No tax, insurance, or energy-plan advice.</p>
+          <p className="small">Superseded Run 5 design: accounts, a shared database (Supabase), and reminder email. The rubric total {bundle.total.toFixed(1)} is still that Run 5 score. Run 6 did not rescore the bundle. The old design stays here as history because it stores private household data on a server, which the portfolio rule does not allow.</p>
         </article>
       </section>
 
       {chosen ? (
         <section className="panel stack">
           <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-            <h2>Revenue scenarios</h2>
+            <h2>Run 5 revenue scenarios, superseded</h2>
             <div className="chips">
               {SCENARIOS.map((name) => (
                 <button key={name} type="button" className="chip" data-on={scenario === name} onClick={() => setScenario(name)}>{name}</button>
