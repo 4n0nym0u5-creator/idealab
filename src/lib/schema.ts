@@ -11,6 +11,7 @@ export const settings = pgTable("settings", {
   categoryOverrides: text("category_overrides").notNull().default("{}"),
   idAliases: text("id_aliases").notNull().default("{}"),
   painMethod: text("pain_method").notNull().default("null"),
+  portfolio: text("portfolio").notNull().default("null"),
 });
 
 export const runs = pgTable("runs", {
@@ -65,6 +66,15 @@ export const ideas = pgTable("ideas", {
   mergedIds: text("merged_ids").notNull().default("[]"),
   relatedIds: text("related_ids").notNull().default("[]"),
   run4Merge: text("run4_merge").notNull().default("[]"),
+  portfolioFit: text("portfolio_fit").notNull().default("null"),
+  tier: text("tier").notNull().default(""),
+  family: text("family").notNull().default(""),
+  privacyClass: text("privacy_class").notNull().default(""),
+  privacyNotes: text("privacy_notes").notNull().default(""),
+  thirdPartyPersonalDataApi: text("third_party_personal_data_api").notNull().default(""),
+  clientSidePath: text("client_side_path").notNull().default("null"),
+  portfolioMonetisation: text("portfolio_monetisation").notNull().default("null"),
+  roadmapSlot: text("roadmap_slot").notNull().default("null"),
   pipelineOrder: integer("pipeline_order").notNull().default(0),
   position: integer("position").notNull().default(0),
   updatedAt: text("updated_at").notNull(),

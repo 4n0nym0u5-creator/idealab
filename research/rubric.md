@@ -236,3 +236,26 @@ templates each gained about 4-5 points).
   3. *Display.* `complaint_frequency` and `pain_cluster_ids` are shown on the idea. The cluster (`db.pain_clusters`) holds raw counts and verbatim quotes with URLs.
 - Merging Run 4 ideas into existing ids did **not** rescore those ideas. Their totals are unchanged. Run 4's own suggested scores are kept in `run4_merge[].suggested_scores` for audit. A future deliberate rescore may use them under the calibration rule above.
 - If CFS is later swept across most ideas with a broader, comment-level corpus, revisit this as rubric v2.1. That would mean taking weight from `pain` rather than adding new weight, and recomputing the score history.
+
+## Portfolio lens (PL 1.0, Run 6) - a second, separate view; rubric totals unchanged
+Purpose: re-order non-killed ideas for a solo, non-engineer builder shipping a small portfolio of paid apps
+(one-time and/or annual) under a hard rule: **no private user data stored on our servers**.
+
+    Viability   V = (0.35 aibuild + 0.25 legal + 0.20 build + 0.20 maint) / 5        (inverted criteria: 5 = easiest/safest)
+    Opportunity O = (0.25 pain_adj + 0.25 wtp + 0.25 distro + 0.10 breadth + 0.15 monetisation_fit) / 5
+        pain_adj = pain + 0.5 if complaint_frequency >= 2.5, + 0.25 if >= 2.0 (cap 5)   # CFS used as a small nudge only
+        monetisation_fit = recurring if recurring >= 3, else 3 if wtp >= 3 (sells as one-time), else 2
+    portfolio_fit = 100 x sqrt(V x O) x privacy_factor x audience_factor
+        privacy_factor: A 1.0 | B 0.95 | C-redesign 0.85 | C-disq 0 ; audience_factor: business 0.9, consumer/both 1.0
+
+Privacy classes
+- **A** fully local/on-device (IndexedDB/OPFS, user files, PWA or native). Reminders = downloaded .ics with alarms, never server email.
+- **B** local + user-owned sync (file in the user's iCloud/Drive/Dropbox) or E2E-encrypted blobs (key in URL fragment) the server cannot read.
+- **C-redesign** spec as written needs server-held personal data, but a documented redesign reaches A/B with some value loss.
+- **C-disq** the core value needs server-held personal data (OAuth tokens to inboxes/accounting, SMS lists, photo uploads, health records) -> Park.
+Also record `third_party_personal_data_api` and whether a `client_side_path` exists (e.g. CSV instead of bank feeds, .ics file instead of calendar OAuth).
+
+Monetisation: one-time for occasional/occasion tools with no ongoing cost; subscription only where value or cost is ongoing
+(term dates, seasons, bundles); both = lifetime unlock + optional annual for updates.
+Tiers: Build now (roadmap 1-2) / Next (3-6 incl. Pass modules) / Later (7-8 or fit >= 68) / Feeder (free tools) / Park (C-disq or fit < 68).
+Weights are judgement calls (PL 1.0); change them only with a version bump and a note in runbook.md.

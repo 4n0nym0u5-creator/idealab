@@ -9,6 +9,7 @@ import { buildBrief } from "@/lib/brief";
 import { domainOf, formatDate } from "@/lib/format";
 import { contribution, workingScores } from "@/lib/scoring";
 import { tierLabel } from "@/lib/bundles";
+import { monetisationLabel, privacyClassName, privacyLabel } from "@/lib/portfolio";
 import { STATUS_META, type Idea, type Status } from "@/lib/types";
 import type { Weights } from "@/lib/criteria";
 import { ScoreRadar } from "./charts";
@@ -73,6 +74,11 @@ export function IdeaDetail({ idea, weights, neighbors, criteriaOrder }: { idea: 
             {brief.security ? <span className="badge badge-security">Cybersecurity · {brief.subtype}</span> : <span className="badge">{idea.category}</span>}
             {idea.secondaryCategories.map((tag) => <span key={tag} className="badge badge-tag">{tag}</span>)}
             {idea.bundleFit ? <Link className={`badge badge-${idea.bundleFit.tier}`} href="/bundles">{tierLabel(idea.bundleFit.tier)} · {idea.bundleFit.module}</Link> : null}
+            {idea.tier ? <Link className="badge" href="/portfolio">{idea.tier}</Link> : null}
+            {idea.family ? <span className="badge badge-tag">{idea.family}</span> : null}
+            {idea.privacyClass ? <span className={privacyClassName(idea.privacyClass)}>{privacyLabel(idea.privacyClass)}</span> : null}
+            {idea.portfolioFit ? <span className="badge">Fit {idea.portfolioFit.score.toFixed(1)}</span> : null}
+            {idea.portfolioMonetisation ? <span className="badge">{monetisationLabel(idea.portfolioMonetisation.model)}</span> : null}
             <span className="badge">{idea.platform}</span>
             <span className="badge">Seen in run {idea.firstSeenRun}</span>
             <span className="badge">Scored in run {idea.lastScoredRun}</span>
@@ -243,6 +249,16 @@ export function IdeaDetail({ idea, weights, neighbors, criteriaOrder }: { idea: 
         {idea.relatedPainClusterIds.length ? <p className="small">Related clusters: {idea.relatedPainClusterIds.map((id) => <Link key={id} href={`/pain/${id}`}>{id}</Link>)}</p> : null}
         {idea.relatedIds.length ? <p className="small">Related ideas: {idea.relatedIds.map((id) => <Link key={id} href={`/ideas/${id}`}>{id}</Link>)}</p> : null}
         {idea.run4Merge.length ? idea.run4Merge.map((item) => <p key={item.run4Id} className="small muted">Folded from {item.run4Id}: {item.note}</p>) : null}
+        {idea.portfolioFit ? (
+          <div className="stack">
+            <h3>Portfolio fit</h3>
+            <p className="small muted">Run 6 annotation. This score is not part of the rubric total.</p>
+            <p className="small">Fit {idea.portfolioFit.score.toFixed(1)} · rank {idea.portfolioFit.rank} · viability {idea.portfolioFit.viability.toFixed(1)} · opportunity {idea.portfolioFit.opportunity.toFixed(1)} · before privacy {idea.portfolioFit.prePrivacy.toFixed(1)}{idea.roadmapSlot != null ? <> · <Link href="/portfolio">roadmap slot {String(idea.roadmapSlot)}</Link></> : null}</p>
+            {idea.portfolioMonetisation ? <p className="small"><strong>{monetisationLabel(idea.portfolioMonetisation.model)}.</strong> {idea.portfolioMonetisation.reasoning}</p> : null}
+            {idea.privacyNotes ? <p className="small">{idea.privacyNotes}</p> : null}
+            {idea.thirdPartyPersonalDataApi ? <p className="small">Third-party personal-data API: {idea.thirdPartyPersonalDataApi}</p> : null}
+          </div>
+        ) : null}
         {idea.painPoints.length ? idea.painPoints.map((point) => (
           <article key={point.id} className="stack">
             <strong>{point.label}</strong>

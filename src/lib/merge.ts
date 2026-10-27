@@ -2,8 +2,9 @@ import { z } from "zod";
 import { isCriterionKey, isOptionalCriterion, type CriterionKey, type Scores, type Weights } from "./criteria";
 import { mergeBundles, overridesFromUnknown } from "./bundles";
 import { aliasesFromUnknown, clustersFromUnknown, methodFromUnknown, resolveAlias, run4MergeFromUnknown } from "./pain";
+import { applyPortfolioFields, emptyPortfolioFields, portfolioFromUnknown } from "./portfolio";
 import { recompute, totalOf } from "./scoring";
-import { isCustomerType, isManualStatus, isStatus, type BundleFit, type BundleRecord, type CategoryEvent, type CategoryOverride, type Evidence, type Idea, type PainCluster, type PainMethod, type PainPoint, type Run, type ScoreSnapshot, type Status } from "./types";
+import { isCustomerType, isManualStatus, isStatus, type BundleFit, type BundleRecord, type CategoryEvent, type CategoryOverride, type Evidence, type Idea, type PainCluster, type PainMethod, type PainPoint, type PortfolioStrategy, type Run, type ScoreSnapshot, type Status } from "./types";
 
 export class ImportError extends Error {
   constructor(message: string) {
@@ -89,12 +90,23 @@ const runMetaSchema = z
   })
   .passthrough();
 
+const annotationSchema = z.object({
+  id: z.string().min(1),
+  fields: z.record(z.string(), z.unknown()),
+});
+
 const runFileSchema = z
   .object({
     run: runMetaSchema,
-    ideas: z.array(incomingIdeaSchema).min(1, "A run needs at least one idea"),
+    ideas: z.array(incomingIdeaSchema).optional(),
+    annotations: z.array(annotationSchema).optional(),
   })
-  .passthrough();
+  .passthrough()
+  .superRefine((data, ctx) => {
+    if (!(data.ideas?.length || data.annotations?.length)) {
+      ctx.addIssue({ code: "custom", message: "A run needs at least one idea or annotation.", path: ["ideas"] });
+    }
+  });
 
 type IncomingIdea = z.infer<typeof incomingIdeaSchema>;
 
@@ -156,7 +168,7 @@ function formatZod(error: z.ZodError): string {
 export function parseRunFile(value: unknown): z.infer<typeof runFileSchema> {
   const parsed = runFileSchema.safeParse(value);
   if (!parsed.success) throw new ImportError(formatZod(parsed.error));
-  const ids = parsed.data.ideas.map((idea) => idea.id);
+  const ids = (parsed.data.ideas ?? []).map((idea) => idea.id);
   const seen = new Set<string>();
   for (const id of ids) {
     if (seen.has(id)) throw new ImportError(`Duplicate id in the run file: ${id}`);
@@ -168,7 +180,7 @@ export function parseRunFile(value: unknown): z.infer<typeof runFileSchema> {
 export function detectImport(value: unknown): "run" | "database" {
   if (!value || typeof value !== "object") throw new ImportError("The JSON root must be an object.");
   const record = value as Record<string, unknown>;
-  if (record.run && typeof record.run === "object" && Array.isArray(record.ideas)) return "run";
+  if (record.run && typeof record.run === "object" && (Array.isArray(record.ideas) || Array.isArray(record.annotations))) return "run";
   if (Array.isArray(record.ideas)) return "database";
   throw new ImportError("Expected a run file { run, ideas } or a full IdeaLab export with an ideas array.");
 }
@@ -243,6 +255,7 @@ function blankIdea(id: string, position: number, now: string): Idea {
     mergedIds: [],
     relatedIds: [],
     run4Merge: [],
+    ...emptyPortfolioFields(),
     pipelineOrder: 0,
     position,
     updatedAt: now,
@@ -401,7 +414,7 @@ function sameHistorySlot(item: ScoreSnapshot, runNumber: number, rubricVersion: 
   return item.run === runNumber && (item.rubricVersion || "") === (rubricVersion || "");
 }
 
-export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, runs: Run[] = [], options: ApplyRunOptions = {}): { ideas: Idea[]; run: Run; report: ImportReport; categoryOverrides: Record<string, CategoryOverride>; bundles: BundleRecord[]; idAliases: Record<string, string>; painClusters: PainCluster[]; painMethod: PainMethod | null } {
+export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, runs: Run[] = [], options: ApplyRunOptions = {}): { ideas: Idea[]; run: Run; report: ImportReport; categoryOverrides: Record<string, CategoryOverride>; bundles: BundleRecord[]; idAliases: Record<string, string>; painClusters: PainCluster[]; painMethod: PainMethod | null; portfolio: PortfolioStrategy | null } {
   const parsed = parseRunFile(file);
   const runNumber = parsed.run.run_number;
   if (runs.some((run) => run.runNumber === runNumber)) {
@@ -423,7 +436,7 @@ export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, ru
   let nextPosition = ideas.reduce((max, idea) => Math.max(max, idea.position), -1) + 1;
   const changes: (ReturnType<typeof applyIncoming> & { id: string; previousTotal: number | null; previousStatus: Status | null; isNew: boolean })[] = [];
 
-  for (const rawIncoming of parsed.ideas) {
+  for (const rawIncoming of parsed.ideas ?? []) {
     const resolvedId = resolveAlias(rawIncoming.id, idAliases);
     const incoming = resolvedId === rawIncoming.id ? rawIncoming : { ...rawIncoming, id: resolvedId };
     const existing = byId.get(incoming.id);
@@ -527,6 +540,16 @@ export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, ru
     changes.push({ ...applied, id: current.id, previousTotal, previousStatus, isNew });
   }
 
+  for (const annotation of parsed.annotations ?? []) {
+    const targetId = resolveAlias(annotation.id, idAliases);
+    const current = byId.get(targetId);
+    if (!current) throw new ImportError(`${annotation.id} is not in the database. Portfolio annotations only update ideas that already exist.`);
+    const unknown = applyPortfolioFields(current, annotation.fields);
+    if (unknown.length) throw new ImportError(`${annotation.id} has fields outside the portfolio allow-list: ${unknown.join(", ")}`);
+  }
+
+  const portfolio = portfolioFromUnknown((file as { portfolio?: unknown }).portfolio);
+
   recompute(ideas, weights, order);
 
   const added: IdeaChange[] = [];
@@ -570,7 +593,7 @@ export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, ru
     author: parsed.run.author?.trim() || "Unknown",
     sourcesSwept: parsed.run.sources_swept ?? [],
     ideasAdded: added.length,
-    ideasRescored: updated.length + duplicates.length,
+    ideasRescored: changes.length ? updated.length + duplicates.length : (parsed.run.ideas_rescored ?? 0),
     notes: parsed.run.notes ?? "",
     focus: parsed.run.focus ?? "",
     rubricVersion,
@@ -588,6 +611,7 @@ export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, ru
     idAliases,
     painClusters,
     painMethod,
+    portfolio,
     bundles: mergeBundles(options.bundles ?? [], source.bundles, {
       runNumber,
       date: parsed.run.date,

@@ -84,6 +84,14 @@ export function CompareView({ ideas, initialIds, criteriaOrder }: { ideas: Idea[
                   {selected.map((idea) => <td key={idea.id}>{idea.complaintFrequency == null ? "—" : idea.complaintFrequency.toFixed(2)}</td>)}
                 </tr>
                 <tr>
+                  <td>Portfolio fit <span className="faint">not scored</span></td>
+                  {selected.map((idea) => <td key={idea.id}>{idea.portfolioFit ? idea.portfolioFit.score.toFixed(1) : "—"}{idea.tier ? ` · ${idea.tier}` : ""}</td>)}
+                </tr>
+                <tr>
+                  <td>Privacy</td>
+                  {selected.map((idea) => <td key={idea.id}>{idea.privacyClass === "C-disq" ? "needs server-held personal data" : (idea.privacyClass || "—")}</td>)}
+                </tr>
+                <tr>
                   <td>Bundle fit</td>
                   {selected.map((idea) => <td key={idea.id}>{idea.bundleFit ? `${tierLabel(idea.bundleFit.tier)} · ${idea.bundleFit.module}` : "—"}</td>)}
                 </tr>

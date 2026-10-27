@@ -88,6 +88,7 @@ export default async function DashboardPage() {
             {portfolio.bundles[0] ? <Link className="chip" href="/bundles">{portfolio.bundles[0].title} · {portfolio.bundles[0].total.toFixed(1)}</Link> : null}
             <Link className="chip" href="/ideas?evidence=1">Complaint evidence · {ideas.filter((idea) => idea.complaintFrequency != null).length}</Link>
             <Link className="chip" href="/pain">Pain clusters · {portfolio.painClusters.length}</Link>
+            <Link className="chip" href="/portfolio">Portfolio roadmap · {portfolio.settings.portfolio?.roadmap.length ?? 8} apps</Link>
           </div>
           <div className="list">
             {starters(live).map((idea) => (

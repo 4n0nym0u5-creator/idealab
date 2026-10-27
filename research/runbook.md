@@ -138,3 +138,25 @@ Never compare totals across rubric versions.
 - Shortlist changes: nosub-app-directory (78.6) and chore-fairness-ledger (76.0) came in. xero-invoice-chaser-lite and appstore-screenshot-maker (76.0 / 75.8) dropped to candidate.
 - Caveat: Run 4's notes call nosub-app-directory a feeder (traffic to the other apps) when it stands alone. Its rubric status is shortlist because wtp 2 / recurring 2 sits just above the feeder rule.
 - Backup: `runs/ideas_before_run_4.json`.
+
+## Schema v5 additions (Run 6)
+Optional idea fields (annotation-only; never change scores/totals/score_history): `portfolio_fit` {score, rank, viability,
+opportunity, pre_privacy, subscores}, `tier`, `family`, `privacy_class` (A|B|C-redesign|C-disq), `privacy_notes`,
+`third_party_personal_data_api`, `client_side_path`, `portfolio_monetisation` {model, reasoning}, `roadmap_slot`.
+Top-level `db["portfolio"]` = {lens, roadmap, scenarios, families, disqualified, redesign, run}; older copies go to `portfolio_history`.
+merge.py: `run["annotations"]=[{id, fields}]` (allow-listed fields only) and `run["portfolio"]`; `run["ideas"]` may be omitted.
+
+## Procedure: re-running the portfolio lens
+1. Back up: `cp ideas.json runs/ideas_before_run_N.json; cp merge.py runs/merge_before_run_N.py`.
+2. Edit overrides in `build_run6_portfolio.py` (PRIV_OVR privacy decisions, FAM families, ROAD roadmap) - copy to build_runN_portfolio.py and set run_number.
+3. `python3 build_runN_portfolio.py` -> runs/runN_portfolio.json; check the printed top 30, tier and privacy counts.
+4. `python3 merge.py runs/runN_portfolio.json`; verify totals/statuses/score_history unchanged vs the backup.
+5. Update the Portfolio Strategy Page in place (EditCanvas) - do not create another Page.
+New ideas from later runs get a default privacy class from keyword rules; review any new idea with sharing, reminders,
+OAuth, uploads or messaging by hand before it can enter the roadmap.
+
+## Run 6 history (27 Oct 2026)
+Portfolio lens PL 1.0 over 170 non-killed ideas; 0 scores changed. 14 C-disq, 21 C-redesign, 3 B, 132 A.
+Roadmap (8 slots, Nov 2026-Apr 2028): GiftLedger -> TimeAudit -> HolidayPlanner AU -> SeatPlan -> BedPlanner AU ->
+Life Admin Pass -> RunSheet -> (optional) TakeoutFixer. Page: "SideHustle Portfolio Strategy & Roadmap" (separate from Idea Lab).
+Files: build_run6_portfolio.py, runs/run6_portfolio.json, runs/ideas_before_run_6.json, runs/merge_before_run_6.py.

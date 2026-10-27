@@ -197,6 +197,7 @@ h3 { font-size: 20px; }
 
 .grid-2 { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 14px; }
 .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
 .stack { display: flex; flex-direction: column; gap: 12px; }
 
 .panel { padding: 16px 18px; }
@@ -240,6 +241,17 @@ h3 { font-size: 20px; }
 .badge-exclude { background: color-mix(in srgb, var(--bad) 14%, transparent); color: var(--bad); }
 .badge-tag { background: transparent; border: 1px solid var(--line); color: var(--soft); }
 .badge-evidence { background: color-mix(in srgb, var(--mid) 16%, transparent); color: var(--ink); }
+.badge-privacy-a { background: color-mix(in srgb, var(--good) 16%, transparent); color: var(--good); }
+.badge-privacy-b { background: color-mix(in srgb, #3d6ea8 16%, transparent); color: #3d6ea8; }
+.dark .badge-privacy-b { color: #9ec0ea; }
+.badge-privacy-c { background: color-mix(in srgb, var(--clay) 18%, transparent); color: var(--clay); }
+.badge-disq { background: color-mix(in srgb, var(--bad) 16%, transparent); color: var(--bad); }
+.timeline { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.timeline-item { border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; background: var(--elev); }
+.timeline-item h3 { margin: 4px 0; font-size: 18px; }
+td.best { background: color-mix(in srgb, var(--good) 12%, transparent); }
+td.mark { background: color-mix(in srgb, var(--clay) 12%, transparent); }
+td.bad-cell { color: var(--bad); font-weight: 600; }
 .cfs-bar { display: block; height: 8px; border-radius: 99px; background: var(--sunken); overflow: hidden; }
 .cfs-bar > span { display: block; height: 100%; background: var(--good); }
 
@@ -381,7 +393,7 @@ details.rubric summary { cursor: pointer; display: flex; justify-content: space-
   .admin-form { width: 100%; }
   .admin-form input { flex: 1; width: auto; }
   .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .feature, .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .feature, .grid-2, .grid-3, .grid-4, .timeline { grid-template-columns: 1fr; }
   main { padding: 18px 16px 80px; }
   .feature .score-figure { font-size: 64px; }
 }
