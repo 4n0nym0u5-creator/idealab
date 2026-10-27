@@ -6,6 +6,8 @@ export const settings = pgTable("settings", {
   rubricVersion: text("rubric_version").notNull(),
   criteriaOrder: text("criteria_order").notNull(),
   weights: text("weights").notNull(),
+  rubricHistory: text("rubric_history").notNull().default("[]"),
+  customerTypes: text("customer_types").notNull().default("[\"consumer\",\"business\",\"both\"]"),
 });
 
 export const runs = pgTable("runs", {
@@ -17,6 +19,7 @@ export const runs = pgTable("runs", {
   ideasRescored: integer("ideas_rescored").notNull(),
   notes: text("notes").notNull().default(""),
   focus: text("focus").notNull().default(""),
+  rubricVersion: text("rubric_version").notNull().default(""),
 });
 
 export const ideas = pgTable("ideas", {
@@ -47,6 +50,9 @@ export const ideas = pgTable("ideas", {
   firstSeenRun: integer("first_seen_run").notNull(),
   lastScoredRun: integer("last_scored_run").notNull(),
   scoreHistory: text("score_history").notNull(),
+  customerType: text("customer_type").notNull().default(""),
+  aibuildReason: text("aibuild_reason").notNull().default(""),
+  painPoints: text("pain_points").notNull().default("[]"),
   pipelineOrder: integer("pipeline_order").notNull().default(0),
   position: integer("position").notNull().default(0),
   updatedAt: text("updated_at").notNull(),

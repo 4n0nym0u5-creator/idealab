@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CRITERIA, type CriterionKey, type Scores } from "@/lib/criteria";
+import { CRITERIA_BY_KEY, DEFAULT_ORDER, criteriaInOrder, type Criterion, type CriterionKey, type Scores } from "@/lib/criteria";
 import { cn } from "@/lib/format";
 import { STATUS_META, type Status } from "@/lib/types";
 
@@ -8,10 +8,17 @@ export function StatusBadge({ status }: { status: Status | string }) {
   return <span className={cn("badge", `badge-${status}`)}>{meta?.label ?? status}</span>;
 }
 
-export function ScoreMeter({ scores, title = "Twelve criteria, legal through platform" }: { scores: Scores; title?: string }) {
+export function CustomerBadge({ type }: { type: string }) {
+  if (type !== "consumer" && type !== "business" && type !== "both") return null;
+  const label = type === "both" ? "Consumer and business" : type === "business" ? "Business" : "Consumer";
+  return <span className={cn("badge", `badge-${type}`)}>{label}</span>;
+}
+
+export function ScoreMeter({ scores, criteria, title }: { scores: Scores; criteria?: Criterion[]; title?: string }) {
+  const items = criteria ?? criteriaInOrder(DEFAULT_ORDER);
   return (
-    <div className="meter" title={title} aria-hidden>
-      {CRITERIA.map((criterion) => {
+    <div className="meter" title={title ?? `${items.length} criteria`} aria-hidden>
+      {items.map((criterion) => {
         const score = scores[criterion.key] ?? 0;
         return <i key={criterion.key} style={{ background: meterColor(score), opacity: 0.35 + (score / 5) * 0.65 }} />;
       })}
@@ -49,7 +56,7 @@ export function FlagList({ flags, tone }: { flags: string[]; tone: "killed" | "a
 }
 
 export function CriterionLabel({ criterion }: { criterion: CriterionKey }) {
-  return CRITERIA.find((item) => item.key === criterion)?.short ?? criterion;
+  return CRITERIA_BY_KEY[criterion]?.short ?? criterion;
 }
 
 export function EmptyState({ title, body, href, action }: { title: string; body: string; href?: string; action?: string }) {

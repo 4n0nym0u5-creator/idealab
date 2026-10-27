@@ -1,4 +1,4 @@
-export const CRITERIA_KEYS = [
+export const DEFAULT_ORDER = [
   "legal",
   "pain",
   "breadth",
@@ -11,19 +11,23 @@ export const CRITERIA_KEYS = [
   "defend",
   "synergy",
   "platform",
+  "aibuild",
 ] as const;
 
-export type CriterionKey = (typeof CRITERIA_KEYS)[number];
+/** Active weighted criteria for a fresh v2 database. Optional criteria stay out of this list until a run promotes them. */
+export const CRITERIA_KEYS: readonly string[] = DEFAULT_ORDER;
 
-export type Scores = Record<CriterionKey, number>;
-export type Weights = Record<CriterionKey, number>;
+export type CriterionKey = string;
+export type Scores = Record<string, number>;
+export type Weights = Record<string, number>;
 
 export type Criterion = {
-  key: CriterionKey;
+  key: string;
   label: string;
   short: string;
   question: string;
   inverted: boolean;
+  optional: boolean;
   defaultWeight: number;
   levels: readonly [string, string, string, string, string, string];
 };
@@ -35,6 +39,7 @@ export const CRITERIA: readonly Criterion[] = [
     short: "Legal",
     question: "Regulatory, legal and liability safety",
     inverted: true,
+    optional: false,
     defaultWeight: 16,
     levels: [
       "Licensed activity or likely illegal (medical device, financial product advice, handling client money, gambling, children's data as the core, DRM bypass).",
@@ -51,7 +56,8 @@ export const CRITERIA: readonly Criterion[] = [
     short: "Pain",
     question: "Pain intensity × frequency",
     inverted: false,
-    defaultWeight: 11,
+    optional: false,
+    defaultWeight: 10,
     levels: [
       "No evidence anyone cares.",
       "Novelty.",
@@ -67,7 +73,8 @@ export const CRITERIA: readonly Criterion[] = [
     short: "Breadth",
     question: "Breadth of audience",
     inverted: false,
-    defaultWeight: 8,
+    optional: false,
+    defaultWeight: 7,
     levels: [
       "Only the founder.",
       "Thousands.",
@@ -83,7 +90,8 @@ export const CRITERIA: readonly Criterion[] = [
     short: "WTP",
     question: "Willingness to pay and monetisation fit",
     inverted: false,
-    defaultWeight: 10,
+    optional: false,
+    defaultWeight: 9,
     levels: [
       "No monetisation path.",
       "Ads or affiliate only.",
@@ -99,7 +107,8 @@ export const CRITERIA: readonly Criterion[] = [
     short: "Recurring",
     question: "Recurring-revenue potential",
     inverted: false,
-    defaultWeight: 8,
+    optional: false,
+    defaultWeight: 7,
     levels: [
       "One-off use, no repeat.",
       "One-time only. Paid major versions are possible.",
@@ -115,7 +124,8 @@ export const CRITERIA: readonly Criterion[] = [
     short: "Build",
     question: "Build effort for a solo AI-assisted builder",
     inverted: true,
-    defaultWeight: 8,
+    optional: false,
+    defaultWeight: 6,
     levels: [
       "Needs a team.",
       "400+ hours, or needs specialist skills.",
@@ -131,7 +141,8 @@ export const CRITERIA: readonly Criterion[] = [
     short: "Maint",
     question: "Ongoing maintenance and support burden",
     inverted: true,
-    defaultWeight: 8,
+    optional: false,
+    defaultWeight: 7,
     levels: [
       "Needs 24/7 on-call.",
       "Heavy support: onboarding businesses, migrations, phone calls.",
@@ -147,7 +158,8 @@ export const CRITERIA: readonly Criterion[] = [
     short: "Distro",
     question: "Distribution and discoverability",
     inverted: false,
-    defaultWeight: 11,
+    optional: false,
+    defaultWeight: 10,
     levels: [
       "No known channel.",
       "Needs paid ads or virality.",
@@ -163,7 +175,8 @@ export const CRITERIA: readonly Criterion[] = [
     short: "Compete",
     question: "Competition and saturation",
     inverted: true,
-    defaultWeight: 6,
+    optional: false,
+    defaultWeight: 5,
     levels: [
       "Owned by the platform itself, or by free market leaders.",
       "Saturated, with strong free options.",
@@ -179,7 +192,8 @@ export const CRITERIA: readonly Criterion[] = [
     short: "Defend",
     question: "Defensibility",
     inverted: false,
-    defaultWeight: 4,
+    optional: false,
+    defaultWeight: 3,
     levels: [
       "The platform owner will ship it next release.",
       "Easily cloned in a weekend.",
@@ -195,6 +209,7 @@ export const CRITERIA: readonly Criterion[] = [
     short: "Synergy",
     question: "Shared shell, audience or channel",
     inverted: false,
+    optional: false,
     defaultWeight: 5,
     levels: [
       "Conflicts with the brand (an ad-heavy site next to privacy-first apps).",
@@ -211,6 +226,7 @@ export const CRITERIA: readonly Criterion[] = [
     short: "Platform",
     question: "Platform dependency risk",
     inverted: true,
+    optional: false,
     defaultWeight: 5,
     levels: [
       "Against the platform's terms of service.",
@@ -221,20 +237,78 @@ export const CRITERIA: readonly Criterion[] = [
       "Runs on the open web or OS with stable public APIs. No gatekeeper review.",
     ],
   },
+  {
+    key: "aibuild",
+    label: "AI-buildability",
+    short: "AI build",
+    question: "Can a non-engineer prompt this to a correct, shippable state and keep it working?",
+    inverted: false,
+    optional: false,
+    defaultWeight: 10,
+    levels: [
+      "Kernel, driver or HAL work, or output that can be wrong, cannot be tested by the owner, and causes harm when wrong (custom crypto, a password vault, child monitoring).",
+      "OS system extensions and private APIs (Quick Look, Network Extension, TCC/launchd, menu-bar hacks), audio or video capture, cryptography, heavy on-device ML, or hardware-specific bugs.",
+      "Native Swift (Xcode, signing, notarisation, sandbox, StoreKit), extensions that scrape a third-party DOM, security-critical code with invisible false negatives, background location, licence servers, or complex billing.",
+      "Review-gated integrations: sensitive Google OAuth, Shopify/Xero/Workspace apps, stable Chrome extensions, real-time sync, Expo with store review, phone camera flows, LLM answers people rely on, or licensed data feeds.",
+      "A web app with one moderately tricky piece: drag-and-drop canvas, PDF layout, a documented parser, accounts with row-level security, scheduled email, or one simple API. Needs fixtures or a checklist.",
+      "A standard web app: CRUD, forms, checklists, calculators or a simple visual UI. Client-side or one table. Magic-link or no auth. Payment is a checkout link. Mistakes are visible.",
+    ],
+  },
+  {
+    key: "complaint_frequency",
+    label: "Complaint frequency",
+    short: "Complaints",
+    question: "How often public forums mention this pain, from pain-point mining",
+    inverted: false,
+    optional: true,
+    defaultWeight: 0,
+    levels: [
+      "No public mentions attached.",
+      "A handful of mentions, or a single thread.",
+      "Occasional complaints across one community.",
+      "A repeated cluster with a countable set of threads.",
+      "Many independent complaints, with quotes and sources.",
+      "A dominant, recurring complaint cluster with high mention counts across several sources.",
+    ],
+  },
 ];
 
 export const DEFAULT_WEIGHTS: Weights = CRITERIA.reduce((weights, criterion) => {
+  if (criterion.optional && criterion.defaultWeight === 0) return weights;
   weights[criterion.key] = criterion.defaultWeight;
   return weights;
 }, {} as Weights);
 
-export const CRITERIA_BY_KEY: Record<CriterionKey, Criterion> = CRITERIA.reduce(
+export const CRITERIA_BY_KEY: Record<string, Criterion> = CRITERIA.reduce(
   (map, criterion) => {
     map[criterion.key] = criterion;
     return map;
   },
-  {} as Record<CriterionKey, Criterion>,
+  {} as Record<string, Criterion>,
 );
+
+export function isOptionalCriterion(key: string): boolean {
+  return CRITERIA_BY_KEY[key]?.optional === true;
+}
+
+export function synthesizeCriterion(key: string): Criterion {
+  const label = key.replace(/_/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+  return {
+    key,
+    label,
+    short: label,
+    question: label,
+    inverted: false,
+    optional: true,
+    defaultWeight: 0,
+    levels: ["0", "1", "2", "3", "4", "5"],
+  };
+}
+
+/** Display metadata for a criteria order. Unknown keys still render, so a future import can add one without a code change. */
+export function criteriaInOrder(order: readonly string[]): Criterion[] {
+  return order.map((key) => CRITERIA_BY_KEY[key] ?? synthesizeCriterion(key));
+}
 
 export const KILL_CRITERIA: readonly string[] = [
   "Legal score is 1 or 0.",
@@ -299,7 +373,7 @@ export const ANCHORS: readonly Anchor[] = [
 
 export const SECURITY_LEGAL_ADDENDUM = {
   title: "Security-specific guidance for legal",
-  versionNote: "Clarification added in Run 2. Weights are unchanged and the rubric stays at v1.0.",
+  versionNote: "Clarification added in Run 2. It still applies under rubric v2.0, and the legal weight stays at 16.",
   levels: [
     { score: "5", text: "Local, read-only, advisory. No credentials and no network scanning (a Mac login-items viewer, a checklist)." },
     { score: "4", text: "Passive checks of public data for domains or accounts the user adds (DNS, certificates, headers). Official read-only APIs with tokens kept on the device. HIBP Pwned Passwords via k-anonymity." },
@@ -324,12 +398,12 @@ export const PORTFOLIO_SHELLS = [
   "Audiences already in reach: indie makers and small businesses.",
 ];
 
-export function isCriterionKey(value: string): value is CriterionKey {
-  return (CRITERIA_KEYS as readonly string[]).includes(value);
+export function isCriterionKey(value: string): boolean {
+  return /^[a-z][a-z0-9_]*$/.test(value);
 }
 
-export function emptyScores(): Scores {
-  return CRITERIA_KEYS.reduce((scores, key) => {
+export function emptyScores(keys: readonly string[] = DEFAULT_ORDER): Scores {
+  return keys.reduce((scores, key) => {
     scores[key] = 0;
     return scores;
   }, {} as Scores);

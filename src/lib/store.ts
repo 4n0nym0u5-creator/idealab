@@ -2,20 +2,25 @@ import fs from "fs";
 import path from "path";
 import { asc, count, desc, eq, inArray, sql } from "drizzle-orm";
 import bundledIdeas from "../../data/ideas.json";
-import { CRITERIA_KEYS, DEFAULT_WEIGHTS, type CriterionKey, type Scores, type Weights } from "./criteria";
+import { CRITERIA_KEYS, DEFAULT_WEIGHTS, isCriterionKey, isOptionalCriterion, type CriterionKey, type Scores, type Weights } from "./criteria";
 import { backupDir, getDb, type AppDatabase } from "./db";
-import { applyRun, detectImport, parseJsonText, type ImportReport } from "./merge";
-import { migrate } from "./migrate";
+import { applyRun, detectImport, parseJsonText, weightsFromUnknown, type ImportReport } from "./merge";
+import { migrationApplied, migrate, recordMigration } from "./migrate";
+import { applyRubricRescore, rubricHistoryFromRescore, type RescoreFile } from "./rescore";
 import { backups, ideas, rubricChangelog, runs, settings } from "./schema";
 import { assertWeights, assignPresentation, bumpVersion, recompute, sanitizeOverrides, totalOf } from "./scoring";
 import { themeForCategory } from "./themes";
 import {
   isManualStatus,
   isStatus,
+  isCustomerType,
+  type CustomerType,
   type Evidence,
   type Idea,
+  type PainPoint,
   type Portfolio,
   type RubricChange,
+  type RubricVersionRecord,
   type Run,
   type ScoreSnapshot,
   type Settings,
@@ -42,14 +47,58 @@ function parseJson<T>(value: string, fallback: T): T {
 }
 
 function asScores(value: unknown): Scores {
-  const record = (value ?? {}) as Partial<Scores>;
-  const scores = {} as Scores;
-  for (const key of CRITERIA_KEYS) {
-    const score = record[key];
-    scores[key] = typeof score === "number" ? score : 0;
+  const record = (value ?? {}) as Record<string, unknown>;
+  const scores: Scores = {};
+  for (const [key, score] of Object.entries(record)) {
+    if (!isCriterionKey(key) || typeof score !== "number") continue;
+    scores[key] = score;
   }
   return scores;
 }
+
+function asPainPoints(value: unknown): PainPoint[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((item) => {
+    if (!item || typeof item !== "object") return [];
+    const row = item as Record<string, unknown>;
+    if (typeof row.id !== "string" || typeof row.label !== "string") return [];
+    const sources = Array.isArray(row.sources)
+      ? row.sources.flatMap((source) => {
+          if (!source || typeof source !== "object") return [];
+          const entry = source as Record<string, unknown>;
+          if (typeof entry.url !== "string") return [];
+          return [{ url: entry.url, note: typeof entry.note === "string" ? entry.note : "" }];
+        })
+      : [];
+    const quotes = Array.isArray(row.quotes) ? row.quotes.filter((quote): quote is string => typeof quote === "string") : [];
+    return [{
+      id: row.id,
+      label: row.label,
+      count: typeof row.count === "number" ? row.count : 0,
+      ...(typeof row.cluster === "string" && row.cluster ? { cluster: row.cluster } : {}),
+      sources,
+      quotes,
+    }];
+  });
+}
+
+function asRubricHistory(value: unknown): RubricVersionRecord[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((item) => {
+    if (!item || typeof item !== "object") return [];
+    const row = item as Record<string, unknown>;
+    if (typeof row.version !== "string" || !row.weights || typeof row.weights !== "object") return [];
+    return [{
+      version: row.version,
+      sinceRun: typeof row.since_run === "number" ? row.since_run : 0,
+      date: typeof row.date === "string" ? row.date : "",
+      weights: row.weights as Weights,
+      change: typeof row.change === "string" ? row.change : "",
+    }];
+  });
+}
+
+const DATA_MIGRATION = "0002_rubric_v2_data";
 
 function rowToIdea(row: IdeaRow): Idea {
   const theme = themeForCategory(row.category);
@@ -80,7 +129,14 @@ function rowToIdea(row: IdeaRow): Idea {
     scoreOverrides: parseJson<Partial<Scores>>(row.scoreOverrides, {}),
     firstSeenRun: row.firstSeenRun,
     lastScoredRun: row.lastScoredRun,
-    scoreHistory: parseJson<ScoreSnapshot[]>(row.scoreHistory, []),
+    scoreHistory: parseJson<ScoreSnapshot[]>(row.scoreHistory, []).map((item) => ({
+      ...item,
+      rubricVersion: item.rubricVersion ?? "",
+      scores: asScores(item.scores),
+    })),
+    customerType: isCustomerType(row.customerType) ? row.customerType : "",
+    aibuildReason: row.aibuildReason ?? "",
+    painPoints: asPainPoints(parseJson(row.painPoints, [])),
     pipelineOrder: row.pipelineOrder,
     position: row.position,
     updatedAt: row.updatedAt,
@@ -120,6 +176,9 @@ function ideaToRow(idea: Idea) {
     firstSeenRun: idea.firstSeenRun,
     lastScoredRun: idea.lastScoredRun,
     scoreHistory: JSON.stringify(idea.scoreHistory),
+    customerType: idea.customerType,
+    aibuildReason: idea.aibuildReason,
+    painPoints: JSON.stringify(idea.painPoints),
     pipelineOrder: idea.pipelineOrder,
     position: idea.position,
     updatedAt: idea.updatedAt,
@@ -137,6 +196,7 @@ function rowToRun(row: RunRow): Run {
     ideasRescored: row.ideasRescored,
     notes: row.notes,
     focus: row.focus,
+    rubricVersion: row.rubricVersion ?? "",
   };
 }
 
@@ -160,6 +220,8 @@ export async function loadPortfolio(): Promise<Portfolio> {
       rubricVersion: settingsRow.rubricVersion,
       criteriaOrder: parseJson<CriterionKey[]>(settingsRow.criteriaOrder, [...CRITERIA_KEYS]),
       weights: parseJson<Weights>(settingsRow.weights, DEFAULT_WEIGHTS),
+      rubricHistory: asRubricHistory(parseJson(settingsRow.rubricHistory, [])),
+      customerTypes: parseJson<string[]>(settingsRow.customerTypes, ["consumer", "business", "both"]),
     },
     runs: loadedRuns,
     ideas: assignPresentation(loadedIdeas),
@@ -189,6 +251,7 @@ async function persistRun(db: Db, run: Run): Promise<void> {
     ideasRescored: run.ideasRescored,
     notes: run.notes,
     focus: run.focus,
+    rubricVersion: run.rubricVersion ?? "",
   };
   await db.insert(runs).values(values).onConflictDoUpdate({
     target: runs.runNumber,
@@ -200,6 +263,7 @@ async function persistRun(db: Db, run: Run): Promise<void> {
       ideasRescored: values.ideasRescored,
       notes: values.notes,
       focus: values.focus,
+      rubricVersion: values.rubricVersion,
     },
   });
 }
@@ -211,6 +275,8 @@ async function persistSettings(db: Db, next: Settings): Promise<void> {
     rubricVersion: next.rubricVersion,
     criteriaOrder: JSON.stringify(next.criteriaOrder),
     weights: JSON.stringify(next.weights),
+    rubricHistory: JSON.stringify(next.rubricHistory ?? []),
+    customerTypes: JSON.stringify(next.customerTypes ?? ["consumer", "business", "both"]),
   };
   await db.insert(settings).values(values).onConflictDoUpdate({
     target: settings.id,
@@ -219,11 +285,13 @@ async function persistSettings(db: Db, next: Settings): Promise<void> {
       rubricVersion: values.rubricVersion,
       criteriaOrder: values.criteriaOrder,
       weights: values.weights,
+      rubricHistory: values.rubricHistory,
+      customerTypes: values.customerTypes,
     },
   });
 }
 
-type RawHistory = { run: number; date: string; total: number; scores: Scores };
+type RawHistory = { run: number; date: string; total: number; scores: Scores; rubric_version?: string; note?: string };
 type RawRun = {
   run_number: number;
   date: string;
@@ -233,6 +301,7 @@ type RawRun = {
   ideas_rescored?: number;
   notes?: string;
   focus?: string;
+  rubric_version?: string;
 };
 type RawApp = {
   user_notes?: string;
@@ -258,6 +327,9 @@ type RawIdea = {
   scores: Scores;
   total?: number;
   status?: string;
+  customer_type?: string;
+  aibuild_reason?: string;
+  pain_points?: PainPoint[];
   kill_flags?: string[];
   avoid_flags?: string[];
   evidence?: Evidence[];
@@ -276,6 +348,8 @@ export type ResearchDocument = {
   criteria_order?: CriterionKey[];
   runs?: RawRun[];
   ideas: RawIdea[];
+  customer_types?: string[];
+  rubric_history?: unknown;
   _idealab?: { rubric_changelog?: Array<Omit<RubricChange, "id"> & { id?: number }> };
 };
 
@@ -314,9 +388,14 @@ export function ideaFromDocument(raw: RawIdea, index: number, now: string): Idea
     scoreHistory: (raw.score_history ?? []).map((item) => ({
       run: item.run,
       date: item.date,
+      rubricVersion: item.rubric_version ?? "",
       total: item.total,
       scores: asScores(item.scores),
+      ...(item.note ? { note: item.note } : {}),
     })),
+    customerType: raw.customer_type && isCustomerType(raw.customer_type) ? raw.customer_type : "",
+    aibuildReason: raw.aibuild_reason ?? "",
+    painPoints: asPainPoints(raw.pain_points),
     pipelineOrder: app.pipeline_order ?? 0,
     position: app.position ?? index,
     updatedAt: app.updated_at ?? now,
@@ -348,7 +427,17 @@ export function canonicalIdea(idea: Idea) {
     ...(idea.liabilityNotes ? { liability_notes: idea.liabilityNotes } : {}),
     first_seen_run: idea.firstSeenRun,
     last_scored_run: idea.lastScoredRun,
-    score_history: idea.scoreHistory,
+    score_history: idea.scoreHistory.map((item) => ({
+      run: item.run,
+      date: item.date,
+      ...(item.rubricVersion ? { rubric_version: item.rubricVersion } : {}),
+      total: item.total,
+      scores: item.scores,
+      ...(item.note ? { note: item.note } : {}),
+    })),
+    ...(idea.customerType ? { customer_type: idea.customerType } : {}),
+    ...(idea.aibuildReason ? { aibuild_reason: idea.aibuildReason } : {}),
+    ...(idea.painPoints.length ? { pain_points: idea.painPoints } : {}),
   };
 }
 
@@ -368,7 +457,18 @@ export async function exportDocument(portfolio?: Portfolio) {
       ideas_rescored: run.ideasRescored,
       notes: run.notes,
       ...(run.focus ? { focus: run.focus } : {}),
+      ...(run.rubricVersion ? { rubric_version: run.rubricVersion } : {}),
     })),
+    ...(source.settings.customerTypes.length ? { customer_types: source.settings.customerTypes } : {}),
+    ...(source.settings.rubricHistory.length ? {
+      rubric_history: source.settings.rubricHistory.map((item) => ({
+        version: item.version,
+        since_run: item.sinceRun,
+        ...(item.date ? { date: item.date } : {}),
+        weights: item.weights,
+        ...(item.change ? { change: item.change } : {}),
+      })),
+    } : {}),
     ideas: [...source.ideas]
       .sort((a, b) => a.position - b.position || a.id.localeCompare(b.id))
       .map((idea) => ({
@@ -407,7 +507,7 @@ export async function replacePortfolio(
   const criteriaOrder = (doc.criteria_order?.length ? doc.criteria_order : [...CRITERIA_KEYS]) as CriterionKey[];
   const loaded = doc.ideas.map((idea, index) => ideaFromDocument(idea, index, now));
   const originals = new Map(loaded.map((idea) => [idea.id, { status: idea.status, total: idea.total }]));
-  recompute(loaded, weights);
+  recompute(loaded, weights, criteriaOrder);
   const mismatches: string[] = [];
   for (const idea of loaded) {
     const original = originals.get(idea.id)!;
@@ -428,6 +528,7 @@ export async function replacePortfolio(
     ideasRescored: run.ideas_rescored ?? 0,
     notes: run.notes ?? "",
     focus: run.focus ?? "",
+    rubricVersion: run.rubric_version ?? "",
   }));
 
   const db = await getDb();
@@ -449,6 +550,8 @@ export async function replacePortfolio(
       rubricVersion: doc.rubric_version ?? "1.0",
       criteriaOrder,
       weights,
+      rubricHistory: asRubricHistory(doc.rubric_history),
+      customerTypes: doc.customer_types ?? ["consumer", "business", "both"],
     });
     for (const run of loadedRuns) await persistRun(tx, run);
     for (const idea of loaded) await tx.insert(ideas).values(ideaToRow(idea));
@@ -468,13 +571,57 @@ export async function replacePortfolio(
   return { ideas: loaded.length, runs: loadedRuns.length, skipped: false };
 }
 
+function contextFromImport(portfolio: Portfolio, value: unknown): Settings & { changed: boolean } {
+  const record = (value ?? {}) as Record<string, unknown>;
+  let weights = { ...portfolio.settings.weights };
+  let criteriaOrder = [...portfolio.settings.criteriaOrder];
+  let rubricVersion = portfolio.settings.rubricVersion;
+  let rubricHistory = portfolio.settings.rubricHistory;
+  let schemaVersion = portfolio.settings.schemaVersion;
+  const customerTypes = portfolio.settings.customerTypes;
+  let changed = false;
+  const nextWeights = weightsFromUnknown(record.weights);
+  if (nextWeights) {
+    assertWeights(nextWeights);
+    weights = nextWeights;
+    changed = true;
+  }
+  if (Array.isArray(record.criteria_order)) {
+    const order = record.criteria_order.filter((key): key is string => typeof key === "string" && isCriterionKey(key));
+    if (order.length) {
+      criteriaOrder = order;
+      changed = true;
+    }
+  }
+  for (const key of Object.keys(weights)) {
+    if ((weights[key] ?? 0) > 0 && !criteriaOrder.includes(key)) criteriaOrder.push(key);
+  }
+  if (typeof record.rubric_version === "string" && record.rubric_version) {
+    rubricVersion = record.rubric_version;
+    changed = true;
+  }
+  if (record.rubric_history) {
+    const history = asRubricHistory(record.rubric_history);
+    if (history.length) {
+      rubricHistory = history;
+      changed = true;
+    }
+  }
+  if (typeof record.schema_version === "string" && record.schema_version) schemaVersion = record.schema_version;
+  for (const key of criteriaOrder) {
+    if (weights[key] === undefined && !isOptionalCriterion(key)) weights[key] = 0;
+  }
+  return { schemaVersion, rubricVersion, criteriaOrder, weights, rubricHistory, customerTypes, changed };
+}
+
 export async function previewImport(text: string): Promise<ImportReport> {
   const portfolio = await loadPortfolio();
   const value = parseJsonText(text);
   if (detectImport(value) !== "run") {
     throw new Error("Full-database restore is not previewed as a run. Import a { run, ideas } file.");
   }
-  return applyRun(portfolio.ideas, value, portfolio.settings.weights, portfolio.runs).report;
+  const context = contextFromImport(portfolio, value);
+  return applyRun(portfolio.ideas, value, context.weights, portfolio.runs, { criteriaOrder: context.criteriaOrder }).report;
 }
 
 export async function commitImport(text: string, actor: string): Promise<{ report: ImportReport; backupPath: string }> {
@@ -506,10 +653,21 @@ export async function commitImport(text: string, actor: string): Promise<{ repor
       },
     };
   }
-  const result = applyRun(portfolio.ideas, value, portfolio.settings.weights, portfolio.runs);
+  const context = contextFromImport(portfolio, value);
+  const result = applyRun(portfolio.ideas, value, context.weights, portfolio.runs, { criteriaOrder: context.criteriaOrder });
   const backupPath = await writeBackup(`ideas_before_run_${result.run.runNumber}`);
   const db = await getDb();
   await db.transaction(async (tx) => {
+    if (context.changed) {
+      await persistSettings(tx, {
+        schemaVersion: context.schemaVersion,
+        rubricVersion: context.rubricVersion,
+        criteriaOrder: context.criteriaOrder,
+        weights: context.weights,
+        rubricHistory: context.rubricHistory,
+        customerTypes: context.customerTypes,
+      });
+    }
     await persistIdeas(tx, result.ideas);
     await persistRun(tx, result.run);
   });
@@ -577,7 +735,7 @@ export async function updateTracking(id: string, patch: TrackingPatch, actor: st
   if (patch.pipelineOrder !== undefined) idea.pipelineOrder = patch.pipelineOrder;
   idea.updatedAt = new Date().toISOString();
   idea.updatedBy = actor;
-  recompute(nextIdeas, portfolio.settings.weights);
+  recompute(nextIdeas, portfolio.settings.weights, portfolio.settings.criteriaOrder);
   const db = await getDb();
   await db.transaction(async (tx) => {
     await persistIdeas(tx, nextIdeas);
@@ -591,7 +749,7 @@ export async function saveWeights(weights: Weights, note: string, actor: string)
   const fromVersion = portfolio.settings.rubricVersion;
   const toVersion = bumpVersion(fromVersion);
   const nextIdeas = portfolio.ideas.map((idea) => structuredClone(idea));
-  recompute(nextIdeas, weights);
+  recompute(nextIdeas, weights, portfolio.settings.criteriaOrder);
   const now = new Date().toISOString();
   for (const idea of nextIdeas) {
     idea.updatedAt = now;
@@ -628,11 +786,124 @@ export async function seedIfEmpty(actor = "seed"): Promise<{ ideas: number; runs
   await migrate();
   const db = await getDb();
   const [{ n }] = await db.select({ n: count() }).from(ideas);
-  if (Number(n) > 0) return { ideas: Number(n), runs: 0, skipped: true };
-  const result = await replacePortfolio(readResearchFile(), actor, { onlyIfEmpty: true });
-  if (!result.skipped) return result;
+  const populated = Number(n) > 0;
+  if (!populated) {
+    const result = await replacePortfolio(readResearchFile(), actor, { onlyIfEmpty: true });
+    if (!result.skipped) {
+      await recordMigration(DATA_MIGRATION);
+      return result;
+    }
+  }
+  if (!(await migrationApplied(DATA_MIGRATION))) {
+    const upgraded = await upgradeResearchData(readResearchFile(), actor);
+    await recordMigration(DATA_MIGRATION);
+    return { ideas: upgraded.ideas, runs: upgraded.runs, skipped: false };
+  }
   const [{ n: after }] = await db.select({ n: count() }).from(ideas);
   return { ideas: Number(after), runs: 0, skipped: true };
+}
+
+export async function commitRescore(file: RescoreFile, actor = "rescore"): Promise<void> {
+  const portfolio = await loadPortfolio();
+  const nextIdeas = applyRubricRescore(portfolio.ideas, file);
+  const weights = file.weights_v2;
+  assertWeights(weights, file.criteria_order_v2);
+  recompute(nextIdeas, weights, file.criteria_order_v2);
+  const now = new Date().toISOString();
+  for (const idea of nextIdeas) {
+    idea.updatedAt = now;
+    idea.updatedBy = actor;
+  }
+  const db = await getDb();
+  await db.transaction(async (tx) => {
+    await persistSettings(tx, {
+      schemaVersion: "2",
+      rubricVersion: file.rubric_to,
+      criteriaOrder: file.criteria_order_v2,
+      weights,
+      rubricHistory: rubricHistoryFromRescore(file),
+      customerTypes: ["consumer", "business", "both"],
+    });
+    await persistIdeas(tx, nextIdeas);
+  });
+}
+
+export async function upgradeResearchData(doc: ResearchDocument, actor = "migrate-v2"): Promise<{ ideas: number; runs: number; preserved: number }> {
+  const portfolio = await loadPortfolio();
+  const existing = new Map(portfolio.ideas.map((idea) => [idea.id, idea]));
+  const now = new Date().toISOString();
+  const weights = doc.weights ?? portfolio.settings.weights;
+  assertWeights(weights);
+  const criteriaOrder = (doc.criteria_order?.length ? doc.criteria_order : portfolio.settings.criteriaOrder) as CriterionKey[];
+  const next: Idea[] = [];
+  let preserved = 0;
+  const expected = new Map<string, { status: Status; total: number; locked: boolean }>();
+  doc.ideas.forEach((raw, index) => {
+    const incoming = ideaFromDocument(raw, index, now);
+    const prior = existing.get(incoming.id);
+    const keepStatus = Boolean(prior && (prior.statusLocked || isManualStatus(prior.status) || prior.status === "avoid"));
+    if (prior) {
+      preserved += 1;
+      incoming.userNotes = prior.userNotes;
+      incoming.mvp = prior.mvp;
+      incoming.distribution = prior.distribution;
+      incoming.risks = prior.risks;
+      incoming.scoreOverrides = prior.scoreOverrides;
+      incoming.pipelineOrder = prior.pipelineOrder;
+      incoming.position = prior.position;
+      incoming.updatedAt = prior.updatedAt;
+      incoming.updatedBy = prior.updatedBy;
+      if (prior.liabilityNotes && !incoming.liabilityNotes) incoming.liabilityNotes = prior.liabilityNotes;
+      if (prior.avoidFlags.length && incoming.avoidFlags.length === 0) incoming.avoidFlags = prior.avoidFlags;
+      if (keepStatus) {
+        incoming.status = prior.status;
+        incoming.statusLocked = true;
+      }
+    } else {
+      incoming.updatedBy = actor;
+    }
+    expected.set(incoming.id, { status: incoming.status, total: incoming.researchTotal, locked: keepStatus });
+    next.push(incoming);
+  });
+  for (const prior of portfolio.ideas) {
+    if (!next.some((idea) => idea.id === prior.id)) next.push(prior);
+  }
+  recompute(next, weights, criteriaOrder);
+  const mismatches: string[] = [];
+  for (const idea of next) {
+    const original = expected.get(idea.id);
+    if (!original) continue;
+    if (!original.locked && idea.status !== original.status) mismatches.push(`${idea.id} status ${original.status} -> ${idea.status}`);
+    if (Math.abs(idea.researchTotal - original.total) > 0.05) mismatches.push(`${idea.id} total ${original.total} -> ${idea.researchTotal}`);
+  }
+  if (mismatches.length) {
+    throw new Error(`Rubric v2 upgrade does not match the research file:\n${mismatches.slice(0, 12).join("\n")}`);
+  }
+  const loadedRuns: Run[] = (doc.runs ?? []).map((run) => ({
+    runNumber: run.run_number,
+    date: run.date,
+    author: run.author ?? "Unknown",
+    sourcesSwept: run.sources_swept ?? [],
+    ideasAdded: run.ideas_added ?? 0,
+    ideasRescored: run.ideas_rescored ?? 0,
+    notes: run.notes ?? "",
+    focus: run.focus ?? "",
+    rubricVersion: run.rubric_version ?? "",
+  }));
+  const db = await getDb();
+  await db.transaction(async (tx) => {
+    await persistSettings(tx, {
+      schemaVersion: doc.schema_version ?? "2",
+      rubricVersion: doc.rubric_version ?? "2.0",
+      criteriaOrder,
+      weights,
+      rubricHistory: asRubricHistory(doc.rubric_history),
+      customerTypes: doc.customer_types ?? ["consumer", "business", "both"],
+    });
+    for (const run of loadedRuns) await persistRun(tx, run);
+    await persistIdeas(tx, next);
+  });
+  return { ideas: next.length, runs: loadedRuns.length, preserved };
 }
 
 export function ideasPath(): string {

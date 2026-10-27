@@ -1,4 +1,4 @@
-# SideHustle idea rubric (version 1.0, set in Run 1, 27 Oct 2026)
+# SideHustle idea rubric (version 2.0, set in Run 3, 27 Oct 2026; v1.0 set in Run 1)
 
 Use this to score small software products for a solo, AI-assisted builder in Sydney who wants a portfolio
 of low-risk, broadly useful apps with small, scalable or recurring income.
@@ -9,20 +9,27 @@ criteria (risk, effort, burden, competition, dependency) are already flipped: 5 
 If you change a weight or level definition, bump `rubric_version`, note it in the run log, and re-score
 the shortlist so totals stay comparable.
 
-| Key | Criterion | Weight |
-|---|---|---|
-| legal | Regulatory, legal & liability safety (inverted risk) | 16 |
-| pain | Pain intensity × frequency | 11 |
-| distro | Distribution & discoverability | 11 |
-| wtp | Willingness to pay & monetisation fit | 10 |
-| breadth | Breadth of audience | 8 |
-| recurring | Recurring-revenue potential | 8 |
-| build | Build effort for a solo AI-assisted builder (inverted) | 8 |
-| maint | Ongoing maintenance & support burden (inverted) | 8 |
-| compete | Competition & saturation (inverted) | 6 |
-| synergy | Portfolio synergy (shared code, audience, channel) | 5 |
-| platform | Platform dependency risk (inverted) | 5 |
-| defend | Defensibility | 4 |
+| Key | Criterion | v2.0 weight | v1.0 weight |
+|---|---|---|---|
+| legal | Regulatory, legal & liability safety (inverted risk) | 16 | 16 |
+| pain | Pain intensity × frequency | 10 | 11 |
+| distro | Distribution & discoverability | 10 | 11 |
+| aibuild | **AI-buildability for a non-engineer (new in v2.0)** | 10 | n/a |
+| wtp | Willingness to pay & monetisation fit | 9 | 10 |
+| breadth | Breadth of audience | 7 | 8 |
+| recurring | Recurring-revenue potential | 7 | 8 |
+| maint | Ongoing maintenance & support burden (inverted) | 7 | 8 |
+| build | Build effort for a solo AI-assisted builder (inverted) | 6 | 8 |
+| compete | Competition & saturation (inverted) | 5 | 6 |
+| synergy | Portfolio synergy (shared code, audience, channel) | 5 | 5 |
+| platform | Platform dependency risk (inverted) | 5 | 5 |
+| defend | Defensibility | 3 | 4 |
+| | **Total** | **100** | **100** |
+
+`criteria_order` in ideas.json: legal, pain, breadth, wtp, recurring, build, maint, distro, compete, defend,
+synergy, platform, **aibuild** (appended last so the 12-digit v1 score strings stay valid as prefixes).
+Every idea also carries `customer_type`: `consumer` (individuals/families/hobbyists pay), `business`
+(a company or sole trader pays for work use), or `both` (prosumer: the same person buys it for work and life).
 
 ## Level definitions
 
@@ -34,7 +41,7 @@ the shortlist so totals stay comparable.
 - 1: Gives advice in a regulated domain (health, finance, legal, food safety, employment awards), or the product depends on scraping or ToS-grey automation.
 - 0: Licensed activity or likely illegal (medical device, financial product advice, handling client money, gambling, children's data as the core, DRM bypass).
 
-### pain: intensity × frequency (11)
+### pain: intensity × frequency (10)
 - 5: Hurts weekly or more, costs money or real time (e.g. chasing unpaid invoices), and people already pay for workarounds.
 - 4: Weekly friction people complain about in public, OR an episodic but acute pain (weddings, moving house).
 - 3: A regular annoyance with clumsy workarounds.
@@ -42,7 +49,7 @@ the shortlist so totals stay comparable.
 - 1: Novelty.
 - 0: No evidence anyone cares.
 
-### breadth: audience size (8)
+### breadth: audience size (7)
 - 5: Tens of millions worldwide (all Mac users, all office workers, all homeowners).
 - 4: Millions (all remote workers, all Xero users, all event hosts).
 - 3: Hundreds of thousands (Shopify micro-merchants, indie devs, club secretaries).
@@ -50,7 +57,7 @@ the shortlist so totals stay comparable.
 - 1: Thousands.
 - 0: Only the founder.
 
-### wtp: willingness to pay & monetisation fit (10)
+### wtp: willingness to pay & monetisation fit (9)
 - 5: Business buyers with a direct ROI (saves money or brings it in), and A$15+/month is easy to justify.
 - 4: Professionals or prosumers who routinely pay US$15-40 one-time or US$5-15/month for tools in this space (evidence: paid competitors with reviews).
 - 3: Consumers will pay US$5-15 once; comparable paid apps exist.
@@ -59,7 +66,7 @@ the shortlist so totals stay comparable.
 - 0: No monetisation path.
 - Feeder rule: if wtp ≤ 2 AND recurring ≤ 1, the idea is marked status `feeder`. It's a free SEO or lead tool that supports paid products, and it never goes on the shortlist by itself.
 
-### recurring: recurring revenue potential (8)
+### recurring: recurring revenue potential (7)
 - 5: Ongoing value for a business: subscription is natural and churn is low (runs monthly ops).
 - 4: Subscription is justified by ongoing sync, data or service. Consumers may churn.
 - 3: Annual or seasonal repeat (yearly tax-time log, yearly paid upgrades).
@@ -67,7 +74,7 @@ the shortlist so totals stay comparable.
 - 1: One-time only; paid major versions are possible.
 - 0: One-off use, no repeat.
 
-### build: effort for a solo AI-assisted builder (8, inverted)
+### build: effort for a solo AI-assisted builder (6, inverted)
 - 5: MVP takes 40 hours or less; one platform, no backend.
 - 4: 40-100 hours (Shoji/SpaceJump class: SpaceJump took 88 h); one platform, licence server only.
 - 3: 100-200 hours; needs a backend, OAuth, or a third-party API integration and app review.
@@ -75,7 +82,7 @@ the shortlist so totals stay comparable.
 - 1: 400+ hours or needs specialist skills.
 - 0: Needs a team.
 
-### maint: maintenance & support burden (8, inverted)
+### maint: maintenance & support burden (7, inverted)
 - 5: Static or local app; breaks only with major OS releases; under 1 h/week support.
 - 4: Small backend (licences) plus yearly OS updates; 1-2 h/week.
 - 3: Depends on third-party APIs that change; or customer data where support questions are about "my data".
@@ -83,7 +90,7 @@ the shortlist so totals stay comparable.
 - 1: Heavy support (onboarding businesses, migrations, phone calls).
 - 0: Needs 24/7 on-call.
 
-### distro: distribution & discoverability (11)
+### distro: distribution & discoverability (10)
 - 5: High-intent search queries you can own ("how to open parquet file on mac", "wedding seating chart maker"), AND/OR a marketplace with built-in search where the niche is thin (Xero/Shopify/Workspace/Chrome store), AND the problem gets asked in AI answer engines.
 - 4: Clear search terms or marketplace category with moderate competition; communities where the users gather and allow self-promotion.
 - 3: Reachable via communities, Product Hunt, Reddit; no strong search intent.
@@ -91,7 +98,7 @@ the shortlist so totals stay comparable.
 - 1: Needs paid ads or virality.
 - 0: No known channel.
 
-### compete: competition & saturation (6, inverted)
+### compete: competition & saturation (5, inverted)
 - 5: No credible product solves it; only forum workarounds.
 - 4: 1-2 weak or abandoned options, or the incumbents ignore this sub-niche.
 - 3: A few paid competitors, but there's room for a simpler, cheaper, or local-first angle.
@@ -99,7 +106,7 @@ the shortlist so totals stay comparable.
 - 1: Saturated, with strong free options.
 - 0: Owned by the platform itself (a native OS/app feature) or by free market leaders.
 
-### defend: defensibility (4)
+### defend: defensibility (3)
 - 5: Data network effects, official partner status, or switching costs from accumulated data.
 - 4: Accumulated user data/history, plus SEO moat and reviews.
 - 3: Brand, reviews and SEO rank you earned (marketplace reviews compound).
@@ -124,6 +131,34 @@ Score against the current portfolio anchors: (a) the native Mac utility shell (S
 - 1: Depends on DOM scraping of one site, or restricted Google scopes (annual CASA assessment).
 - 0: Against the platform's ToS.
 
+### aibuild: AI-buildability for a non-engineer (10, new in v2.0)
+How safely the owner, who is not an engineer and builds by prompting AI tools (Cursor, v0, Lovable, Claude/Grok),
+can get this to a correct, shippable state **and keep it working**. Score three things together:
+(a) does the stack match what AI tools write best (Next.js/React + Tailwind on Vercel; Supabase only if needed);
+(b) can the owner *verify* the result by looking at it (visual UI, sample files, a click-through checklist)
+rather than reasoning about code; (c) when it breaks, does the bug show on screen with a readable error, or is it hidden
+in signing, review queues, OS internals or security edge cases. `build` measures hours of effort;
+`aibuild` measures the chance a non-engineer ends up with something that silently doesn't work.
+- **5** Standard web app on the mainstream stack: CRUD, forms, checklists, calculators, generators or a simple
+  visual UI. Client-side or local-first (localStorage/IndexedDB) or one simple table. No auth or magic-link only.
+  Payment is a Stripe Payment Link or merchant-of-record checkout (no webhooks needed). Mistakes are visible.
+- **4** Web app with ONE moderately tricky piece AI handles well with iteration: drag-drop canvas (dnd-kit/Konva),
+  PDF/print layout, parsing a documented export (CSV/ICS/JSON), accounts + Postgres with row-level security,
+  cron/scheduled emails, or a single simple API (LLM call, Stripe webhook). Needs test fixtures or a checklist.
+- **3** Review-gated or fiddly integrations: Google OAuth sensitive scopes (app verification), Shopify/Xero/
+  Workspace marketplace apps, Chrome extensions on stable APIs, real-time multi-user sync, Expo/React Native with
+  App Store review, camera/photo flows on phones, correctness of LLM output that users rely on, licensed data feeds.
+  Debugging means reading logs and dashboards.
+- **2** Native Swift macOS/iOS (Xcode, signing, notarisation, sandbox, StoreKit), browser extensions that
+  scrape a third-party site's DOM, security-critical code where false negatives are invisible, background
+  location, licence/update servers, money movement or complex billing edge cases.
+- **1** OS system extensions and private/undocumented APIs (Quick Look, Network Extension, TCC/launchd
+  internals, menu bar hacks), audio/video capture, cryptography, heavy on-device ML, hardware-specific bugs.
+- **0** Kernel/driver/HAL level, or output that can be plausibly wrong, can't be tested by the owner, and
+  causes harm when wrong (custom crypto, password vault, child monitoring).
+Evidence this matters: CVE-2025-48757 (AI-built Lovable apps shipped without Supabase row-level security and
+leaked data) is why "accounts + DB" is a 4 not a 5, and why anything security-critical is 2 or lower.
+
 ## Hard kill criteria (auto-status `killed`, regardless of total)
 1. legal ≤ 1.
 2. Gives personalised medical, dietary, financial, tax, legal or employment-award advice, or acts as a medical device (TGA SaMD).
@@ -142,6 +177,8 @@ Record the reason in `kill_flags`. A killed idea stays in the file so future run
 3. Faster to build (`build`).
 
 ## Calibration anchors (use these to keep scores consistent across runs)
+- (v2) aibuild anchors: `event-run-sheet` = 5, `wedding-seating-planner` = 4, `gcal-time-audit` (Google OAuth) = 3 vs `ics-time-audit` (file upload) = 5, `mac-clipboard-plain` (Swift) = 2, `mac-quicklook-data-viewer` = 1, `sec-indie-password-manager` = 0.
+- (v2) synergy anchor (e): local-first consumer Next.js planner shell; ideas reusing it score synergy 4.
 - Shoji (shojimac.com) as a product: legal 5, pain 3, breadth 4, wtp 3, recurring 1, build 3, maint 3, distro 3, compete 1, defend 2, synergy 5, platform 4.
 - MacMD Viewer: distro 5 (owns "read markdown on Mac" search), wtp 3, recurring 1.
 - TranscriptExporter: pain 4, distro 5, platform 2 (now on the official API), compete 4.
@@ -155,3 +192,22 @@ This is a clarification only; the weights are unchanged and the rubric stays at 
 - 0-1 / kill_flags: credential custody (password vaults), scanning third-party systems without permission (Criminal Code Part 10.7), offensive or dual-use tooling, OSINT people lookup, stalkerware or monitoring of other people, building a breach search engine (HIBP ToS).
 - Design rules: never claim to make anyone "secure" or "compliant"; never give a "safe" verdict; alert on your own failures (heartbeats); verify ownership before any active check; keep secrets local.
 - Put soft risks in `notes`, not `kill_flags`, because any kill flag auto-kills the idea.
+
+## Version 2.0 changelog (Run 3, 27 Oct 2026)
+**Why:** the owner is not an engineer and will build with AI. v1's `build` criterion measured effort for an
+"AI-assisted builder" but not whether a non-engineer can verify and debug the result. That made native Mac
+utilities and review-gated marketplace apps look easier than they are for this owner.
+**What changed:**
+1. New criterion `aibuild` (weight 10), with levels defined above.
+2. Weights rebalanced to make room (−1 each on pain, breadth, wtp, recurring, maint, distro, compete, defend; −2 on
+   `build`, because `aibuild` overlaps with effort). Effort as a whole (build 6 + aibuild 10 = 16) now equals legal.
+3. `legal` stays the heaviest at 16; the hard kill rules are unchanged.
+4. New field `customer_type` (consumer | business | both) on every idea.
+5. Synergy anchor (e) added: a local-first consumer Next.js "planner shell" (drag-drop canvas + print/PDF + Stripe
+   Payment Link). Ideas that reuse it (seating, gallery wall, garden bed, gift list, run sheet) score synergy 4.
+**Migration:** `migrate_v2.py` backfilled `aibuild` and `customer_type` for all 100 Run 1-2 ideas, recomputed
+totals, kept the v1 totals in `score_history` (tagged `rubric_version: "1.0"`), and wrote the full before/after table to
+`runs/run3_rubric_v2_rescore.json`. v1 and v2 totals are not directly comparable: always compare within one version.
+**Effect:** Mac utilities fell hardest (Quick Look viewer from #5 to #28, −4.6 points; display restorer from #19 to #38;
+per-app audio −5.4). Pure web tools rose (event-run-sheet from #7 to #1; trust page, timezone planner and Notion
+templates each gained about 4-5 points).

@@ -13,6 +13,7 @@ export default async function IdeaPage({ params }: { params: Promise<{ id: strin
       <IdeaDetail
         idea={idea}
         weights={portfolio.settings.weights}
+        criteriaOrder={portfolio.settings.criteriaOrder}
         neighbors={{
           prev: index > 0 ? { id: live[index - 1].id, title: live[index - 1].title } : undefined,
           next: index >= 0 && index < live.length - 1 ? { id: live[index + 1].id, title: live[index + 1].title } : undefined,

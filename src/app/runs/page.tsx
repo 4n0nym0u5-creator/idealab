@@ -24,7 +24,7 @@ export default async function RunsPage() {
             <p className="kicker">Run {run.runNumber} · {formatDate(run.date)}</p>
             <h2>{run.focus || (run.runNumber === 1 ? "Baseline sweep" : `Run ${run.runNumber}`)}</h2>
             <p className="muted">{run.focus || (run.runNumber === 1 ? RUN_ONE_FOCUS : "")}</p>
-            <p className="small">{run.author} · {run.ideasAdded} added · {run.ideasRescored} re-scored</p>
+            <p className="small">{run.author} · {run.ideasAdded} added · {run.ideasRescored} re-scored{run.rubricVersion ? ` · rubric ${run.rubricVersion}` : ""}</p>
             <p>{run.notes}</p>
             <div className="chips">{run.sourcesSwept.map((source) => <span key={source} className="badge">{source}</span>)}</div>
             <p className="small">

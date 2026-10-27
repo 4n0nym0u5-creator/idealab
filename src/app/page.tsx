@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { DistributionChart } from "@/components/charts";
 import { withPortfolio } from "@/components/gate";
-import { ScoreMeter, StatusBadge } from "@/components/ui";
+import { CustomerBadge, ScoreMeter, StatusBadge } from "@/components/ui";
+import { criteriaInOrder } from "@/lib/criteria";
 import { formatDate } from "@/lib/format";
 import { workingScores } from "@/lib/scoring";
 import { RUN_ONE_FOCUS, THEMES, securitySubtype } from "@/lib/themes";
@@ -34,8 +35,8 @@ export default async function DashboardPage() {
           <p className="kicker">Portfolio overview</p>
           <h1>A lab for small, low-risk products.</h1>
           <p className="lede">
-            {ideas.length} scored ideas across {portfolio.runs.length} research runs. Shortlist is the top 10 automatic candidates.
-            Cybersecurity entered in Run 2 and now has its own theme.
+            {ideas.length} scored ideas across {portfolio.runs.length} research runs. Rubric {portfolio.settings.rubricVersion} scores AI-buildability for a non-engineer.
+            Shortlist is the top 10 automatic candidates. Run 3 is the consumer sweep.
           </p>
         </header>
 
@@ -43,6 +44,7 @@ export default async function DashboardPage() {
           <Stat value={String(ideas.length)} label="Ideas" />
           <Stat value={String(counts.shortlist ?? 0)} label="Shortlist" />
           <Stat value={String(counts.feeder ?? 0)} label="Feeders" />
+          <Stat value={String(ideas.filter((idea) => idea.customerType === "consumer").length)} label="Consumer" />
           <Stat value={String(security.length)} label="Security" />
           <Stat value={String(killed.length)} label="Killed" />
           <Stat value={mean.toFixed(1)} label="Live average" />
@@ -54,9 +56,11 @@ export default async function DashboardPage() {
               <p className="kicker">Highest ranked live idea</p>
               <h2>{lead.title}</h2>
               <p className="lede">{lead.problem}</p>
-              <ScoreMeter scores={workingScores(lead)} />
+              <ScoreMeter scores={workingScores(lead)} criteria={criteriaInOrder(portfolio.settings.criteriaOrder)} />
               <div className="chips">
                 <StatusBadge status={lead.status} />
+                <CustomerBadge type={lead.customerType} />
+                <span className="badge">AI {workingScores(lead).aibuild ?? "—"}/5</span>
                 <span className="badge">{lead.category}</span>
                 <span className="badge">{lead.platform}</span>
               </div>
@@ -68,6 +72,32 @@ export default async function DashboardPage() {
             </div>
           </section>
         ) : null}
+
+        <section className="panel stack">
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+            <h2>Start here for non-engineers</h2>
+            <Link href="/ideas?lens=starters">Open the full view</Link>
+          </div>
+          <p className="small muted">Sorted by AI-buildability, then total. These are live ideas a non-engineer can prompt into a shippable product.</p>
+          <div className="chips">
+            <Link className="chip" href="/ideas?customer=consumer">Consumer · {ideas.filter((idea) => idea.customerType === "consumer").length}</Link>
+            <Link className="chip" href="/ideas?customer=business">Business · {ideas.filter((idea) => idea.customerType === "business").length}</Link>
+            <Link className="chip" href="/ideas?customer=both">Both · {ideas.filter((idea) => idea.customerType === "both").length}</Link>
+          </div>
+          <div className="list">
+            {starters(live).map((idea) => (
+              <div key={idea.id} className="row">
+                <span className="num">{workingScores(idea).aibuild ?? "—"}/5</span>
+                <span>
+                  <Link href={`/ideas/${idea.id}`}><strong>{idea.title}</strong></Link>
+                  <div className="small faint">{idea.aibuildReason}</div>
+                </span>
+                <CustomerBadge type={idea.customerType} />
+                <span className="num">{idea.total.toFixed(1)}</span>
+              </div>
+            ))}
+          </div>
+        </section>
 
         <section className="grid-2">
           <div className="panel stack">
@@ -168,7 +198,7 @@ export default async function DashboardPage() {
                 {portfolio.runs.map((run) => (
                   <div key={run.runNumber}>
                     <strong>Run {run.runNumber}</strong>
-                    <span className="faint"> · {formatDate(run.date)} · +{run.ideasAdded} / {run.ideasRescored} rescored</span>
+                    <span className="faint"> · {formatDate(run.date)} · +{run.ideasAdded} / {run.ideasRescored} rescored{run.rubricVersion ? ` · rubric ${run.rubricVersion}` : ""}</span>
                     <p className="small muted">{run.focus || (run.runNumber === 1 ? RUN_ONE_FOCUS : run.notes)}</p>
                   </div>
                 ))}
@@ -180,6 +210,13 @@ export default async function DashboardPage() {
       </div>
     );
   });
+}
+
+function starters(live: Idea[]) {
+  return [...live]
+    .filter((idea) => (workingScores(idea).aibuild ?? 0) >= 4)
+    .sort((a, b) => (workingScores(b).aibuild ?? 0) - (workingScores(a).aibuild ?? 0) || b.total - a.total)
+    .slice(0, 5);
 }
 
 function Stat({ value, label }: { value: string; label: string }) {

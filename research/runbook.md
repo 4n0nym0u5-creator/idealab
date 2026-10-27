@@ -5,6 +5,8 @@ Files (all in `/workspace/sidehustle/`):
 - `ideas.json`: the master database (schema below). Never edit totals by hand.
 - `merge.py`: merges a run file into `ideas.json`, dedupes by `id`, recomputes totals and statuses, and picks the top-10 shortlist.
 - `build_run1.py`: how Run 1 was generated (a reference only; don't re-run it, because it overwrites `ideas.json`).
+- `build_run2.py`, `build_run3.py`: generators for the Run 2/3 import files (copy the `E()`/`I()` helper pattern from `build_run3.py`; it uses 13-digit score strings and a `customer_type` argument).
+- `migrate_v2.py`: one-off v1.0→v2.0 rubric migration (already run in Run 3; it refuses to run twice).
 - Page: "SideHustle Idea Lab", canvas_id `8f08a468-4039-454a-9a27-358c67955747`, url https://cursor.com/canvas/store-4d61992f-8a12-47ae-9e32-57cfaf4b60d1/8f08a468-4039-454a-9a27-358c67955747 . Use `ReadCanvas`, then `EditCanvas`. Its `RAW` array mirrors `ideas.json`; `DETAILS` holds the shortlist write-ups.
 
 ## 1. Prepare (5 min)
@@ -36,20 +38,22 @@ For each candidate, write: id (kebab-case, stable, problem-first e.g. `mac-displ
 Aim for at least 10 new ideas, plus re-scores of any shortlisted idea where you found new evidence.
 
 ## 4. Score
-- Score all 12 criteria 0-5 using `rubric.md` level definitions, and check against the calibration anchors.
-- Apply the kill criteria first; put reasons in `kill_flags`.
+- Score all 13 criteria 0-5 (rubric v2.0 added `aibuild`, scored last) using `rubric.md` level definitions, and check against the calibration anchors.
+- Apply the kill criteria first; put reasons in `kill_flags`. Only hard kills go in `kill_flags` (any entry auto-kills); soft risks go in `notes`.
+- Set `customer_type` (consumer | business | both) on every new idea; merge.py rejects new ideas without it.
+- For re-scores, send the full record (all 13 scores), not a partial one.
 - If a score changes for an existing idea, put one line of rationale in `notes` (e.g. "R2: compete 3->2, X launched").
 - Don't touch statuses `building`, `launched`, `parked`, `rejected`: the user sets those.
 
 ## 5. Merge
 1. Write `/workspace/sidehustle/runs/run_N.json`:
-   `{"run":{"run_number":N,"date":"YYYY-MM-DD","author":"...","sources_swept":[...],"notes":"..."},"ideas":[...]}`
+   `{"run":{"run_number":N,"date":"YYYY-MM-DD","author":"...","rubric_version":"2.0","focus":"...","sources_swept":[...],"notes":"..."},"ideas":[...]}`
 2. `cp ideas.json runs/ideas_before_run_N.json` (backup), then `python3 merge.py runs/run_N.json`.
 3. Check the printed top 15 makes sense. If a cheap feeder tool ranks high, it should show status `feeder`.
 
 ## 6. Update the Page (EditCanvas, never a full rewrite unless the structure changes)
 1. `ListCanvases` query "SideHustle Idea Lab" → `ReadCanvas`.
-2. Regenerate the `RAW` array from `ideas.json` (one tuple per idea: [id, title, category, platform, status, first_seen_run, total, 12-digit score string in criteria_order, price]) and replace it with one `EditCanvas`. Use the helper below. For any new shortlist idea, add a `DETAILS` entry (why, mvp, money, distro, risk).
+2. Regenerate the `RAW` array from `ideas.json` (one tuple per idea: [id, title, category, platform, status, first_seen_run, total, 13-digit score string in criteria_order, price, customer_type]) and replace it with one `EditCanvas`. Use the helper below. For any new shortlist idea, add a `DETAILS` entry (why, mvp, money, distro, risk).
 3. Append a row to the `RUNS` array (run, date, focus, added, rescored, headline).
 4. Update the "Shortlist" and "Focus themes" sections only if the top 10 or the themes changed; add a "What changed in Run N" bullet list under Run log.
 5. Share the Page link only after the edit succeeds.
@@ -58,25 +62,33 @@ Helper to print the RAW array for the Page:
 ```
 python3 - <<'X'
 import json;d=json.load(open('/workspace/sidehustle/ideas.json'));K=d['criteria_order']
-out=[[i['id'],i['title'],i['category'],i['platform'],i['status'],i['first_seen_run'],i['total'],''.join(str(i['scores'][k]) for k in K),i['price_hypothesis']] for i in sorted(d['ideas'],key=lambda x:-x['total'])]
+out=[[i['id'],i['title'],i['category'],i['platform'],i['status'],i['first_seen_run'],i['total'],''.join(str(i['scores'][k]) for k in K),i['price_hypothesis'],i['customer_type']] for i in sorted(d['ideas'],key=lambda x:-x['total'])]
 print('const RAW: Raw[] = '+json.dumps(out,ensure_ascii=False,separators=(',',':')).replace('],[','],\n[')+';')
 X
 ```
 Also update the Metrics counts, the TableOfContents (if sections change) and the Page title (e.g. "Run N (date)").
 
-## ideas.json schema (v1.0)
+## ideas.json schema (schema_version 2, rubric v2.0)
 ```
-{ schema_version, rubric_version, weights{key:weight}, criteria_order[12 keys],
-  runs: [{run_number, date, author, sources_swept[], ideas_added, ideas_rescored, notes}],
+{ schema_version (2), rubric_version ("2.0"), weights{key:weight} (13 keys, sum 100), criteria_order[13 keys, aibuild last],
+  customer_types ["consumer","business","both"],
+  rubric_history: [{version, since_run, date?, weights, change?}],
+  runs: [{run_number, date, author, rubric_version?, focus?, sources_swept[], ideas_added, ideas_rescored, notes}],
   ideas: [{ id*, title, category, platform, problem, target_users, monetisation, price_hypothesis,
-            scores{legal,pain,breadth,wtp,recurring,build,maint,distro,compete,defend,synergy,platform},
+            customer_type (consumer|business|both), aibuild_reason (one line, backfilled ideas),
+            scores{legal,pain,breadth,wtp,recurring,build,maint,distro,compete,defend,synergy,platform,aibuild},
             total (computed), status (candidate|shortlist|feeder|killed|building|launched|parked|rejected),
             kill_flags[], evidence[{url,note}], competitors[], notes,
-            first_seen_run, last_scored_run, score_history[{run,date,total,scores}] }] }
+            first_seen_run, last_scored_run,
+            score_history[{run, date, rubric_version, total, scores, note?}] }] }
 ```
+score_history keeps one entry per (run, rubric_version). v1.0 entries have 12 score keys; v2.0 entries have 13.
+Never compare totals across rubric versions.
+
 `id` is the primary key. Never rename an id; if an idea is reframed, keep the id and edit the title.
 
 ## Run history
 - Run 1 (27 Oct 2026): baseline sweep, 60 ideas (`build_run1.py`).
 - Run 2 (27 Oct 2026): cybersecurity deep dive, 40 new ideas plus a re-score of `saas-bulk-exporter-pattern` (`build_run2.py` -> `runs/run2.json`; backup in `runs/ideas_before_run_2.json`). Security categories are prefixed `Security:`. The rubric.md addendum covers security legal levels. The Page now has a "Cybersecurity deep dive (Run 2)" section with its own `CYBER_DETAILS` array, so add a `DETAILS` entry for any new shortlist id.
 - File naming: Run 2 used `runs/run2.json`; keep `runs/runN.json` from now on.
+- Run 3 (27 Oct 2026): consumer sweep + **rubric v2.0** (`aibuild` criterion, weight 10; weights rebalanced; `customer_type` on every idea). Order used: backup → `migrate_v2.py` (backfill all 100, writes `runs/run3_rubric_v2_rescore.json`) → `build_run3.py` → `merge.py runs/run3.json` (35 new consumer ideas, 2 re-scores). Backup in `runs/ideas_before_run_3.json`. The Page has a "Consumer pass (Run 3)" section (consumer shortlist details live in `DETAILS`), an AI-buildability explainer, a v1 vs v2 table and a first-build plan.

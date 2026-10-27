@@ -2,25 +2,26 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { ANCHORS, CRITERIA, FEEDER_RULE, KILL_CRITERIA, PORTFOLIO_SHELLS, SECURITY_LEGAL_ADDENDUM, TIE_BREAKERS, type Weights } from "@/lib/criteria";
+import { ANCHORS, FEEDER_RULE, KILL_CRITERIA, PORTFOLIO_SHELLS, SECURITY_LEGAL_ADDENDUM, TIE_BREAKERS, type Criterion, type Weights } from "@/lib/criteria";
 import { saveWeightsAction } from "@/lib/actions";
 import { assignPresentation, normalizeWeights, recompute } from "@/lib/scoring";
-import type { Idea, RubricChange } from "@/lib/types";
+import type { Idea, RubricChange, RubricVersionRecord } from "@/lib/types";
 
-export function RubricStudio({ ideas, weights, version, changes }: { ideas: Idea[]; weights: Weights; version: string; changes: RubricChange[] }) {
+export function RubricStudio({ ideas, weights, version, changes, criteria, history }: { ideas: Idea[]; weights: Weights; version: string; changes: RubricChange[]; criteria: Criterion[]; history: RubricVersionRecord[] }) {
+  const order = criteria.map((criterion) => criterion.key);
   const [draft, setDraft] = useState<Weights>(weights);
   const [note, setNote] = useState("");
   const [message, setMessage] = useState("");
   const [pending, startTransition] = useTransition();
   const router = useRouter();
-  const sum = CRITERIA.reduce((total, criterion) => total + (draft[criterion.key] || 0), 0);
-  const dirty = CRITERIA.some((criterion) => draft[criterion.key] !== weights[criterion.key]);
+  const sum = criteria.reduce((total, criterion) => total + (draft[criterion.key] || 0), 0);
+  const dirty = criteria.some((criterion) => draft[criterion.key] !== weights[criterion.key]);
 
   const preview = useMemo(() => {
     const clones = ideas.map((idea) => structuredClone(idea));
-    recompute(clones, draft);
+    recompute(clones, draft, order);
     return assignPresentation(clones);
-  }, [ideas, draft]);
+  }, [ideas, draft, order]);
   const currentRank = new Map(ideas.map((idea) => [idea.id, idea.rank]));
 
   function setWeight(key: keyof Weights, value: number) {
@@ -48,8 +49,32 @@ export function RubricStudio({ ideas, weights, version, changes }: { ideas: Idea
       <header className="stack">
         <p className="kicker">Rubric {version}</p>
         <h1>Weights you can argue with.</h1>
-        <p className="lede">Total = Σ (score ÷ 5 × weight), from 0 to 100. Five is always good for the builder. Inverted criteria are already flipped. Changing a weight recomputes every total. Level definitions stay put, because those are judgment, not arithmetic.</p>
+        <p className="lede">Total = Σ (score ÷ 5 × weight), from 0 to 100. Five is always good for the builder. Inverted criteria are already flipped. Changing a weight recomputes every total. Level definitions stay put, because those are judgment, not arithmetic. Optional criteria such as complaint frequency stay out of the total until a research run gives them a weight.</p>
       </header>
+
+      {history.length ? (
+        <section className="panel stack">
+          <h2>Rubric versions</h2>
+          <p className="small muted">Current research rubric is {version}. Weights below can be edited locally. Totals from different versions are not comparable.</p>
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Version</th><th>Since run</th><th>Date</th><th>Change</th></tr>
+              </thead>
+              <tbody>
+                {history.map((item) => (
+                  <tr key={item.version}>
+                    <td>{item.version}{item.version === version ? " · current" : ""}</td>
+                    <td className="num">{item.sinceRun || "—"}</td>
+                    <td>{item.date || "—"}</td>
+                    <td className="small">{item.change || "Baseline weights."}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      ) : null}
 
       <section className="grid-2">
         <div className="panel stack">
@@ -57,7 +82,7 @@ export function RubricStudio({ ideas, weights, version, changes }: { ideas: Idea
             <h2>Weights</h2>
             <strong className={sum === 100 ? "muted" : ""} style={{ color: sum === 100 ? "var(--good)" : "var(--clay)" }}>{sum} / 100</strong>
           </div>
-          {CRITERIA.map((criterion) => (
+          {criteria.map((criterion) => (
             <label key={criterion.key} className="stack" style={{ gap: 4 }}>
               <span style={{ display: "flex", justifyContent: "space-between" }}>
                 <span>{criterion.label}{criterion.inverted ? <span className="faint"> · inverted</span> : null}</span>
@@ -72,7 +97,7 @@ export function RubricStudio({ ideas, weights, version, changes }: { ideas: Idea
           </label>
           <div className="filters">
             <button className="btn btn-primary" type="button" disabled={pending || sum !== 100 || !dirty} onClick={save}>Save and rescore</button>
-            <button className="btn" type="button" onClick={() => setDraft(normalizeWeights(draft))}>Normalize to 100</button>
+            <button className="btn" type="button" onClick={() => setDraft(normalizeWeights(draft, order))}>Normalize to 100</button>
             <button className="btn btn-ghost" type="button" onClick={() => setDraft(weights)}>Reset</button>
           </div>
           {sum !== 100 ? <p className="small" style={{ color: "var(--clay)" }}>Weights need to sum to 100 before they can be saved.</p> : null}
@@ -102,7 +127,7 @@ export function RubricStudio({ ideas, weights, version, changes }: { ideas: Idea
 
       <section className="panel">
         <h2>Level definitions</h2>
-        {CRITERIA.map((criterion) => (
+        {criteria.map((criterion) => (
           <details key={criterion.key} className="rubric">
             <summary>
               <strong>{criterion.label}</strong>
@@ -143,13 +168,13 @@ export function RubricStudio({ ideas, weights, version, changes }: { ideas: Idea
         <div className="table-wrap" style={{ border: 0 }}>
           <table>
             <thead>
-              <tr><th>Anchor</th>{CRITERIA.map((criterion) => <th key={criterion.key}>{criterion.short}</th>)}</tr>
+              <tr><th>Anchor</th>{criteria.map((criterion) => <th key={criterion.key}>{criterion.short}</th>)}</tr>
             </thead>
             <tbody>
               {ANCHORS.map((anchor) => (
                 <tr key={anchor.name}>
                   <td><strong>{anchor.name}</strong><div className="small faint">{anchor.note}</div></td>
-                  {CRITERIA.map((criterion) => <td key={criterion.key} className="num">{anchor.scores[criterion.key] ?? "—"}</td>)}
+                  {criteria.map((criterion) => <td key={criterion.key} className="num">{anchor.scores[criterion.key] ?? "—"}</td>)}
                 </tr>
               ))}
             </tbody>

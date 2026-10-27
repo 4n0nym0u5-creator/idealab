@@ -22,8 +22,8 @@ export function buildBrief(idea: Idea, weights: Weights): Brief {
   const recurring = CRITERIA_BY_KEY.recurring.levels[scores.recurring] ?? "";
   const build = CRITERIA_BY_KEY.build.levels[scores.build] ?? "";
   const distro = CRITERIA_BY_KEY.distro.levels[scores.distro] ?? "";
-  const weak = (Object.keys(CRITERIA_BY_KEY) as Array<keyof typeof CRITERIA_BY_KEY>)
-    .filter((key) => scores[key] <= 2)
+  const weak = Object.keys(scores)
+    .filter((key) => scores[key] <= 2 && CRITERIA_BY_KEY[key] && !CRITERIA_BY_KEY[key].optional)
     .map((key) => ({
       label: CRITERIA_BY_KEY[key].label,
       score: scores[key],

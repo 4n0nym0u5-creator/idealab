@@ -43,11 +43,25 @@ export const STATUS_META: Record<Status, { label: string; hint: string }> = {
 
 export type Evidence = { url: string; note: string };
 
+export const CUSTOMER_TYPES = ["consumer", "business", "both"] as const;
+export type CustomerType = (typeof CUSTOMER_TYPES)[number];
+
+export type PainPoint = {
+  id: string;
+  label: string;
+  count: number;
+  cluster?: string;
+  sources: Evidence[];
+  quotes: string[];
+};
+
 export type ScoreSnapshot = {
   run: number;
   date: string;
+  rubricVersion: string;
   total: number;
   scores: Scores;
+  note?: string;
 };
 
 export type Idea = {
@@ -78,6 +92,9 @@ export type Idea = {
   firstSeenRun: number;
   lastScoredRun: number;
   scoreHistory: ScoreSnapshot[];
+  customerType: CustomerType | "";
+  aibuildReason: string;
+  painPoints: PainPoint[];
   pipelineOrder: number;
   position: number;
   updatedAt: string;
@@ -96,6 +113,15 @@ export type Run = {
   ideasRescored: number;
   notes: string;
   focus: string;
+  rubricVersion: string;
+};
+
+export type RubricVersionRecord = {
+  version: string;
+  sinceRun: number;
+  date: string;
+  weights: Weights;
+  change: string;
 };
 
 export type Settings = {
@@ -103,6 +129,8 @@ export type Settings = {
   rubricVersion: string;
   criteriaOrder: CriterionKey[];
   weights: Weights;
+  rubricHistory: RubricVersionRecord[];
+  customerTypes: string[];
 };
 
 export type RubricChange = {
@@ -127,4 +155,8 @@ export function isStatus(value: string): value is Status {
 
 export function isManualStatus(value: string): value is ManualStatus {
   return (MANUAL_STATUSES as readonly string[]).includes(value);
+}
+
+export function isCustomerType(value: string): value is CustomerType {
+  return (CUSTOMER_TYPES as readonly string[]).includes(value);
 }
