@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
-import { CRITERIA, type Scores } from "@/lib/criteria";
+import { DEFAULT_ORDER, criteriaInOrder, type Criterion, type Scores } from "@/lib/criteria";
 
 export function useDark() {
   const [dark, setDark] = useState(false);
@@ -24,11 +24,12 @@ export function ClientOnly({ children, height = 280 }: { children: React.ReactNo
   return <>{children}</>;
 }
 
-export function ScoreRadar({ series }: { series: { name: string; scores: Scores; color: string }[] }) {
+export function ScoreRadar({ series, criteria }: { series: { name: string; scores: Scores; color: string }[]; criteria?: Criterion[] }) {
   const dark = useDark();
-  const data = CRITERIA.map((criterion) => {
+  const items = criteria ?? criteriaInOrder(DEFAULT_ORDER);
+  const data = items.map((criterion) => {
     const row: Record<string, string | number> = { label: criterion.short };
-    for (const entry of series) row[entry.name] = entry.scores[criterion.key];
+    for (const entry of series) row[entry.name] = entry.scores[criterion.key] ?? 0;
     return row;
   });
   return (

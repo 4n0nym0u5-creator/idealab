@@ -39,7 +39,20 @@ function canonicalFromFile(idea: Record<string, unknown>) {
     notes: idea.notes ?? "",
     first_seen_run: idea.first_seen_run,
     last_scored_run: idea.last_scored_run,
-    score_history: idea.score_history,
+    score_history: (Array.isArray(idea.score_history) ? idea.score_history : []).map((item) => {
+      const row = item as Record<string, unknown>;
+      return {
+        run: row.run,
+        date: row.date,
+        ...(row.rubric_version ? { rubric_version: row.rubric_version } : {}),
+        total: row.total,
+        scores: row.scores,
+        ...(row.note ? { note: row.note } : {}),
+      };
+    }),
+    ...(idea.customer_type ? { customer_type: idea.customer_type } : {}),
+    ...(idea.aibuild_reason ? { aibuild_reason: idea.aibuild_reason } : {}),
+    ...(Array.isArray(idea.pain_points) && idea.pain_points.length ? { pain_points: idea.pain_points } : {}),
     ...(Array.isArray(idea.avoid_flags) && idea.avoid_flags.length ? { avoid_flags: idea.avoid_flags } : {}),
     ...(idea.liability_notes ? { liability_notes: idea.liability_notes } : {}),
   };
@@ -78,7 +91,7 @@ test("run 2 import matches the merged research database", async () => {
   assert.equal(portfolio.runs[1].focus, "Cybersecurity deep dive");
   assert.equal(portfolio.ideas.filter((idea) => idea.category.startsWith("Security:")).length, 40);
 
-  const merged = JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", "ideas.json"), "utf8")) as {
+  const merged = JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", "ideas-v1.json"), "utf8")) as {
     ideas: Record<string, unknown>[];
     runs: Record<string, unknown>[];
   };
@@ -162,6 +175,121 @@ test("run 2 import matches the merged research database", async () => {
   assert.equal(exportedBulk?.score_history.length, 2);
   assert.equal(exported.schema_version, "1.0");
   assert.equal(exported.ideas.length, 101);
+  } finally {
+    await closeDb();
+  }
+});
+
+test("rescore plus run 3 matches the v2 research database", async () => {
+  const { closeDb } = await import("../src/lib/db");
+  const { migrate } = await import("../src/lib/migrate");
+  const { readResearchFile, replacePortfolio, commitImport, commitRescore, loadPortfolio, canonicalIdea, previewImport } = await import("../src/lib/store");
+  try {
+    await migrate();
+    const v1 = readResearchFile(path.join(process.cwd(), "data", "ideas-v1.json"));
+    const seeded = await replacePortfolio(v1, "test");
+    assert.equal(seeded.ideas, 100);
+    const rescore = JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", "run3-rubric-v2-rescore.json"), "utf8"));
+    await commitRescore(rescore, "test");
+    const run3Text = fs.readFileSync(path.join(process.cwd(), "data", "run3.json"), "utf8");
+    const preview = await previewImport(run3Text);
+    assert.equal(preview.ideasAdded, 35);
+    assert.equal(preview.ideasRescored, 2);
+    assert.ok(preview.updated.some((idea) => idea.id === "wedding-seating-planner"));
+    assert.ok(preview.updated.some((idea) => idea.id === "gcal-time-audit"));
+    await commitImport(run3Text, "test");
+    const portfolio = await loadPortfolio();
+    assert.equal(portfolio.ideas.length, 135);
+    assert.equal(portfolio.runs.length, 3);
+    assert.equal(portfolio.settings.rubricVersion, "2.0");
+    assert.equal(portfolio.settings.criteriaOrder.at(-1), "aibuild");
+    assert.equal(portfolio.runs[2].rubricVersion, "2.0");
+    assert.match(portfolio.runs[2].focus, /Consumer/);
+    assert.equal(portfolio.settings.rubricHistory.length, 2);
+
+    const merged = JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", "ideas.json"), "utf8")) as { ideas: Record<string, unknown>[] };
+    const byId = new Map(portfolio.ideas.map((idea) => [idea.id, canonicalIdea(idea)]));
+    for (const raw of merged.ideas) {
+      assert.deepEqual(byId.get(String(raw.id)), canonicalFromFile(raw), String(raw.id));
+    }
+    const sample = portfolio.ideas.find((idea) => idea.id === "mac-display-arrangement-restorer") ?? portfolio.ideas.find((idea) => idea.scoreHistory.length > 1);
+    assert.ok(sample);
+    assert.ok(sample.scoreHistory.some((item) => item.rubricVersion === "1.0"));
+    assert.ok(sample.scoreHistory.some((item) => item.rubricVersion === "2.0"));
+
+    const scored = portfolio.ideas.find((idea) => idea.customerType === "consumer");
+    assert.ok(scored);
+    await assert.rejects(
+      () => previewImport(JSON.stringify({
+        run: { run_number: 4, date: "2026-11-03", author: "Test", rubric_version: "2.0", focus: "Pain mining" },
+        ideas: [{ id: "missing-customer", title: "Missing customer", category: "Web", platform: "Web", problem: "No type", target_users: "People", monetisation: "Checkout", price_hypothesis: "US$10", scores: scored.scores }],
+      })),
+      /customer_type/,
+    );
+    const withPain = await previewImport(JSON.stringify({
+      run: { run_number: 4, date: "2026-11-03", author: "Test", rubric_version: "2.0", focus: "Pain mining", weights: portfolio.settings.weights, criteria_order: portfolio.settings.criteriaOrder },
+      ideas: [{
+        id: scored.id,
+        scores: { ...scored.scores, complaint_frequency: 4 },
+        pain_points: [{ id: "export-pain", label: "Export complaints", count: 12, cluster: "export", sources: [{ url: "https://example.com/thread", note: "A forum thread" }], quotes: ["I still cannot export."] }],
+        notes: scored.notes,
+      }],
+    }));
+    assert.equal(withPain.updated[0]?.partial, true);
+    assert.ok(withPain.updated[0]?.fieldsUpdated.includes("pain points"));
+    await commitImport(JSON.stringify({
+      run: { run_number: 4, date: "2026-11-03", author: "Test", rubric_version: "2.0", focus: "Pain mining" },
+      ideas: [{
+        id: scored.id,
+        scores: { ...scored.scores, complaint_frequency: 4 },
+        pain_points: [{ id: "export-pain", label: "Export complaints", count: 12, cluster: "export", sources: [{ url: "https://example.com/thread", note: "A forum thread" }], quotes: ["I still cannot export."] }],
+      }],
+    }), "test");
+    const after = await loadPortfolio();
+    const mined = after.ideas.find((idea) => idea.id === scored.id);
+    assert.equal(mined?.scores.complaint_frequency, 4);
+    assert.equal(mined?.painPoints[0]?.count, 12);
+    assert.equal(mined?.painPoints[0]?.quotes[0], "I still cannot export.");
+    assert.equal(mined?.scoreHistory.filter((item) => item.run === 4 && item.rubricVersion === "2.0").length, 1);
+  } finally {
+    await closeDb();
+  }
+});
+
+test("production upgrade preserves notes, statuses and overrides", async () => {
+  const { closeDb } = await import("../src/lib/db");
+  const { migrate } = await import("../src/lib/migrate");
+  const { readResearchFile, replacePortfolio, updateTracking, seedIfEmpty, loadPortfolio } = await import("../src/lib/store");
+  try {
+    await migrate();
+    await replacePortfolio(readResearchFile(path.join(process.cwd(), "data", "ideas-v1.json")), "test");
+    await updateTracking("mac-quicklook-data-viewer", {
+      status: "building",
+      userNotes: "Keep this note through the upgrade.",
+      scoreOverrides: { distro: 1 },
+    }, "test");
+    const upgraded = await seedIfEmpty("migrate-v2");
+    assert.equal(upgraded.skipped, false);
+    assert.equal(upgraded.ideas, 135);
+    const portfolio = await loadPortfolio();
+    assert.equal(portfolio.ideas.length, 135);
+    assert.equal(portfolio.runs.length, 3);
+    assert.equal(portfolio.settings.rubricVersion, "2.0");
+    assert.equal(portfolio.settings.schemaVersion, "2");
+    const kept = portfolio.ideas.find((idea) => idea.id === "mac-quicklook-data-viewer");
+    assert.equal(kept?.status, "building");
+    assert.equal(kept?.statusLocked, true);
+    assert.equal(kept?.userNotes, "Keep this note through the upgrade.");
+    assert.equal(kept?.scoreOverrides.distro, 1);
+    assert.equal(kept?.customerType.length > 0, true);
+    assert.equal(typeof kept?.scores.aibuild, "number");
+    const again = await seedIfEmpty("migrate-v2");
+    assert.equal(again.skipped, true);
+    await updateTracking("mac-quicklook-data-viewer", { userNotes: "Edited after the upgrade." }, "test");
+    await seedIfEmpty("migrate-v2");
+    const after = await loadPortfolio();
+    assert.equal(after.ideas.find((idea) => idea.id === "mac-quicklook-data-viewer")?.userNotes, "Edited after the upgrade.");
+    assert.equal(after.ideas.length, 135);
   } finally {
     await closeDb();
   }

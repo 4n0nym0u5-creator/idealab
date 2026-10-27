@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { CRITERIA_KEYS, isCriterionKey, type CriterionKey, type Scores, type Weights } from "./criteria";
+import { isCriterionKey, isOptionalCriterion, type CriterionKey, type Scores, type Weights } from "./criteria";
 import { recompute, totalOf } from "./scoring";
-import { isManualStatus, isStatus, type Evidence, type Idea, type Run, type ScoreSnapshot, type Status } from "./types";
+import { isCustomerType, isManualStatus, isStatus, type Evidence, type Idea, type PainPoint, type Run, type ScoreSnapshot, type Status } from "./types";
 
 export class ImportError extends Error {
   constructor(message: string) {
@@ -11,20 +11,7 @@ export class ImportError extends Error {
 }
 
 const scoreValue = z.number().int().min(0).max(5);
-const scoresSchema = z.object({
-  legal: scoreValue,
-  pain: scoreValue,
-  breadth: scoreValue,
-  wtp: scoreValue,
-  recurring: scoreValue,
-  build: scoreValue,
-  maint: scoreValue,
-  distro: scoreValue,
-  compete: scoreValue,
-  defend: scoreValue,
-  synergy: scoreValue,
-  platform: scoreValue,
-});
+const scoresSchema = z.record(z.string(), scoreValue);
 
 const evidenceSchema = z.object({
   url: z.string().min(1),
@@ -42,6 +29,16 @@ const incomingIdeaSchema = z
     monetisation: z.string().optional(),
     price_hypothesis: z.string().optional(),
     scores: scoresSchema,
+    customer_type: z.enum(["consumer", "business", "both"]).optional(),
+    aibuild_reason: z.string().optional(),
+    pain_points: z.array(z.object({
+      id: z.string().min(1),
+      label: z.string().min(1),
+      count: z.number().int().nonnegative(),
+      cluster: z.string().optional(),
+      sources: z.array(evidenceSchema).optional(),
+      quotes: z.array(z.string()).optional(),
+    })).optional(),
     status: z.string().optional(),
     kill_flags: z.array(z.string()).optional(),
     avoid_flags: z.array(z.string()).optional(),
@@ -60,6 +57,7 @@ const runMetaSchema = z
     sources_swept: z.array(z.string()).optional(),
     notes: z.string().optional(),
     focus: z.string().optional(),
+    rubric_version: z.string().optional(),
     ideas_added: z.number().optional(),
     ideas_rescored: z.number().optional(),
   })
@@ -153,6 +151,17 @@ function pySorted(values: string[]): string[] {
   return [...new Set(values.map((value) => value.trim()).filter(Boolean))].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
 }
 
+function asPainPoint(item: { id: string; label: string; count: number; cluster?: string; sources?: Evidence[]; quotes?: string[] }): PainPoint {
+  return {
+    id: item.id,
+    label: item.label,
+    count: item.count,
+    ...(item.cluster ? { cluster: item.cluster } : {}),
+    sources: (item.sources ?? []).map((source) => ({ url: source.url, note: source.note })),
+    quotes: [...(item.quotes ?? [])],
+  };
+}
+
 function unionEvidence(current: Evidence[], incoming: Evidence[]): { evidence: Evidence[]; added: string[] } {
   const map = new Map<string, Evidence>();
   for (const item of current) map.set(item.url, { ...item });
@@ -167,10 +176,7 @@ function unionEvidence(current: Evidence[], incoming: Evidence[]): { evidence: E
 }
 
 function blankIdea(id: string, position: number, now: string): Idea {
-  const scores = CRITERIA_KEYS.reduce((map, key) => {
-    map[key] = 0;
-    return map;
-  }, {} as Scores);
+  const scores = {} as Scores;
   return {
     id,
     title: "",
@@ -199,6 +205,9 @@ function blankIdea(id: string, position: number, now: string): Idea {
     firstSeenRun: 0,
     lastScoredRun: 0,
     scoreHistory: [],
+    customerType: "",
+    aibuildReason: "",
+    painPoints: [],
     pipelineOrder: 0,
     position,
     updatedAt: now,
@@ -241,6 +250,7 @@ function applyIncoming(current: Idea, incoming: IncomingIdea, isNew: boolean): {
     ["price_hypothesis", "priceHypothesis", "price hypothesis"],
     ["notes", "notes", "notes"],
     ["liability_notes", "liabilityNotes", "liability notes"],
+    ["aibuild_reason", "aibuildReason", "AI-buildability reason"],
   ];
 
   for (const [source, target, label] of scalars) {
@@ -251,11 +261,23 @@ function applyIncoming(current: Idea, incoming: IncomingIdea, isNew: boolean): {
   }
 
   const scoreDiffs: ScoreDiff[] = [];
-  for (const key of CRITERIA_KEYS) {
+  const scoreKeys = [...new Set([...Object.keys(previousScores), ...Object.keys(incoming.scores)])];
+  for (const key of scoreKeys) {
     const next = incoming.scores[key];
+    if (next === undefined) continue;
     if (previousScores[key] !== next) scoreDiffs.push({ key, from: previousScores[key] ?? 0, to: next });
   }
   current.scores = { ...incoming.scores };
+
+  if (incoming.customer_type && isCustomerType(incoming.customer_type)) {
+    if (current.customerType !== incoming.customer_type) fieldsUpdated.push("customer type");
+    current.customerType = incoming.customer_type;
+  }
+  if (incoming.pain_points) {
+    const nextPain = incoming.pain_points.map(asPainPoint);
+    if (JSON.stringify(current.painPoints) !== JSON.stringify(nextPain)) fieldsUpdated.push("pain points");
+    current.painPoints = nextPain;
+  }
 
   let evidenceAdded: string[] = [];
   if (incoming.evidence) {
@@ -319,12 +341,23 @@ function applyIncoming(current: Idea, incoming: IncomingIdea, isNew: boolean): {
   };
 }
 
-export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, runs: Run[] = []): { ideas: Idea[]; run: Run; report: ImportReport } {
+export type ApplyRunOptions = {
+  criteriaOrder?: readonly string[];
+};
+
+function sameHistorySlot(item: ScoreSnapshot, runNumber: number, rubricVersion: string): boolean {
+  return item.run === runNumber && (item.rubricVersion || "") === (rubricVersion || "");
+}
+
+export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, runs: Run[] = [], options: ApplyRunOptions = {}): { ideas: Idea[]; run: Run; report: ImportReport } {
   const parsed = parseRunFile(file);
   const runNumber = parsed.run.run_number;
   if (runs.some((run) => run.runNumber === runNumber)) {
     throw new ImportError(`Run ${runNumber} is already in the database.`);
   }
+  const order = [...(options.criteriaOrder?.length ? options.criteriaOrder : Object.keys(weights))];
+  const rubricVersion = parsed.run.rubric_version ?? "";
+  const needsCustomer = Number(rubricVersion.split(".")[0] || "0") >= 2 || order.includes("aibuild");
 
   const ideas = inputIdeas.map((idea) => structuredClone(idea));
   const byId = new Map(ideas.map((idea) => [idea.id, idea]));
@@ -335,6 +368,16 @@ export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, ru
 
   for (const incoming of parsed.ideas) {
     const existing = byId.get(incoming.id);
+    for (const key of Object.keys(incoming.scores)) {
+      if (!isCriterionKey(key)) throw new ImportError(`${incoming.id} has an invalid score key: ${key}`);
+    }
+    const missingScores = order.filter((key) => !isOptionalCriterion(key) && typeof incoming.scores[key] !== "number");
+    if (missingScores.length) {
+      throw new ImportError(`${incoming.id} is missing scores for ${missingScores.join(", ")}.`);
+    }
+    if (!existing && needsCustomer && !incoming.customer_type) {
+      throw new ImportError(`${incoming.id} is a new idea and needs customer_type (consumer, business, or both).`);
+    }
     if (!existing && isPartial(incoming)) {
       const missing = REQUIRED_NEW.filter(([key]) => {
         const value = incoming[key];
@@ -361,10 +404,11 @@ export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, ru
     const snapshot: ScoreSnapshot = {
       run: runNumber,
       date: parsed.run.date,
-      total: totalOf(current.scores, weights),
+      rubricVersion,
+      total: totalOf(current.scores, weights, order),
       scores: { ...current.scores },
     };
-    current.scoreHistory = [...current.scoreHistory.filter((item) => item.run !== runNumber), snapshot];
+    current.scoreHistory = [...current.scoreHistory.filter((item) => !sameHistorySlot(item, runNumber, rubricVersion)), snapshot];
     current.lastScoredRun = runNumber;
     current.researchTotal = snapshot.total;
     current.total = snapshot.total;
@@ -373,7 +417,7 @@ export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, ru
     changes.push({ ...change, id: current.id, previousTotal, previousStatus, isNew });
   }
 
-  recompute(ideas, weights);
+  recompute(ideas, weights, order);
 
   const added: IdeaChange[] = [];
   const updated: IdeaChange[] = [];
@@ -419,6 +463,7 @@ export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, ru
     ideasRescored: updated.length + duplicates.length,
     notes: parsed.run.notes ?? "",
     focus: parsed.run.focus ?? "",
+    rubricVersion,
   };
 
   return {
@@ -453,16 +498,13 @@ export function parseJsonText(text: string): unknown {
 }
 
 export function weightsFromUnknown(value: unknown): Weights | null {
-  if (!value || typeof value !== "object") return null;
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
   const record = value as Record<string, unknown>;
-  const weights = {} as Weights;
-  for (const key of CRITERIA_KEYS) {
-    const weight = record[key];
-    if (typeof weight !== "number") return null;
+  const weights: Weights = {};
+  for (const [key, weight] of Object.entries(record)) {
+    if (!isCriterionKey(key) || typeof weight !== "number") return null;
     weights[key] = weight;
   }
-  for (const key of Object.keys(record)) {
-    if (!isCriterionKey(key)) return null;
-  }
+  if (!Object.keys(weights).length) return null;
   return weights;
 }

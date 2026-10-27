@@ -229,6 +229,10 @@ h3 { font-size: 20px; }
 .badge-avoid { background: color-mix(in srgb, var(--clay) 18%, transparent); color: var(--clay); }
 .badge-killed { background: color-mix(in srgb, var(--bad) 16%, transparent); color: var(--bad); }
 .badge-security { background: color-mix(in srgb, var(--ink) 8%, transparent); color: var(--ink); border: 1px solid var(--line); }
+.badge-consumer { background: color-mix(in srgb, var(--good) 14%, transparent); color: var(--good); }
+.badge-business { background: color-mix(in srgb, #3d6ea8 16%, transparent); color: #3d6ea8; }
+.dark .badge-business { color: #9ec0ea; }
+.badge-both { background: color-mix(in srgb, var(--clay) 16%, transparent); color: var(--clay); }
 
 .split { display: flex; height: 10px; border-radius: 99px; overflow: hidden; background: var(--sunken); }
 .split span { display: block; height: 100%; }

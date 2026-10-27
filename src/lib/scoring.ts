@@ -1,14 +1,22 @@
-import { CRITERIA_KEYS, type CriterionKey, type Scores, type Weights } from "./criteria";
+import { isOptionalCriterion, type CriterionKey, type Scores, type Weights } from "./criteria";
 import { isManualStatus, type Idea, type Status } from "./types";
 
 export function round1(value: number): number {
   return Math.round(value * 10) / 10;
 }
 
-export function totalOf(scores: Scores, weights: Weights): number {
+export function weightKeys(weights: Weights, keys?: readonly string[]): string[] {
+  return [...(keys ?? Object.keys(weights))];
+}
+
+export function totalOf(scores: Scores, weights: Weights, keys?: readonly string[]): number {
   let sum = 0;
-  for (const key of CRITERIA_KEYS) {
-    sum += (scores[key] / 5) * weights[key];
+  for (const key of weightKeys(weights, keys)) {
+    const weight = weights[key] ?? 0;
+    if (!weight) continue;
+    const score = scores[key];
+    if (score === undefined && isOptionalCriterion(key)) continue;
+    sum += ((score ?? 0) / 5) * weight;
   }
   return round1(sum);
 }
@@ -17,9 +25,10 @@ export function contribution(score: number, weight: number): number {
   return round1((score / 5) * weight);
 }
 
-export function workingScores(idea: Pick<Idea, "scores" | "scoreOverrides">): Scores {
+export function workingScores(idea: Pick<Idea, "scores" | "scoreOverrides">, keys?: readonly string[]): Scores {
   const scores = { ...idea.scores };
-  for (const key of CRITERIA_KEYS) {
+  const names = keys ?? [...new Set([...Object.keys(idea.scores), ...Object.keys(idea.scoreOverrides)])];
+  for (const key of names) {
     const override = idea.scoreOverrides[key];
     if (override !== undefined) scores[key] = override;
   }
@@ -36,11 +45,12 @@ export function compareRank(a: Pick<Idea, "id" | "total" | "scores" | "scoreOver
   return a.id.localeCompare(b.id);
 }
 
-export function recompute(ideas: Idea[], weights: Weights): void {
+export function recompute(ideas: Idea[], weights: Weights, keys?: readonly string[]): void {
+  const order = weightKeys(weights, keys);
   for (const idea of ideas) {
-    const working = workingScores(idea);
-    idea.researchTotal = totalOf(idea.scores, weights);
-    idea.total = totalOf(working, weights);
+    const working = workingScores(idea, order);
+    idea.researchTotal = totalOf(idea.scores, weights, order);
+    idea.total = totalOf(working, weights, order);
     if (idea.statusLocked || isManualStatus(idea.status)) continue;
     const killFlags = idea.killFlags.map((flag) => flag.trim()).filter(Boolean);
     const avoidFlags = idea.avoidFlags.map((flag) => flag.trim()).filter(Boolean);
@@ -50,11 +60,17 @@ export function recompute(ideas: Idea[], weights: Weights): void {
     else idea.status = "candidate";
   }
 
-  // Match merge.py: top 10 candidates by total only. JS sort is stable, so ties
-  // keep the current portfolio order (file order, then newly imported ideas).
   const pool = ideas
     .filter((idea) => idea.status === "candidate")
-    .sort((a, b) => b.total - a.total);
+    .sort((a, b) => {
+      if (b.total !== a.total) return b.total - a.total;
+      const left = workingScores(a, order);
+      const right = workingScores(b, order);
+      if ((right.distro ?? 0) !== (left.distro ?? 0)) return (right.distro ?? 0) - (left.distro ?? 0);
+      if ((right.legal ?? 0) !== (left.legal ?? 0)) return (right.legal ?? 0) - (left.legal ?? 0);
+      if ((right.build ?? 0) !== (left.build ?? 0)) return (right.build ?? 0) - (left.build ?? 0);
+      return a.id.localeCompare(b.id);
+    });
   for (const idea of pool.slice(0, 10)) idea.status = "shortlist";
 }
 
@@ -68,9 +84,10 @@ export function assignPresentation(ideas: Idea[]): Idea[] {
   return ranked;
 }
 
-export function assertWeights(weights: Weights): void {
+export function assertWeights(weights: Weights, keys?: readonly string[]): void {
+  const names = weightKeys(weights, keys).filter((key) => !isOptionalCriterion(key) || (weights[key] ?? 0) > 0);
   let sum = 0;
-  for (const key of CRITERIA_KEYS) {
+  for (const key of names) {
     const weight = weights[key];
     if (!Number.isInteger(weight) || weight < 0 || weight > 100) {
       throw new Error(`${key} weight must be a whole number from 0 to 100.`);
@@ -80,21 +97,22 @@ export function assertWeights(weights: Weights): void {
   if (sum !== 100) throw new Error(`Weights sum to ${sum}. They need to sum to 100.`);
 }
 
-export function normalizeWeights(weights: Weights): Weights {
-  const sum = CRITERIA_KEYS.reduce((total, key) => total + (Number.isFinite(weights[key]) ? weights[key] : 0), 0);
+export function normalizeWeights(weights: Weights, keys?: readonly string[]): Weights {
+  const names = weightKeys(weights, keys);
+  const sum = names.reduce((total, key) => total + (Number.isFinite(weights[key]) ? weights[key] : 0), 0);
   const next = {} as Weights;
   if (sum <= 0) {
-    for (const key of CRITERIA_KEYS) next[key] = 0;
+    for (const key of names) next[key] = 0;
     next.legal = 100;
     return next;
   }
   let acc = 0;
-  for (const key of CRITERIA_KEYS) {
-    next[key] = Math.max(0, Math.round((weights[key] / sum) * 100));
+  for (const key of names) {
+    next[key] = Math.max(0, Math.round(((weights[key] ?? 0) / sum) * 100));
     acc += next[key];
   }
   let diff = 100 - acc;
-  const order = [...CRITERIA_KEYS].sort((a, b) => next[b] - next[a] || a.localeCompare(b));
+  const order = [...names].sort((a, b) => next[b] - next[a] || a.localeCompare(b));
   let index = 0;
   while (diff !== 0 && index < 500) {
     const key = order[index % order.length];
@@ -116,9 +134,10 @@ export function bumpVersion(version: string): string {
   return `${match[1]}.${Number(match[2]) + 1}`;
 }
 
-export function sanitizeOverrides(input: Partial<Record<CriterionKey, number>>): Partial<Scores> {
+export function sanitizeOverrides(input: Partial<Record<CriterionKey, number>>, keys?: readonly string[]): Partial<Scores> {
   const overrides: Partial<Scores> = {};
-  for (const key of CRITERIA_KEYS) {
+  const names = keys ?? Object.keys(input);
+  for (const key of names) {
     const value = input[key];
     if (value === undefined) continue;
     if (!Number.isInteger(value) || value < 0 || value > 5) {

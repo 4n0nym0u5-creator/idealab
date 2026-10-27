@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { CRITERIA, SECURITY_LEGAL_ADDENDUM, type CriterionKey } from "@/lib/criteria";
+import { DEFAULT_ORDER, SECURITY_LEGAL_ADDENDUM, criteriaInOrder, type CriterionKey } from "@/lib/criteria";
 import { saveTrackingAction } from "@/lib/actions";
 import { buildBrief } from "@/lib/brief";
 import { domainOf, formatDate } from "@/lib/format";
@@ -12,10 +12,11 @@ import { STATUS_META, type Idea, type Status } from "@/lib/types";
 import type { Weights } from "@/lib/criteria";
 import { ScoreRadar } from "./charts";
 import { Sparkline } from "./sparkline";
-import { FlagList, ScoreMeter, StatusBadge, meterColor } from "./ui";
+import { CustomerBadge, FlagList, ScoreMeter, StatusBadge, meterColor } from "./ui";
 
-export function IdeaDetail({ idea, weights, neighbors }: { idea: Idea; weights: Weights; neighbors: { prev?: { id: string; title: string }; next?: { id: string; title: string } } }) {
-  const scores = workingScores(idea);
+export function IdeaDetail({ idea, weights, neighbors, criteriaOrder }: { idea: Idea; weights: Weights; neighbors: { prev?: { id: string; title: string }; next?: { id: string; title: string } }; criteriaOrder?: string[] }) {
+  const criteria = criteriaInOrder(criteriaOrder?.length ? criteriaOrder : DEFAULT_ORDER);
+  const scores = workingScores(idea, criteria.map((item) => item.key));
   const brief = buildBrief(idea, weights);
   const [status, setStatus] = useState<Status>(idea.status);
   const [userNotes, setUserNotes] = useState(idea.userNotes);
@@ -67,6 +68,7 @@ export function IdeaDetail({ idea, weights, neighbors }: { idea: Idea; weights: 
         <div className="stack">
           <div className="chips">
             <StatusBadge status={idea.status} />
+            <CustomerBadge type={idea.customerType} />
             {brief.security ? <span className="badge badge-security">Cybersecurity · {brief.subtype}</span> : <span className="badge">{idea.category}</span>}
             <span className="badge">{idea.platform}</span>
             <span className="badge">Seen in run {idea.firstSeenRun}</span>
@@ -76,13 +78,25 @@ export function IdeaDetail({ idea, weights, neighbors }: { idea: Idea; weights: 
           <h1 style={{ fontSize: "clamp(36px, 4vw, 56px)" }}>{idea.title}</h1>
           <p className="lede">{idea.problem}</p>
           <p className="small muted">For {idea.targetUsers}</p>
-          <ScoreMeter scores={scores} />
+          <ScoreMeter scores={scores} criteria={criteria} />
         </div>
         <div>
           <div className="score-figure">{idea.total.toFixed(1)}</div>
           <p className="faint small">{idea.rank ? `Live rank ${idea.rank}` : "Outside the live ranking"}{idea.total !== idea.researchTotal ? ` · research total ${idea.researchTotal.toFixed(1)}` : ""}</p>
         </div>
       </header>
+
+      <section className="feature">
+        <div className="stack">
+          <p className="kicker">AI-buildability for a non-engineer</p>
+          <p className="lede">{idea.aibuildReason || "How far a non-engineer can prompt this to a correct, shippable state."}</p>
+          {(scores.aibuild ?? 0) >= 4 ? <Link className="btn" href="/ideas?lens=starters">Start here for non-engineers</Link> : null}
+        </div>
+        <div>
+          <div className="score-figure">{scores.aibuild ?? "—"}<span className="small faint">/5</span></div>
+          <p className="faint small">Weight {weights.aibuild ?? 0}. A high score means the mistakes are visible and the stack is ordinary web software.</p>
+        </div>
+      </section>
 
       {brief.security ? (
         <section className="panel stack">
@@ -117,17 +131,17 @@ export function IdeaDetail({ idea, weights, neighbors }: { idea: Idea; weights: 
       <section className="grid-2">
         <div className="panel">
           <h2>Score shape</h2>
-          <ScoreRadar series={[{ name: idea.title, scores, color: "#1e6b4a" }]} />
+          <ScoreRadar series={[{ name: idea.title, scores, color: "#1e6b4a" }]} criteria={criteria} />
         </div>
         <div className="panel">
           <h2>Points by criterion</h2>
           <div className="bars">
-            {CRITERIA.map((criterion) => {
-              const points = contribution(scores[criterion.key], weights[criterion.key]);
+            {criteria.map((criterion) => {
+              const points = contribution(scores[criterion.key] ?? 0, weights[criterion.key] ?? 0);
               return (
                 <div key={criterion.key} className="bar-row">
                   <span>{criterion.short}</span>
-                  <div className="track" title={`${scores[criterion.key]}/5 × weight ${weights[criterion.key]}`}><span style={{ width: `${(points / Math.max(weights[criterion.key], 1)) * 100}%`, background: meterColor(scores[criterion.key]) }} /></div>
+                  <div className="track" title={`${scores[criterion.key] ?? 0}/5 × weight ${weights[criterion.key] ?? 0}`}><span style={{ width: `${(points / Math.max(weights[criterion.key] ?? 0, 1)) * 100}%`, background: meterColor(scores[criterion.key] ?? 0) }} /></div>
                   <span className="num">{points.toFixed(1)}</span>
                 </div>
               );
@@ -142,13 +156,13 @@ export function IdeaDetail({ idea, weights, neighbors }: { idea: Idea; weights: 
             <tr><th>Criterion</th><th>Score</th><th>Weight</th><th>Points</th><th>What this score means</th></tr>
           </thead>
           <tbody>
-            {CRITERIA.map((criterion) => (
+            {criteria.map((criterion) => (
               <tr key={criterion.key}>
                 <td>{criterion.label}{criterion.inverted ? <span className="faint"> · inverted</span> : null}{idea.scoreOverrides[criterion.key] !== undefined ? <span className="faint"> · override</span> : null}</td>
-                <td className="num">{scores[criterion.key]}</td>
-                <td className="num">{weights[criterion.key]}</td>
-                <td className="num">{contribution(scores[criterion.key], weights[criterion.key]).toFixed(1)}</td>
-                <td className="small muted">{criterion.levels[scores[criterion.key]]}</td>
+                <td className="num">{scores[criterion.key] ?? "—"}</td>
+                <td className="num">{weights[criterion.key] ?? 0}</td>
+                <td className="num">{contribution(scores[criterion.key] ?? 0, weights[criterion.key] ?? 0).toFixed(1)}</td>
+                <td className="small muted">{scores[criterion.key] === undefined ? "Not scored" : criterion.levels[scores[criterion.key]]}</td>
               </tr>
             ))}
           </tbody>
@@ -196,21 +210,36 @@ export function IdeaDetail({ idea, weights, neighbors }: { idea: Idea; weights: 
       </section>
 
       <section className="panel stack">
+        <h2>Pain points and evidence</h2>
+        <p className="small muted">Forum pain-point mining lands here: clusters, raw mention counts, sources and quotes. Complaint frequency is an optional criterion, so a later run can attach it without a code change.</p>
+        {idea.painPoints.length ? idea.painPoints.map((point) => (
+          <article key={point.id} className="stack">
+            <strong>{point.label}</strong>
+            <p className="small">{point.count} mentions{point.cluster ? ` · ${point.cluster}` : ""}</p>
+            {point.quotes.map((quote) => <blockquote key={quote} className="small">{quote}</blockquote>)}
+            {point.sources.map((source) => <p key={source.url} className="small"><a href={source.url}>{domainOf(source.url)}</a> — {source.note}</p>)}
+          </article>
+        )) : <p className="small">No pain clusters are attached to this idea yet.</p>}
+      </section>
+
+      <section className="panel stack">
         <h2>Score history</h2>
-        {idea.scoreHistory.length > 1 ? (
-          <Sparkline points={idea.scoreHistory.map((item) => item.total)} labels={idea.scoreHistory.map((item) => `R${item.run}`)} />
-        ) : (
-          <p className="small muted">Scored once, in run {idea.scoreHistory[0]?.run ?? idea.firstSeenRun} on {formatDate(idea.scoreHistory[0]?.date ?? "")}.</p>
-        )}
-        <div className="list">
-          {idea.scoreHistory.map((item) => (
-            <div key={item.run} className="row" style={{ gridTemplateColumns: "80px 1fr auto" }}>
-              <span className="num">{item.total.toFixed(1)}</span>
-              <span>Run {item.run} · {formatDate(item.date)}</span>
-              <span className="small faint">{CRITERIA.map((criterion) => item.scores[criterion.key]).join("")}</span>
-            </div>
-          ))}
-        </div>
+        {new Set(idea.scoreHistory.map((item) => item.rubricVersion || "1.0")).size > 1 ? (
+          <p className="small muted">Totals are kept under the rubric version that produced them. A v1.0 total and a v2.0 total are not the same scale.</p>
+        ) : null}
+        {[...groupHistory(idea.scoreHistory)].map(([version, items]) => (
+          <div key={version} className="stack">
+            <p className="kicker">Rubric {version}</p>
+            {items.length > 1 ? <Sparkline points={items.map((item) => item.total)} labels={items.map((item) => `R${item.run}`)} /> : null}
+            {items.map((item) => (
+              <div key={`${item.run}-${item.rubricVersion}`} className="row" style={{ gridTemplateColumns: "88px 1fr auto" }}>
+                <span className="num">{item.total.toFixed(1)}</span>
+                <span>Run {item.run} · {formatDate(item.date)}{item.note ? ` · ${item.note}` : ""}</span>
+                <span className="small faint">{scoreDigits(item.scores)}</span>
+              </div>
+            ))}
+          </div>
+        ))}
       </section>
 
       <section className="panel stack">
@@ -241,7 +270,7 @@ export function IdeaDetail({ idea, weights, neighbors }: { idea: Idea; weights: 
           <summary>Manual score overrides</summary>
           <p className="small muted">Overrides change the working total and can move automatic statuses. Research scores and score history stay intact. Export still writes the research scores.</p>
           <div className="filters" style={{ marginTop: 10 }}>
-            {CRITERIA.map((criterion) => (
+            {criteria.map((criterion) => (
               <label key={criterion.key} className="small">{criterion.short}
                 <select
                   className="control"
@@ -276,4 +305,22 @@ export function IdeaDetail({ idea, weights, neighbors }: { idea: Idea; weights: 
       </div>
     </div>
   );
+}
+
+function groupHistory(history: Idea["scoreHistory"]) {
+  const groups = new Map<string, Idea["scoreHistory"]>();
+  for (const item of history) {
+    const version = item.rubricVersion || "1.0";
+    const list = groups.get(version) ?? [];
+    list.push(item);
+    groups.set(version, list);
+  }
+  return groups;
+}
+
+function scoreDigits(scores: Record<string, number>) {
+  const order: readonly string[] = DEFAULT_ORDER;
+  const known = order.filter((key) => scores[key] !== undefined);
+  const extra = Object.keys(scores).filter((key) => !known.includes(key));
+  return [...known, ...extra].map((key) => scores[key]).join("");
 }

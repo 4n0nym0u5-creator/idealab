@@ -2,14 +2,15 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { CRITERIA } from "@/lib/criteria";
+import { DEFAULT_ORDER, criteriaInOrder } from "@/lib/criteria";
 import { liabilitySentences } from "@/lib/format";
 import { workingScores } from "@/lib/scoring";
 import type { Idea } from "@/lib/types";
 import { ScoreRadar, SERIES_COLORS } from "./charts";
-import { StatusBadge } from "./ui";
+import { CustomerBadge, StatusBadge } from "./ui";
 
-export function CompareView({ ideas, initialIds }: { ideas: Idea[]; initialIds: string[] }) {
+export function CompareView({ ideas, initialIds, criteriaOrder }: { ideas: Idea[]; initialIds: string[]; criteriaOrder?: string[] }) {
+  const criteria = criteriaInOrder(criteriaOrder?.length ? criteriaOrder : DEFAULT_ORDER);
   const [ids, setIds] = useState<string[]>(initialIds.slice(0, 4));
   const [query, setQuery] = useState("");
   const selected = ids.map((id) => ideas.find((idea) => idea.id === id)).filter((idea): idea is Idea => Boolean(idea));
@@ -46,7 +47,7 @@ export function CompareView({ ideas, initialIds }: { ideas: Idea[]; initialIds: 
       {selected.length < 2 ? <p className="muted">Choose at least two ideas.</p> : (
         <>
           <div className="panel">
-            <ScoreRadar series={selected.map((idea, index) => ({ name: idea.title, scores: workingScores(idea), color: SERIES_COLORS[index % SERIES_COLORS.length] }))} />
+            <ScoreRadar criteria={criteria} series={selected.map((idea, index) => ({ name: idea.title, scores: workingScores(idea), color: SERIES_COLORS[index % SERIES_COLORS.length] }))} />
           </div>
           <div className="table-wrap">
             <table className="compare-table">
@@ -66,6 +67,14 @@ export function CompareView({ ideas, initialIds }: { ideas: Idea[]; initialIds: 
                   {selected.map((idea) => <td key={idea.id}><StatusBadge status={idea.status} /></td>)}
                 </tr>
                 <tr>
+                  <td>Customer</td>
+                  {selected.map((idea) => <td key={idea.id}><CustomerBadge type={idea.customerType} /></td>)}
+                </tr>
+                <tr>
+                  <td>AI-buildability</td>
+                  {selected.map((idea) => <td key={idea.id} className="small">{workingScores(idea).aibuild ?? "—"}/5{idea.aibuildReason ? ` — ${idea.aibuildReason}` : ""}</td>)}
+                </tr>
+                <tr>
                   <td>Category</td>
                   {selected.map((idea) => <td key={idea.id}>{idea.category}</td>)}
                 </tr>
@@ -73,12 +82,12 @@ export function CompareView({ ideas, initialIds }: { ideas: Idea[]; initialIds: 
                   <td>Price</td>
                   {selected.map((idea) => <td key={idea.id}>{idea.priceHypothesis}</td>)}
                 </tr>
-                {CRITERIA.map((criterion) => (
+                {criteria.map((criterion) => (
                   <tr key={criterion.key}>
                     <td>{criterion.label}</td>
                     {selected.map((idea) => {
-                      const score = workingScores(idea)[criterion.key];
-                      const values = selected.map((item) => workingScores(item)[criterion.key]);
+                      const score = workingScores(idea)[criterion.key] ?? 0;
+                      const values = selected.map((item) => workingScores(item)[criterion.key] ?? 0);
                       return <td key={idea.id} className={best(values, score) ? "best num" : "num"}>{score}</td>;
                     })}
                   </tr>

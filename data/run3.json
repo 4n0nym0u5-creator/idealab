@@ -1,0 +1,1693 @@
+{
+  "run": {
+    "run_number": 3,
+    "date": "2026-10-27",
+    "author": "Grok Bot (Run 3)",
+    "rubric_version": "2.0",
+    "focus": "Consumer (B2C/prosumer/family) sweep + rubric v2 (AI-buildability for a non-engineer)",
+    "sources_swept": [
+      "Indie seating-chart tools (Tablee, Seatful, SeatCanvas, Seat Smart, Lovely Seating)",
+      "EtsyHunt + Toolsy Etsy planner best-seller data",
+      "Etsy wedding/gift/house-sitter/cookbook templates",
+      "TrustMRR + builtwithaiindex (AI-built consumer apps)",
+      "Splitwise limit coverage (Mint, Lifehacker AU)",
+      "Elfster/drawnames",
+      "stats.fm/Earhours/Spotify export",
+      "VeloViewer/StatsHunters",
+      "GrowVeg/Planta",
+      "Footytips/Round Won/TippingHQ",
+      "StoryGraph/Bookclubs",
+      "Plan to Eat/Paprika",
+      "Group trip + hens/bucks apps",
+      "Kinder baby names",
+      "OurFamilyWizard/AppClose/CalmCo",
+      "NSW term dates",
+      "Bobby/Rocket Money/Renewley/Life Admin",
+      "Google Time Insights + OAuth sensitive scope docs",
+      "MyCalendarStats",
+      "funeral planning templates",
+      "Evite/Punchbowl/SignUpGenius",
+      "room/gallery-wall planners",
+      "board game trackers",
+      "wardrobe apps",
+      "revision planners",
+      "home inventory apps",
+      "bank CSV analysers",
+      "CVE-2025-48757 (Lovable RLS)",
+      "Stripe Payment Links"
+    ],
+    "notes": "Rubric v2.0 introduced this run (migrate_v2.py backfilled aibuild + customer_type for all 100 earlier ideas before this merge; see runs/run3_rubric_v2_rescore.json). Reddit not fetched directly; no Reddit-only claims used. Etsy sales figures are third-party estimates (EtsyHunt) and labelled so."
+  },
+  "ideas": [
+    {
+      "id": "wedding-seating-planner",
+      "title": "Drag-and-drop seating chart planner",
+      "category": "Events & occasions",
+      "platform": "Web app (local-first, Next.js)",
+      "customer_type": "consumer",
+      "problem": "Seating charts are painful, with constraints (couples, feuds, dietary flags)",
+      "target_users": "Couples, event planners",
+      "monetisation": "Free to ~40 guests; one-time Event Pass per event; optional planner annual plan later",
+      "price_hypothesis": "US$19-29 per event (A$29-39); planner plan US$79-99/yr later",
+      "scores": {
+        "legal": 5,
+        "pain": 4,
+        "breadth": 3,
+        "wtp": 4,
+        "recurring": 1,
+        "build": 4,
+        "maint": 4,
+        "distro": 5,
+        "compete": 2,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://ted-labs.com/en/apps/tablee/",
+          "note": "Tablee (iPhone, live 24 Aug 2026): free to 5 tables, $8.99 per event, Pro $79.99/yr"
+        },
+        {
+          "url": "https://seatful.app/couples/",
+          "note": "Seatful: free to 40 guests, $14.99 one-time Event Pass incl. RSVP link, caterer report, QR find-your-seat"
+        },
+        {
+          "url": "https://www.seatcanvas.app/blog/wedding-seating-chart-maker-budget",
+          "note": "SeatCanvas: free to 40 seated guests, $19.99 one-time; says subscription rivals cost $60-120 over an engagement"
+        },
+        {
+          "url": "https://seatsmart.cloud/",
+          "note": "Seat Smart: free to 20 guests, $19/event (150), $49/event unlimited, guest self-select seats"
+        },
+        {
+          "url": "https://www.lovelyseating.com/help/account-and-billing/plans-and-pricing",
+          "note": "Lovely Seating (updated 14 Oct 2026): Free, Pro $39 one-time, Agency $79/mo for planners"
+        },
+        {
+          "url": "https://ehunt.ai/etsy-competitor-research/best-etsy-digital-planner",
+          "note": "EtsyHunt (1 Oct 2026): wedding planner spreadsheet incl. seating plan = #2 digital planner, 10,915 sales, $104,457 revenue (third-party estimate)"
+        },
+        {
+          "url": "https://www.etsy.com/market/digital_wedding_planner_best_sellers",
+          "note": "Etsy wedding planner spreadsheets $9.70-9.99 with 11.3k-12.6k reviews"
+        }
+      ],
+      "competitors": [
+        "AllSeated",
+        "Lovely Seating",
+        "Seat Smart",
+        "SeatCanvas",
+        "Seatful",
+        "Table Planner",
+        "Tablee",
+        "Zola",
+        "Zola (free)"
+      ],
+      "notes": "R3: compete 3->2 (at least 5 indie one-time seating tools priced $8.99-49, several launched in 2026, likely AI-built too: proves demand and buildability, but differentiation must be sharp: AU/UK wording 'table plan', constraint solver ('keep apart'), caterer/meal report, escort-card print, non-wedding events). synergy 3->4 (seeds the consumer local-first planner shell). aibuild 4: drag-drop canvas + PDF export are well-trodden."
+    },
+    {
+      "id": "gcal-time-audit",
+      "title": "Calendar time audit: where did my week go",
+      "category": "Workspace add-on",
+      "platform": "Google Workspace / web",
+      "customer_type": "both",
+      "problem": "People and managers can't see how meeting time splits across projects/clients without manual tallying",
+      "target_users": "Managers, consultants, freelancers billing by client",
+      "monetisation": "Subscription",
+      "price_hypothesis": "US$4-8/mo per user",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 3,
+        "aibuild": 3
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://support.google.com/calendar/answer/10738043?hl=en",
+          "note": "Google Calendar Time Insights: only for eligible work/school accounts, not personal Gmail"
+        },
+        {
+          "url": "https://developers.google.com/identity/protocols/oauth2/production-readiness/sensitive-scope-verification",
+          "note": "calendar.readonly is a sensitive scope: Google app verification required, no CASA security assessment"
+        },
+        {
+          "url": "https://mycalendarstats.com/",
+          "note": "MyCalendarStats: upload .ics or connect Google, browser-local time analytics (direct competitor)"
+        },
+        {
+          "url": "https://apps.apple.com/us/app/where-does-my-time-go/id6756804741",
+          "note": "'Where does my time go?' iOS: manual journaling time tracker"
+        }
+      ],
+      "competitors": [
+        "Clockwise",
+        "Reclaim (stats)",
+        "Timing (Mac)",
+        "MyCalendarStats"
+      ],
+      "notes": "R3: unchanged scores. Google's own Time Insights is only for work/school accounts, so personal Gmail users have a gap. OAuth calendar.readonly is a sensitive scope (Google verification, no CASA) -> aibuild 3. Build the consumer version as ics-time-audit first."
+    },
+    {
+      "id": "ics-time-audit",
+      "title": "Calendar time audit from an .ics file (no login)",
+      "category": "Personal analytics",
+      "platform": "Web app (client-side)",
+      "customer_type": "consumer",
+      "problem": "People want to know where their week goes, but Google's Time Insights isn't available on personal accounts and OAuth apps feel invasive.",
+      "target_users": "Freelancers, students, parents, anyone with a busy personal Google/Apple/Outlook calendar",
+      "monetisation": "Free one-month report; paid unlock for all-time trends, custom categories, weekly email via the private iCal URL",
+      "price_hypothesis": "US$9-15 one-time, or US$3/mo for weekly digest",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 5,
+        "maint": 5,
+        "distro": 4,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://mycalendarstats.com/",
+          "note": "MyCalendarStats: upload .ics or connect Google, browser-local time analytics (direct competitor)"
+        },
+        {
+          "url": "https://support.google.com/calendar/answer/10738043?hl=en",
+          "note": "Google Calendar Time Insights: only for eligible work/school accounts, not personal Gmail"
+        },
+        {
+          "url": "https://developers.google.com/identity/protocols/oauth2/production-readiness/sensitive-scope-verification",
+          "note": "calendar.readonly is a sensitive scope: Google app verification required, no CASA security assessment"
+        },
+        {
+          "url": "https://apps.apple.com/us/app/where-does-my-time-go/id6756804741",
+          "note": "'Where does my time go?' iOS: manual journaling time tracker"
+        }
+      ],
+      "competitors": [
+        "MyCalendarStats",
+        "Google Time Insights (work accounts only)",
+        "RescueTime",
+        "Where does my time go?"
+      ],
+      "notes": "Fastest path to the time-audit idea for a non-engineer: parse a user-exported .ics in the browser (no OAuth, no server data). Later: paste the calendar's 'secret iCal address' for weekly refresh without Google verification. Competitor MyCalendarStats already does upload analytics, so win on categories ('meetings vs family vs exercise'), week-over-week change and shareable cards."
+    },
+    {
+      "id": "school-holiday-leave-planner-au",
+      "title": "School holiday & leave planner for AU parents",
+      "category": "Family calendar",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Working parents juggle 12 weeks of school holidays, two employers' leave balances and grandparents; spreadsheets every term.",
+      "target_users": "AU working parents (later NZ/UK)",
+      "monetisation": "Free planner; paid 'family plan' with shared link, .ics export, leave balance tracking, holiday-program notes",
+      "price_hypothesis": "A$9-19/yr",
+      "scores": {
+        "legal": 5,
+        "pain": 4,
+        "breadth": 3,
+        "wtp": 2,
+        "recurring": 3,
+        "build": 5,
+        "maint": 4,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://calmcoparenting.org/tools/school-holiday-planner",
+          "note": "CalmCo free School Holiday Planner (NSW etc.), split each break, export calendar"
+        },
+        {
+          "url": "https://annualleaveplanner.com.au/school-holiday-annual-leave-planner/",
+          "note": "AU school holiday annual leave planner/calculator (free)"
+        },
+        {
+          "url": "https://www.education.nsw.gov.au/schooling/calendars/2027",
+          "note": "NSW 2027 official term dates (public data source)"
+        }
+      ],
+      "competitors": [
+        "annualleaveplanner.com.au",
+        "CalmCo school holiday planner",
+        "shared Google Calendars"
+      ],
+      "notes": "Low legal (public term dates, no child names needed). Seasonal SEO 4x/yr ('NSW school holidays 2027'). Must update term dates yearly per state. Keep custody features out (see custody-holiday-calendar)."
+    },
+    {
+      "id": "custody-holiday-calendar",
+      "title": "Co-parent holiday split planner",
+      "category": "Family calendar",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Separated parents need to split school holidays and special days fairly and see it on one calendar.",
+      "target_users": "Separated parents",
+      "monetisation": "Paid per family",
+      "price_hypothesis": "US$29/yr",
+      "scores": {
+        "legal": 2,
+        "pain": 4,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 4,
+        "maint": 3,
+        "distro": 3,
+        "compete": 2,
+        "defend": 3,
+        "synergy": 2,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.ourfamilywizard.com/plans-and-pricing",
+          "note": "OurFamilyWizard: $110-299.88/yr per parent"
+        },
+        {
+          "url": "https://www.appclose.com/pricing",
+          "note": "AppClose: $7.99/mo per parent (web)"
+        },
+        {
+          "url": "https://calmcoparenting.org/tools/school-holiday-planner",
+          "note": "CalmCo free School Holiday Planner (NSW etc.), split each break, export calendar"
+        }
+      ],
+      "competitors": [
+        "OurFamilyWizard",
+        "AppClose",
+        "parentingagreement.com free tool"
+      ],
+      "notes": "Pain and WTP are real (OFW charges each parent), but records can end up in family-court disputes and hold children's schedules -> legal 2. Not killed, but don't build first."
+    },
+    {
+      "id": "funeral-order-of-service-maker",
+      "title": "Funeral order-of-service & first-week planner",
+      "category": "Life moments",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Families have about a week to plan a service, write a program and coordinate tasks while grieving.",
+      "target_users": "Bereaved families, celebrants",
+      "monetisation": "One-time per service: printable order of service + checklist",
+      "price_hypothesis": "US$19-29 per service",
+      "scores": {
+        "legal": 4,
+        "pain": 4,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 0,
+        "build": 4,
+        "maint": 5,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://endoflifetools.com/shop/funeral-planning-kit",
+          "note": "Funeral Planning Kit: 7-day timeline, budget sheets, 4 order-of-service templates"
+        },
+        {
+          "url": "https://funeralprogrammaker.com/funeral-order-of-service-template",
+          "note": "Funeral Program Maker: order-of-service templates + checklist (SEO competitor)"
+        },
+        {
+          "url": "https://www.etsy.com/uk/listing/1654556349/funeral-service-planner-memorial",
+          "note": "Etsy 33-page funeral service planner PDF"
+        }
+      ],
+      "competitors": [
+        "Funeral Program Maker",
+        "Etsy/Canva templates",
+        "funeral homes' own booklets"
+      ],
+      "notes": "Acute, episodic pain with clear one-off WTP. Sensitive tone; no pricing advice on funeral homes. Template + print layout is AI-friendly. Distribution via SEO ('order of service template') and celebrants."
+    },
+    {
+      "id": "moving-box-qr-labels",
+      "title": "Moving box QR labels & contents list",
+      "category": "Household admin",
+      "platform": "Web app (offline-capable)",
+      "customer_type": "consumer",
+      "problem": "After a move nobody knows which box has the kettle; labels get vague.",
+      "target_users": "People moving house",
+      "monetisation": "Free 10 boxes; one-time unlock per move",
+      "price_hypothesis": "US$9-19 per move",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 0,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://spectrtech.si/moving-planner/",
+          "note": "SpectrTech Moving Planner: $29 once, offline QR box labels (Product Hunt launch)"
+        },
+        {
+          "url": "https://apps.apple.com/us/app/boxbuddy-moving-box-organizer/id6758800955",
+          "note": "BoxBuddy: free to 10 boxes then $19.99/yr"
+        }
+      ],
+      "competitors": [
+        "SpectrTech Moving Planner",
+        "BoxBuddy",
+        "KindlyQR",
+        "Sortly"
+      ],
+      "notes": "Pairs with moving-house-checklist-au as a bundle. Hard part: a phone scan must show contents without a server (encode contents in the QR or a static share link)."
+    },
+    {
+      "id": "wedding-guestlist-budget-hub",
+      "title": "Wedding guest list, RSVP & budget hub (upsell of the seating planner)",
+      "category": "Life moments",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Couples run guest lists, RSVPs, meals and budgets in 3-4 spreadsheets that feed the seating chart.",
+      "target_users": "Engaged couples",
+      "monetisation": "Bundle with the seating Event Pass",
+      "price_hypothesis": "US$29-39 per wedding",
+      "scores": {
+        "legal": 4,
+        "pain": 4,
+        "breadth": 3,
+        "wtp": 4,
+        "recurring": 1,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 1,
+        "defend": 2,
+        "synergy": 5,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://ehunt.ai/etsy-competitor-research/best-etsy-digital-planner",
+          "note": "EtsyHunt (1 Oct 2026): wedding planner spreadsheet incl. seating plan = #2 digital planner, 10,915 sales, $104,457 revenue (third-party estimate)"
+        },
+        {
+          "url": "https://www.etsy.com/market/digital_wedding_planner_best_sellers",
+          "note": "Etsy wedding planner spreadsheets $9.70-9.99 with 11.3k-12.6k reviews"
+        },
+        {
+          "url": "https://seatful.app/couples/",
+          "note": "Seatful: free to 40 guests, $14.99 one-time Event Pass incl. RSVP link, caterer report, QR find-your-seat"
+        }
+      ],
+      "competitors": [
+        "Zola",
+        "The Knot",
+        "Etsy wedding spreadsheets",
+        "Seatful (RSVP)"
+      ],
+      "notes": "Etsy's #2 digital planner is a wedding spreadsheet bundle (10.9k sales, third-party estimate). Free incumbents (Zola/The Knot) -> compete 1. Best as module 2 of the seating planner rather than standalone."
+    },
+    {
+      "id": "trip-expense-splitter-web",
+      "title": "No-limits trip & share-house expense splitter (web, no accounts)",
+      "category": "Household admin",
+      "platform": "Web app / PWA",
+      "customer_type": "consumer",
+      "problem": "Splitwise's free tier caps entries per day with ad waits; groups want a simple shared ledger for one trip.",
+      "target_users": "Friends on trips, share-houses",
+      "monetisation": "Free one group; one-time unlock for unlimited groups/exports",
+      "price_hypothesis": "US$5-9 one-time",
+      "scores": {
+        "legal": 4,
+        "pain": 4,
+        "breadth": 5,
+        "wtp": 2,
+        "recurring": 2,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 1,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.livemint.com/mint-lounge/business-of-life/splitwise-app-expense-tracking-sharing-india-competitors-11742293866967.html",
+          "note": "Mint: Splitwise free tier capped at ~4 entries/day with 10s ad waits; Splitkaro claims 50k MAU, ~2% paid"
+        },
+        {
+          "url": "https://au.lifehacker.com/mobile-apps/14972/news/the-five-best-free-alternatives-to-splitwise",
+          "note": "Lifehacker AU (Feb 2024): Splitwise limits; free alternatives Tricount, Settle Up, Splid ($3-4 one-time), SplitMyExpenses"
+        }
+      ],
+      "competitors": [
+        "Splitwise",
+        "Tricount",
+        "Settle Up",
+        "Splid",
+        "SplitMyExpenses"
+      ],
+      "notes": "Records who owes what; never moves money (moving money = kill). Free incumbents (Tricount) keep wtp at 2. Shared ledger needs a small DB with Supabase RLS done right (see CVE-2025-48757)."
+    },
+    {
+      "id": "hens-bucks-weekend-planner",
+      "title": "Hens/bucks weekend planner (dates poll, run sheet, who-owes-what)",
+      "category": "Life moments",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "The organiser chases 12 people for dates, money and RSVPs over WhatsApp.",
+      "target_users": "Wedding party organisers",
+      "monetisation": "One-time per event",
+      "price_hypothesis": "US$15-25 per event",
+      "scores": {
+        "legal": 4,
+        "pain": 4,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 1,
+        "build": 3,
+        "maint": 4,
+        "distro": 3,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 3,
+        "platform": 5,
+        "aibuild": 3
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://apps.apple.com/au/app/nowa-event-bill-split/id6745529822",
+          "note": "Nowa (AU): free date voting, RSVPs, run sheets and cost settlement for bucks/hens"
+        },
+        {
+          "url": "https://buxmate.com/",
+          "note": "Buxmate: bucks/hens itinerary, RSVPs, cost splitting"
+        }
+      ],
+      "competitors": [
+        "Nowa",
+        "Buxmate",
+        "welago",
+        "Tally"
+      ],
+      "notes": "Several AU-specific competitors already. Multi-user voting/real-time -> aibuild 3."
+    },
+    {
+      "id": "group-trip-planner-votes",
+      "title": "Group trip planner with voting",
+      "category": "Travel",
+      "platform": "Web/mobile",
+      "customer_type": "consumer",
+      "problem": "Group trips stall on decisions and scattered links.",
+      "target_users": "Friend groups, families",
+      "monetisation": "Freemium subscription",
+      "price_hypothesis": "US$4/mo",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 2,
+        "build": 3,
+        "maint": 3,
+        "distro": 2,
+        "compete": 1,
+        "defend": 2,
+        "synergy": 2,
+        "platform": 5,
+        "aibuild": 3
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.trekunity.com/",
+          "note": "TrekUnity: free group trip planner (votes, itinerary, splitting)"
+        },
+        {
+          "url": "https://www.tripplo.app/en",
+          "note": "Tripplo: group trips $3.99/mo or $39.90/yr"
+        }
+      ],
+      "competitors": [
+        "TrekUnity",
+        "Wanderlog",
+        "Tripplo",
+        "YesTrip"
+      ],
+      "notes": "Crowded and VC-funded; affiliate-driven. Skip."
+    },
+    {
+      "id": "kids-party-planner",
+      "title": "Kids' birthday party planner (run sheet, budget, RSVP)",
+      "category": "Life moments",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Parents plan a party a year per child with lists, invites and a budget.",
+      "target_users": "Parents",
+      "monetisation": "One-time per party",
+      "price_hypothesis": "US$5-9",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 2,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.greenvelope.com/resources/best-kids-birthday-invitation-platforms",
+          "note": "Kids party invites: Evite free with ads (Pro $249.99/yr), Punchbowl $47.99-95.99/yr"
+        }
+      ],
+      "competitors": [
+        "Evite",
+        "Punchbowl",
+        "Paperless Post"
+      ],
+      "notes": "Invitee lists are other people's children -> legal 3; free invite giants -> compete 1. Fold run-sheet features into event-run-sheet instead."
+    },
+    {
+      "id": "christmas-hosting-planner",
+      "title": "Christmas/holiday hosting planner: who hosts, who brings what",
+      "category": "Seasonal",
+      "platform": "Web app (link-shared)",
+      "customer_type": "consumer",
+      "problem": "Families coordinate dishes, hosting rotation and timings in group chats every December.",
+      "target_users": "Families, friend groups",
+      "monetisation": "Free (SEO feeder); tip jar or bundle with gift-list tracker",
+      "price_hypothesis": "Free / US$3",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 2,
+        "recurring": 1,
+        "build": 5,
+        "maint": 5,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.kunbaa.com/festivals/christmas",
+          "note": "Kunbaa: free family Christmas planner (who hosts, who brings what)"
+        },
+        {
+          "url": "https://getladle.com/potluck-app",
+          "note": "GetLadle: potluck/holiday meal dish claims"
+        },
+        {
+          "url": "https://www.signupgenius.com/resources/signupgenius-cost",
+          "note": "SignUpGenius: free with ads; paid $11.99-59.99/mo"
+        }
+      ],
+      "competitors": [
+        "Kunbaa",
+        "GetLadle",
+        "SignUpGenius"
+      ],
+      "notes": "Feeder: strong seasonal search, weak WTP. Good cross-sell surface for gift-list-budget-tracker."
+    },
+    {
+      "id": "secret-santa-plus",
+      "title": "Secret Santa with exclusions and no-repeat history",
+      "category": "Seasonal",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Families want exclusions and to avoid drawing the same person as last year.",
+      "target_users": "Families, friend groups",
+      "monetisation": "Free; affiliate links",
+      "price_hypothesis": "Free",
+      "scores": {
+        "legal": 4,
+        "pain": 2,
+        "breadth": 5,
+        "wtp": 1,
+        "recurring": 1,
+        "build": 5,
+        "maint": 4,
+        "distro": 4,
+        "compete": 1,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.elfster.com/how-elfster-works/",
+          "note": "Elfster: free Secret Santa, 40M+ users, monetised by affiliate/sponsored gifts, no paid tier"
+        },
+        {
+          "url": "https://www.drawnames.com/",
+          "note": "drawnames: free, no account; 7,061,757 names drawn this year (site counter)"
+        }
+      ],
+      "competitors": [
+        "Elfster",
+        "drawnames"
+      ],
+      "notes": "Elfster (40M+ users) and drawnames are free -> feeder only. Not worth a build except as a viral feeder in December."
+    },
+    {
+      "id": "gift-list-budget-tracker",
+      "title": "Christmas & birthday gift list + budget tracker (year over year)",
+      "category": "Seasonal",
+      "platform": "Web app (local-first)",
+      "customer_type": "consumer",
+      "problem": "People overspend at Christmas and forget what they gave whom last year.",
+      "target_users": "Gift-givers, parents",
+      "monetisation": "One-time unlock; reminder before birthdays",
+      "price_hypothesis": "US$9-19 one-time",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 5,
+        "maint": 5,
+        "distro": 4,
+        "compete": 3,
+        "defend": 3,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.etsy.com/listing/4547036700/holiday-spending-planner-christmas-gift",
+          "note": "Etsy interactive Christmas gift budget tracker $19"
+        },
+        {
+          "url": "https://fluvana.com/product/christmas-budget-planner-app",
+          "note": "FluVana Christmas budget web app $29"
+        },
+        {
+          "url": "https://toolsy.io/blog/etsy-planner-templates-monthly-2026-09/",
+          "note": "Toolsy: 5,117 Etsy planner-template listings; top-heavy (median listing gained 1 review in 30 days); book tracker, budget sheets, wedding binder in top 10"
+        }
+      ],
+      "competitors": [
+        "Etsy gift-tracker spreadsheets",
+        "FluVana",
+        "Notion templates"
+      ],
+      "notes": "Etsy proves WTP for spreadsheets ($19 interactive tracker; FluVana web app $29). Annual history = mild lock-in. Budget tracking only, no financial advice. Extremely AI-buildable."
+    },
+    {
+      "id": "baby-name-shortlist-match",
+      "title": "Baby name shortlist & partner match",
+      "category": "Life moments",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Couples argue over names; want a shared shortlist and private matching.",
+      "target_users": "Expecting parents",
+      "monetisation": "Free; one-time name packs",
+      "price_hypothesis": "US$3-5",
+      "scores": {
+        "legal": 5,
+        "pain": 2,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 0,
+        "build": 5,
+        "maint": 5,
+        "distro": 3,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 2,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://apps.apple.com/us/app/kinder-find-baby-names/id1068421785",
+          "note": "Kinder: swipe baby names with partner; $0.99 sets / $4.99 all (one-time)"
+        }
+      ],
+      "competitors": [
+        "Kinder",
+        "BabyName",
+        "NameMatch",
+        "NameHatch"
+      ],
+      "notes": "Saturated, low price -> feeder. No child data (names are just names)."
+    },
+    {
+      "id": "subscription-tracker-local",
+      "title": "Subscription & free-trial tracker (manual, no bank link)",
+      "category": "Household admin",
+      "platform": "Web app / PWA",
+      "customer_type": "consumer",
+      "problem": "People forget trials and renewals but won't connect a bank account.",
+      "target_users": "Everyone with subscriptions",
+      "monetisation": "Free; tiny one-time unlock",
+      "price_hypothesis": "US$3-5 one-time",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 2,
+        "recurring": 1,
+        "build": 5,
+        "maint": 5,
+        "distro": 4,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://apps.apple.com/us/app/bobby-track-subscriptions/id1059152023",
+          "note": "Bobby: manual subscription tracker, one-time unlocks $0.99-2.99"
+        },
+        {
+          "url": "https://allthingsn.com/best/subscription-trackers/",
+          "note": "Rocket Money Premium ~$7-14/mo via bank linking (search summary)"
+        }
+      ],
+      "competitors": [
+        "Bobby",
+        "Rocket Money",
+        "dozens of clones"
+      ],
+      "notes": "Feeder: Bobby sells unlocks at $0.99-2.99. Could be a free tool inside a household admin bundle."
+    },
+    {
+      "id": "household-renewals-calendar",
+      "title": "Household renewals calendar (rego, passport, insurance, licences)",
+      "category": "Household admin",
+      "platform": "Web app + .ics feed",
+      "customer_type": "consumer",
+      "problem": "Renewal dates live in emails and drawers; missed rego or passport expiry costs real money.",
+      "target_users": "Households, AU first",
+      "monetisation": "One-time unlock or small annual",
+      "price_hypothesis": "US$19-39 one-time or US$12/yr",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 5,
+        "maint": 4,
+        "distro": 4,
+        "compete": 2,
+        "defend": 3,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://renewley.com/",
+          "note": "Renewley: passport/rego/insurance expiry reminders, $39.99 one-time"
+        },
+        {
+          "url": "https://mylifeadmin.app/",
+          "note": "Life Admin: household renewals, $9-15/mo"
+        }
+      ],
+      "competitors": [
+        "Renewley",
+        "Life Admin",
+        "DocDoc",
+        "Make Lemons"
+      ],
+      "notes": "Renewley charges $39.99 one-time. Store dates and labels only, never ID numbers (keeps legal at 4). Calendar subscription feed needs a small server -> aibuild 4. Overlaps home-maintenance-reminders; consider merging into one 'home admin calendar'."
+    },
+    {
+      "id": "spending-csv-insights",
+      "title": "Private spending insights from bank CSV exports",
+      "category": "Personal analytics",
+      "platform": "Web app (client-side)",
+      "customer_type": "consumer",
+      "problem": "People want to see where money goes without giving bank logins to an app.",
+      "target_users": "Budget-conscious households",
+      "monetisation": "One-time unlock for rules, multi-account, yearly report",
+      "price_hypothesis": "US$15-29 one-time",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 4,
+        "maint": 3,
+        "distro": 4,
+        "compete": 2,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://spendinginsights.app/",
+          "note": "Spending Insights: free browser-local bank CSV analysis"
+        },
+        {
+          "url": "https://categorizeonce.com/",
+          "note": "CategorizeOnce: free open-source local CSV categoriser"
+        }
+      ],
+      "competitors": [
+        "Spending Insights",
+        "CategorizeOnce",
+        "Vexyn",
+        "Where Money Went",
+        "PocketSmith"
+      ],
+      "notes": "Legal 3: financial data and close to advice; must present facts only, never advice. Several free local tools already. Bank CSV formats vary (maint 3)."
+    },
+    {
+      "id": "spotify-history-insights",
+      "title": "Listening history insights from your Spotify export",
+      "category": "Personal analytics",
+      "platform": "Web app (client-side)",
+      "customer_type": "consumer",
+      "problem": "Wrapped comes once a year; fans want all-time stats anytime.",
+      "target_users": "Music fans",
+      "monetisation": "Free; $5 one-time pro",
+      "price_hypothesis": "US$5",
+      "scores": {
+        "legal": 4,
+        "pain": 2,
+        "breadth": 5,
+        "wtp": 2,
+        "recurring": 1,
+        "build": 5,
+        "maint": 4,
+        "distro": 4,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 4,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://newsletter.fkowalski.com/p/spotify-stats-analysis",
+          "note": "stats.fm: Sensor Tower estimates cited at ~$300k/month (2024); Adapty later est. ~$100k/month (estimates, not verified)"
+        },
+        {
+          "url": "https://dorukctn.gumroad.com/l/earhours-pro",
+          "note": "Earhours Pro: $5 one-time, parses Spotify export locally"
+        },
+        {
+          "url": "https://support.spotify.com/us/article/understanding-your-data/",
+          "note": "Spotify Extended Streaming History export: lifetime plays, timestamps, skips"
+        }
+      ],
+      "competitors": [
+        "stats.fm",
+        "Earhours",
+        "Spotigraph"
+      ],
+      "notes": "stats.fm proves the category at scale (estimates only), but $5 one-time pricing -> feeder. Avoid Spotify trademarks/'Wrapped' in branding."
+    },
+    {
+      "id": "strava-year-poster",
+      "title": "Year-in-sport poster from your Strava export",
+      "category": "Personal analytics",
+      "platform": "Web app (client-side)",
+      "customer_type": "consumer",
+      "problem": "Athletes want a printable/shareable summary of their year.",
+      "target_users": "Runners, cyclists",
+      "monetisation": "One-time per poster (digital file)",
+      "price_hypothesis": "US$9-15",
+      "scores": {
+        "legal": 4,
+        "pain": 2,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 2,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 4,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://blog.veloviewer.com/veloviewer-free-vs-pro/",
+          "note": "VeloViewer: indie Strava analytics PRO GBP10/yr, PRO+ GBP20/yr"
+        },
+        {
+          "url": "https://www.statshunters.com/",
+          "note": "StatsHunters: free donation-supported Strava heatmaps"
+        }
+      ],
+      "competitors": [
+        "VeloViewer",
+        "StatsHunters",
+        "Strava's own Year in Sport"
+      ],
+      "notes": "Uses the user's bulk export (no API terms). Seasonal December spike. Mid score."
+    },
+    {
+      "id": "garden-bed-planner-au",
+      "title": "Drag-drop vegetable garden bed planner for AU climates",
+      "category": "Hobbies",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Home gardeners plan beds and planting times with generic Northern-hemisphere tools.",
+      "target_users": "AU/NZ home gardeners (later global)",
+      "monetisation": "Annual subscription (seasonal reminders)",
+      "price_hypothesis": "A$29/yr",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 4,
+        "recurring": 4,
+        "build": 3,
+        "maint": 4,
+        "distro": 4,
+        "compete": 2,
+        "defend": 3,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.growveg.com/subscribeinfo.aspx",
+          "note": "GrowVeg Garden Planner: US $35/yr auto-renew, $50 1yr, $85 2yr; 7-day trial"
+        }
+      ],
+      "competitors": [
+        "GrowVeg",
+        "Gardenize",
+        "seed company calendars"
+      ],
+      "notes": "GrowVeg proves annual WTP ($35/yr). AU climate-zone angle is the wedge. Planting data must be curated and checked (AI can draft but can't be trusted blindly); avoid any plant toxicity/edibility safety claims."
+    },
+    {
+      "id": "room-furniture-fit-planner",
+      "title": "'Will it fit' room & furniture planner",
+      "category": "Visual planners",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Buying a couch without knowing if it fits.",
+      "target_users": "Renters, movers",
+      "monetisation": "Free; affiliate",
+      "price_hypothesis": "Free",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 2,
+        "recurring": 0,
+        "build": 4,
+        "maint": 5,
+        "distro": 4,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://freeroomplanner.com/",
+          "note": "Free Room Planner: free 2D/3D, no account"
+        },
+        {
+          "url": "https://floorspacer.com/",
+          "note": "Floorspacer: EUR 10 one-time full catalogue"
+        },
+        {
+          "url": "https://planner5d.com/use/room-planner-tool",
+          "note": "Planner 5D Premium $4.99/mo annual"
+        }
+      ],
+      "competitors": [
+        "Free Room Planner",
+        "Floorspacer",
+        "Planner 5D",
+        "IKEA planners"
+      ],
+      "notes": "Many free tools -> feeder."
+    },
+    {
+      "id": "gallery-wall-planner",
+      "title": "Gallery wall layout & nail-position planner",
+      "category": "Visual planners",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Hanging a set of frames means measuring, guessing and extra holes in the wall.",
+      "target_users": "Renters, homeowners",
+      "monetisation": "One-time unlock (PDF hanging guide)",
+      "price_hypothesis": "US$7-12",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 0,
+        "build": 4,
+        "maint": 5,
+        "distro": 4,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://gallery-planner.com/pricing",
+          "note": "GalleryPlanner web: free core, Pro passes $6-20 or $99 lifetime (PDF hanging guide)"
+        },
+        {
+          "url": "https://wallhang.app/",
+          "note": "WallHang iPhone: Pro $7.99 one-time"
+        }
+      ],
+      "competitors": [
+        "GalleryPlanner",
+        "WallHang",
+        "Suprtiles"
+      ],
+      "notes": "Same drag-drop canvas as the seating planner (high reuse). Competitors exist at $7.99-19.99. Nice second product on the planner shell."
+    },
+    {
+      "id": "wardrobe-capsule-planner",
+      "title": "Capsule wardrobe & outfit planner",
+      "category": "Visual planners",
+      "platform": "Web/mobile",
+      "customer_type": "consumer",
+      "problem": "People own a lot and wear little.",
+      "target_users": "Fashion-interested consumers",
+      "monetisation": "Freemium",
+      "price_hypothesis": "US$3/mo",
+      "scores": {
+        "legal": 5,
+        "pain": 2,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 2,
+        "build": 3,
+        "maint": 4,
+        "distro": 3,
+        "compete": 1,
+        "defend": 2,
+        "synergy": 2,
+        "platform": 5,
+        "aibuild": 3
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://fitwardrobe.me/blog/best-outfit-planning-apps-compared/",
+          "note": "Whering/Indyx free; Stylebook $4.99 one-time; Indyx Insider $74.99/yr"
+        }
+      ],
+      "competitors": [
+        "Whering",
+        "Indyx",
+        "Stylebook",
+        "Acloset"
+      ],
+      "notes": "Saturated with free apps; image cut-outs add complexity."
+    },
+    {
+      "id": "study-timetable-planner",
+      "title": "Exam revision timetable generator (Year 12 / uni)",
+      "category": "Students",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Students build revision timetables by hand around exams and work shifts.",
+      "target_users": "Senior high school (16+) and uni students",
+      "monetisation": "One-time per exam season",
+      "price_hypothesis": "US$9-15 per season",
+      "scores": {
+        "legal": 4,
+        "pain": 4,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 2,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://myrevisionplanner.com/plans",
+          "note": "My Revision Planner: GBP49 one-off"
+        },
+        {
+          "url": "https://usememio.com/",
+          "note": "Memio revision timetables GBP4.99/mo"
+        }
+      ],
+      "competitors": [
+        "My Revision Planner",
+        "Memio",
+        "StudyClock",
+        "Notion templates"
+      ],
+      "notes": "Target 16+ and uni to avoid children's data (rule 4). Seasonal (exam periods). Scheduling logic is testable with fixtures."
+    },
+    {
+      "id": "footy-tipping-organiser",
+      "title": "Footy tipping comp organiser (no money)",
+      "category": "Seasonal",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Office/family tipping comps run on spreadsheets or ad-heavy free apps.",
+      "target_users": "AU footy fans, workplaces",
+      "monetisation": "Free small comps; paid branded comps",
+      "price_hypothesis": "A$10-20 per comp",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 3,
+        "build": 3,
+        "maint": 3,
+        "distro": 3,
+        "compete": 1,
+        "defend": 3,
+        "synergy": 2,
+        "platform": 3,
+        "aibuild": 3
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.fanzava.com/en-au/compare/fanzava-vs-footytips/",
+          "note": "ESPN Footytips: free private comps, no paid organiser tier"
+        },
+        {
+          "url": "https://www.roundwon.com.au/",
+          "note": "Round Won: free to 10 tippers, then $10/competition (also handles entry fees - we would not)"
+        },
+        {
+          "url": "https://tippinghq.au/",
+          "note": "TippingHQ: free under 10 tippers, paid from $279/season (club/business)"
+        }
+      ],
+      "competitors": [
+        "ESPN Footytips",
+        "Round Won",
+        "TippingHQ",
+        "Puntr"
+      ],
+      "notes": "Never touch entry fees or payouts (gambling/holding money = kill). Fixture data licensing and weekly maintenance in season. Weak."
+    },
+    {
+      "id": "board-game-collection-log",
+      "title": "Board game collection & play log",
+      "category": "Hobbies",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Collectors track games and plays across BGG and spreadsheets.",
+      "target_users": "Board gamers",
+      "monetisation": "Freemium",
+      "price_hypothesis": "US$2-3/mo",
+      "scores": {
+        "legal": 4,
+        "pain": 2,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 2,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 2,
+        "defend": 3,
+        "synergy": 3,
+        "platform": 3,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://theboardhub.app/",
+          "note": "BoardHub Pro $2.99/mo or $29.99/yr"
+        },
+        {
+          "url": "https://gamesquire.app/",
+          "note": "GameSquire EUR 3.99/mo or EUR 29.99/yr"
+        }
+      ],
+      "competitors": [
+        "BoardGameGeek",
+        "BoardHub",
+        "GameSquire",
+        "GameShelf"
+      ],
+      "notes": "BGG data terms create platform risk. Crowded."
+    },
+    {
+      "id": "book-club-organiser",
+      "title": "Book club organiser (polls, schedule, host rotation)",
+      "category": "Hobbies",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Book clubs juggle dates, picks and hosts in group chats.",
+      "target_users": "Book clubs",
+      "monetisation": "Per club per year",
+      "price_hypothesis": "US$20-30/yr",
+      "scores": {
+        "legal": 5,
+        "pain": 2,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 2,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://bookclubs.com/premium-pricing",
+          "note": "Bookclubs: Premium $60/club/yr, Pro $180/yr"
+        }
+      ],
+      "competitors": [
+        "Bookclubs",
+        "Facebook groups",
+        "WhatsApp"
+      ],
+      "notes": "Bookclubs charges $60/club/yr; a simpler cheaper version could work but pain is mild."
+    },
+    {
+      "id": "family-cookbook-maker",
+      "title": "Family recipe cookbook PDF maker",
+      "category": "Life moments",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Families want Grandma's recipes in one printable book for a birthday/Christmas gift.",
+      "target_users": "Families, gift-givers",
+      "monetisation": "One-time per book (print-ready PDF)",
+      "price_hypothesis": "US$15-25 per book",
+      "scores": {
+        "legal": 5,
+        "pain": 2,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 1,
+        "build": 4,
+        "maint": 5,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.recipeprinter.com/cookbook-maker",
+          "note": "RecipePrinter: $19.99 once per cookbook PDF"
+        },
+        {
+          "url": "https://reciscan.app/",
+          "note": "ReciScan: printed family cookbooks from ~$18"
+        }
+      ],
+      "competitors": [
+        "RecipePrinter",
+        "ReciScan",
+        "Mixbook",
+        "Canva/Etsy templates"
+      ],
+      "notes": "Gift-driven, seasonal. Print layout is the hard part (AI handles HTML-to-PDF reasonably)."
+    },
+    {
+      "id": "meal-plan-grocery-list",
+      "title": "Weekly family meal planner + grocery list (no diet advice)",
+      "category": "Household admin",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Deciding dinners and writing the shopping list every week.",
+      "target_users": "Families",
+      "monetisation": "Subscription",
+      "price_hypothesis": "US$4-6/mo",
+      "scores": {
+        "legal": 4,
+        "pain": 4,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 1,
+        "defend": 3,
+        "synergy": 3,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.plantoeat.com/compare/",
+          "note": "Plan to Eat: bootstrapped, profitable 15+ yrs, $5.95/mo or $49/yr"
+        },
+        {
+          "url": "https://www.paprikaapp.com/",
+          "note": "Paprika: one-time per-platform recipe manager with meal planning"
+        }
+      ],
+      "competitors": [
+        "Plan to Eat",
+        "Mealime",
+        "Paprika",
+        "AnyList"
+      ],
+      "notes": "Plan to Eat shows a bootstrapped business can last 15+ yrs. Very crowded; legal 4 only if it never gives nutrition/diet advice."
+    },
+    {
+      "id": "home-inventory-insurance",
+      "title": "Home contents inventory for insurance claims",
+      "category": "Household admin",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "After a burglary or flood people can't list what they owned.",
+      "target_users": "Homeowners, renters",
+      "monetisation": "Annual plan",
+      "price_hypothesis": "US$19-29/yr",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 2,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 3,
+        "defend": 3,
+        "synergy": 3,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://manifestme.me/blog/home-inventory-app-tracker",
+          "note": "Encircle consumer home inventory app shut down 17 Dec 2025; Sortly is business-priced"
+        },
+        {
+          "url": "https://streamlineclaims.com/",
+          "note": "Streamline Claims: free, Plus $4.99/mo home inventory for claims"
+        }
+      ],
+      "competitors": [
+        "Streamline Claims",
+        "Assuredly",
+        "Sortly",
+        "Encircle (consumer app closed)"
+      ],
+      "notes": "Gap after Encircle's consumer app closed (Dec 2025). Photos + values are sensitive personal data -> legal 3; never advise on cover amounts."
+    },
+    {
+      "id": "house-sitter-handover-guide",
+      "title": "House & pet sitter handover guide builder",
+      "category": "Household admin",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Owners rewrite the same instructions every trip.",
+      "target_users": "Pet owners, travellers",
+      "monetisation": "Free with paid print templates",
+      "price_hypothesis": "US$5-9",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 1,
+        "build": 5,
+        "maint": 5,
+        "distro": 4,
+        "compete": 3,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.etsy.com/listing/1279912883/printable-house-sitter-notes-pet-sitter",
+          "note": "Etsy 14-page house/pet sitter instructions printable"
+        }
+      ],
+      "competitors": [
+        "Etsy printables",
+        "Canva templates"
+      ],
+      "notes": "Feeder; bundle with pet-care-shared-log."
+    },
+    {
+      "id": "plant-care-schedule",
+      "title": "Houseplant watering schedule",
+      "category": "Hobbies",
+      "platform": "Web/PWA",
+      "customer_type": "consumer",
+      "problem": "Plants die from irregular watering.",
+      "target_users": "Plant owners",
+      "monetisation": "Subscription",
+      "price_hypothesis": "US$2/mo",
+      "scores": {
+        "legal": 4,
+        "pain": 2,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 1,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 5,
+        "aibuild": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://apps.apple.com/us/app/planta-plant-garden-care/id1410126781",
+          "note": "Planta Premium $7.99/mo or $35.99/yr"
+        }
+      ],
+      "competitors": [
+        "Planta",
+        "Greg",
+        "Blossom"
+      ],
+      "notes": "Planta proves subscriptions ($35.99/yr) but the space is saturated with AI plant-ID apps."
+    },
+    {
+      "id": "creator-media-kit-builder",
+      "title": "Media kit & rate card builder for small creators",
+      "category": "Creators",
+      "platform": "Web app",
+      "customer_type": "both",
+      "problem": "Small creators need a professional one-page media kit with live stats for brand pitches.",
+      "target_users": "Micro-creators, UGC creators",
+      "monetisation": "One-time or small annual",
+      "price_hypothesis": "US$12-19",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 2,
+        "build": 5,
+        "maint": 5,
+        "distro": 4,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5,
+        "aibuild": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.canva.com/media-kits/templates/",
+          "note": "Canva free media-kit templates (strong free option)"
+        },
+        {
+          "url": "https://www.etsy.com/listing/1513447222/youtube-media-kit-canva-template",
+          "note": "Etsy creator media-kit templates ~$9-16"
+        }
+      ],
+      "competitors": [
+        "Canva templates (free)",
+        "Etsy templates",
+        "Beacons/Stan media kits"
+      ],
+      "notes": "Canva's free templates cap WTP; manual stats entry avoids platform APIs."
+    },
+    {
+      "id": "gmail-unsubscribe-declutter",
+      "title": "Gmail newsletter declutter / bulk unsubscribe",
+      "category": "Household admin",
+      "platform": "Web app",
+      "customer_type": "consumer",
+      "problem": "Inbox overload from newsletters.",
+      "target_users": "Everyone",
+      "monetisation": "Subscription",
+      "price_hypothesis": "US$5/mo",
+      "scores": {
+        "legal": 1,
+        "pain": 4,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 2,
+        "build": 3,
+        "maint": 3,
+        "distro": 4,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 2,
+        "platform": 1,
+        "aibuild": 2
+      },
+      "kill_flags": [
+        "Needs Gmail restricted scopes and a yearly CASA assessment (rubric kill #9)"
+      ],
+      "evidence": [
+        {
+          "url": "https://developer.nylas.com/docs/provider-guides/google/google-verification-security-assessment-guide/",
+          "note": "Gmail restricted scopes require CASA security assessment"
+        }
+      ],
+      "competitors": [
+        "Clean Email",
+        "Unroll.me",
+        "Gmail's built-in subscriptions page"
+      ],
+      "notes": "Recorded so future runs skip it."
+    },
+    {
+      "id": "kids-reward-chart",
+      "title": "Kids chore & reward chart",
+      "category": "Family",
+      "platform": "Web/mobile",
+      "customer_type": "consumer",
+      "problem": "Parents track chores and pocket money.",
+      "target_users": "Parents of young children",
+      "monetisation": "Subscription",
+      "price_hypothesis": "US$3/mo",
+      "scores": {
+        "legal": 1,
+        "pain": 4,
+        "breadth": 5,
+        "wtp": 2,
+        "recurring": 3,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 1,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 5,
+        "aibuild": 3
+      },
+      "kill_flags": [
+        "Core data is about children under 16 (rubric kill #4)"
+      ],
+      "evidence": [],
+      "competitors": [
+        "OurHome",
+        "Greenlight",
+        "S'moresUp"
+      ],
+      "notes": "Recorded so future runs skip it."
+    }
+  ]
+}
