@@ -9,6 +9,7 @@ data/*.db
 data/*.db-*
 data/*.db-journal
 data/backups
+data/pglite
 
 .DS_Store
 *.log

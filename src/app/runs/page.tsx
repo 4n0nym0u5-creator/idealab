@@ -5,7 +5,7 @@ import { RUN_ONE_FOCUS } from "@/lib/themes";
 
 export const metadata = { title: "Runs" };
 
-export default function RunsPage() {
+export default async function RunsPage() {
   return withPortfolio((portfolio) => (
     <div className="page">
       <header className="stack">

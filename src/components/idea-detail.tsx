@@ -40,23 +40,23 @@ export function IdeaDetail({ idea, weights, neighbors }: { idea: Idea; weights: 
   function save(unlock = false) {
     setMessage("");
     startTransition(async () => {
-      try {
-        await saveTrackingAction({
-          id: idea.id,
-          status: unlock ? undefined : status,
-          userNotes,
-          mvp,
-          distribution,
-          risks,
-          liabilityNotes,
-          scoreOverrides: overrides,
-          unlock,
-        });
-        setMessage(unlock ? "Returned to automatic status." : "Saved.");
-        router.refresh();
-      } catch (error) {
-        setMessage(error instanceof Error ? error.message : "Could not save.");
+      const result = await saveTrackingAction({
+        id: idea.id,
+        status: unlock ? undefined : status,
+        userNotes,
+        mvp,
+        distribution,
+        risks,
+        liabilityNotes,
+        scoreOverrides: overrides,
+        unlock,
+      });
+      if (!result.ok) {
+        setMessage(result.error);
+        return;
       }
+      setMessage(unlock ? "Returned to automatic status." : "Saved.");
+      router.refresh();
     });
   }
 

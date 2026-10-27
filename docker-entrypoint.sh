@@ -1,8 +1,8 @@
 #!/bin/sh
 set -e
-mkdir -p "$(dirname "$DATABASE_PATH")" "$BACKUP_DIR"
-if [ ! -f "$DATABASE_PATH" ]; then
-  echo "Seeding $DATABASE_PATH"
+mkdir -p "${PGLITE_PATH:-/data/pglite}" "${BACKUP_DIR:-/data/backups}"
+if [ -n "$DATABASE_URL" ] || [ -n "$POSTGRES_URL" ]; then
+  echo "Migrating Postgres and seeding it if empty"
   npm run db:setup
 fi
 exec npm start

@@ -7,7 +7,7 @@ import { workingScores } from "@/lib/scoring";
 import { RUN_ONE_FOCUS, THEMES, securitySubtype } from "@/lib/themes";
 import type { Idea, Status } from "@/lib/types";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
   return withPortfolio((portfolio) => {
     const ideas = portfolio.ideas;
     const live = ideas.filter((idea) => idea.status !== "killed" && idea.status !== "avoid");

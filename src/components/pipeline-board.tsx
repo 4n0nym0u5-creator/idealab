@@ -24,12 +24,13 @@ export function PipelineBoard({ ideas }: { ideas: Idea[] }) {
     setError("");
     setRows((current) => current.map((idea) => idea.id === id ? { ...idea, status, statusLocked: true } : idea));
     startTransition(async () => {
-      try {
-        await setStatusAction(id, status, Date.now());
+      const result = await setStatusAction(id, status, Date.now());
+      if (!result.ok) {
+        setError(result.error);
         router.refresh();
-      } catch (caught) {
-        setError(caught instanceof Error ? caught.message : "Could not move that idea.");
+        return;
       }
+      router.refresh();
     });
   }
 

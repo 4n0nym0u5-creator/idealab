@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Columns3, Download, GitCompare, History, LayoutDashboard, Library, Moon, Scale, Search, Sun } from "lucide-react";
+import { AdminLock } from "./admin-lock";
+import type { WriteMode } from "@/lib/access";
 
 const LINKS = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -19,7 +21,7 @@ function current(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function Shell({ children }: { children: React.ReactNode }) {
+export function Shell({ children, mode }: { children: React.ReactNode; mode: WriteMode }) {
   const pathname = usePathname();
   const [dark, setDark] = useState(false);
 
@@ -56,7 +58,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
             );
           })}
         </nav>
-        <p className="side-note">Single-user studio. Scores follow the SideHustle rubric. Auth can sit in front of getActor() later.</p>
+        <p className="side-note">Browsing is public. Imports, edits, status changes and weight saves need the admin password.</p>
       </aside>
       <div className="main-col">
         <header className="topbar">
@@ -64,6 +66,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
             <Search size={16} />
             <input name="q" placeholder="Search ideas, problems, competitors" aria-label="Search ideas" />
           </form>
+          <AdminLock mode={mode} />
           <a className="text-btn" href="/api/export">
             <Download size={15} /> Export
           </a>

@@ -1,10 +1,12 @@
 import fs from "fs";
 import path from "path";
-import { asc, eq } from "drizzle-orm";
+import { asc, count, desc, eq, inArray, sql } from "drizzle-orm";
+import bundledIdeas from "../../data/ideas.json";
 import { CRITERIA_KEYS, DEFAULT_WEIGHTS, type CriterionKey, type Scores, type Weights } from "./criteria";
-import { backupDir, getDb, getSqlite, isDatabaseReady } from "./db";
+import { backupDir, getDb, type AppDatabase } from "./db";
 import { applyRun, detectImport, parseJsonText, type ImportReport } from "./merge";
-import { ideas, rubricChangelog, runs, settings } from "./schema";
+import { migrate } from "./migrate";
+import { backups, ideas, rubricChangelog, runs, settings } from "./schema";
 import { assertWeights, assignPresentation, bumpVersion, recompute, sanitizeOverrides, totalOf } from "./scoring";
 import { themeForCategory } from "./themes";
 import {
@@ -22,10 +24,11 @@ import {
 
 type IdeaRow = typeof ideas.$inferSelect;
 type RunRow = typeof runs.$inferSelect;
+type Db = AppDatabase;
 
 export class DatabaseNotReadyError extends Error {
   constructor() {
-    super("IdeaLab database is not initialised. Run npm run db:setup, then refresh.");
+    super("IdeaLab database is not initialised. Set DATABASE_URL and redeploy, or run npm run db:setup locally.");
     this.name = "DatabaseNotReadyError";
   }
 }
@@ -60,10 +63,10 @@ function rowToIdea(row: IdeaRow): Idea {
     monetisation: row.monetisation,
     priceHypothesis: row.priceHypothesis,
     scores: asScores(parseJson(row.scores, {})),
-    total: row.total,
-    researchTotal: row.researchTotal,
+    total: Number(row.total),
+    researchTotal: Number(row.researchTotal),
     status: isStatus(row.status) ? row.status : "candidate",
-    statusLocked: row.statusLocked === 1,
+    statusLocked: Number(row.statusLocked) === 1,
     killFlags: parseJson<string[]>(row.killFlags, []),
     avoidFlags: parseJson<string[]>(row.avoidFlags, []),
     evidence: parseJson<Evidence[]>(row.evidence, []),
@@ -137,18 +140,13 @@ function rowToRun(row: RunRow): Run {
   };
 }
 
-export function requirePortfolio(): Portfolio {
-  if (!isDatabaseReady()) throw new DatabaseNotReadyError();
-  return loadPortfolio();
-}
-
-export function loadPortfolio(): Portfolio {
-  const db = getDb();
-  const settingsRow = db.select().from(settings).get();
+export async function loadPortfolio(): Promise<Portfolio> {
+  const db = await getDb();
+  const [settingsRow] = await db.select().from(settings).limit(1);
   if (!settingsRow) throw new DatabaseNotReadyError();
-  const loadedIdeas = db.select().from(ideas).orderBy(asc(ideas.position), asc(ideas.id)).all().map(rowToIdea);
-  const loadedRuns = db.select().from(runs).orderBy(asc(runs.runNumber)).all().map(rowToRun);
-  const changes = db.select().from(rubricChangelog).orderBy(asc(rubricChangelog.id)).all().map((row) => ({
+  const loadedIdeas = (await db.select().from(ideas).orderBy(asc(ideas.position), asc(ideas.id))).map(rowToIdea);
+  const loadedRuns = (await db.select().from(runs).orderBy(asc(runs.runNumber))).map(rowToRun);
+  const changes = (await db.select().from(rubricChangelog).orderBy(asc(rubricChangelog.id))).map((row) => ({
     id: row.id,
     at: row.at,
     fromVersion: row.fromVersion,
@@ -169,69 +167,60 @@ export function loadPortfolio(): Portfolio {
   };
 }
 
-function persistIdeas(nextIdeas: Idea[]): void {
-  const db = getDb();
-  const sqlite = getSqlite();
-  const write = sqlite.transaction(() => {
-    for (const idea of nextIdeas) {
-      const row = ideaToRow(idea);
-      db.insert(ideas)
-        .values(row)
-        .onConflictDoUpdate({ target: ideas.id, set: row })
-        .run();
-    }
+export async function requirePortfolio(): Promise<Portfolio> {
+  return loadPortfolio();
+}
+
+async function persistIdeas(db: Db, nextIdeas: Idea[]): Promise<void> {
+  for (const idea of nextIdeas) {
+    const row = ideaToRow(idea);
+    const { id, ...set } = row;
+    await db.insert(ideas).values(row).onConflictDoUpdate({ target: ideas.id, set });
+  }
+}
+
+async function persistRun(db: Db, run: Run): Promise<void> {
+  const values = {
+    runNumber: run.runNumber,
+    date: run.date,
+    author: run.author,
+    sourcesSwept: JSON.stringify(run.sourcesSwept),
+    ideasAdded: run.ideasAdded,
+    ideasRescored: run.ideasRescored,
+    notes: run.notes,
+    focus: run.focus,
+  };
+  await db.insert(runs).values(values).onConflictDoUpdate({
+    target: runs.runNumber,
+    set: {
+      date: values.date,
+      author: values.author,
+      sourcesSwept: values.sourcesSwept,
+      ideasAdded: values.ideasAdded,
+      ideasRescored: values.ideasRescored,
+      notes: values.notes,
+      focus: values.focus,
+    },
   });
-  write();
 }
 
-function persistRun(run: Run): void {
-  getDb()
-    .insert(runs)
-    .values({
-      runNumber: run.runNumber,
-      date: run.date,
-      author: run.author,
-      sourcesSwept: JSON.stringify(run.sourcesSwept),
-      ideasAdded: run.ideasAdded,
-      ideasRescored: run.ideasRescored,
-      notes: run.notes,
-      focus: run.focus,
-    })
-    .onConflictDoUpdate({
-      target: runs.runNumber,
-      set: {
-        date: run.date,
-        author: run.author,
-        sourcesSwept: JSON.stringify(run.sourcesSwept),
-        ideasAdded: run.ideasAdded,
-        ideasRescored: run.ideasRescored,
-        notes: run.notes,
-        focus: run.focus,
-      },
-    })
-    .run();
-}
-
-function persistSettings(next: Settings): void {
-  getDb()
-    .insert(settings)
-    .values({
-      id: 1,
-      schemaVersion: next.schemaVersion,
-      rubricVersion: next.rubricVersion,
-      criteriaOrder: JSON.stringify(next.criteriaOrder),
-      weights: JSON.stringify(next.weights),
-    })
-    .onConflictDoUpdate({
-      target: settings.id,
-      set: {
-        schemaVersion: next.schemaVersion,
-        rubricVersion: next.rubricVersion,
-        criteriaOrder: JSON.stringify(next.criteriaOrder),
-        weights: JSON.stringify(next.weights),
-      },
-    })
-    .run();
+async function persistSettings(db: Db, next: Settings): Promise<void> {
+  const values = {
+    id: 1,
+    schemaVersion: next.schemaVersion,
+    rubricVersion: next.rubricVersion,
+    criteriaOrder: JSON.stringify(next.criteriaOrder),
+    weights: JSON.stringify(next.weights),
+  };
+  await db.insert(settings).values(values).onConflictDoUpdate({
+    target: settings.id,
+    set: {
+      schemaVersion: values.schemaVersion,
+      rubricVersion: values.rubricVersion,
+      criteriaOrder: values.criteriaOrder,
+      weights: values.weights,
+    },
+  });
 }
 
 type RawHistory = { run: number; date: string; total: number; scores: Scores };
@@ -363,13 +352,14 @@ export function canonicalIdea(idea: Idea) {
   };
 }
 
-export function exportDocument(portfolio: Portfolio = loadPortfolio()) {
+export async function exportDocument(portfolio?: Portfolio) {
+  const source = portfolio ?? await loadPortfolio();
   return {
-    schema_version: portfolio.settings.schemaVersion,
-    rubric_version: portfolio.settings.rubricVersion,
-    weights: portfolio.settings.weights,
-    criteria_order: portfolio.settings.criteriaOrder,
-    runs: portfolio.runs.map((run) => ({
+    schema_version: source.settings.schemaVersion,
+    rubric_version: source.settings.rubricVersion,
+    weights: source.settings.weights,
+    criteria_order: source.settings.criteriaOrder,
+    runs: source.runs.map((run) => ({
       run_number: run.runNumber,
       date: run.date,
       author: run.author,
@@ -379,7 +369,7 @@ export function exportDocument(portfolio: Portfolio = loadPortfolio()) {
       notes: run.notes,
       ...(run.focus ? { focus: run.focus } : {}),
     })),
-    ideas: [...portfolio.ideas]
+    ideas: [...source.ideas]
       .sort((a, b) => a.position - b.position || a.id.localeCompare(b.id))
       .map((idea) => ({
         ...canonicalIdea(idea),
@@ -401,12 +391,16 @@ export function exportDocument(portfolio: Portfolio = loadPortfolio()) {
       })),
     _idealab: {
       exported_at: new Date().toISOString(),
-      rubric_changelog: portfolio.changes,
+      rubric_changelog: source.changes,
     },
   };
 }
 
-export function replacePortfolio(doc: ResearchDocument, actor = "seed"): { ideas: number; runs: number } {
+export async function replacePortfolio(
+  doc: ResearchDocument,
+  actor = "seed",
+  options?: { onlyIfEmpty?: boolean },
+): Promise<{ ideas: number; runs: number; skipped: boolean }> {
   const now = new Date().toISOString();
   const weights = doc.weights ?? DEFAULT_WEIGHTS;
   assertWeights(weights);
@@ -436,38 +430,46 @@ export function replacePortfolio(doc: ResearchDocument, actor = "seed"): { ideas
     focus: run.focus ?? "",
   }));
 
-  const sqlite = getSqlite();
-  const db = getDb();
-  const write = sqlite.transaction(() => {
-    sqlite.exec("DELETE FROM ideas; DELETE FROM runs; DELETE FROM settings; DELETE FROM rubric_changelog;");
-    persistSettings({
+  const db = await getDb();
+  let skipped = false;
+  await db.transaction(async (tx) => {
+    if (options?.onlyIfEmpty) {
+      const existing = await tx.select({ id: ideas.id }).from(ideas).limit(1);
+      if (existing.length) {
+        skipped = true;
+        return;
+      }
+    }
+    await tx.delete(rubricChangelog);
+    await tx.delete(ideas);
+    await tx.delete(runs);
+    await tx.delete(settings);
+    await persistSettings(tx, {
       schemaVersion: doc.schema_version ?? "1.0",
       rubricVersion: doc.rubric_version ?? "1.0",
       criteriaOrder,
       weights,
     });
-    for (const run of loadedRuns) persistRun(run);
-    for (const idea of loaded) {
-      db.insert(ideas).values(ideaToRow(idea)).run();
-    }
+    for (const run of loadedRuns) await persistRun(tx, run);
+    for (const idea of loaded) await tx.insert(ideas).values(ideaToRow(idea));
     for (const change of doc._idealab?.rubric_changelog ?? []) {
-      db.insert(rubricChangelog)
-        .values({
-          at: change.at,
-          fromVersion: change.fromVersion,
-          toVersion: change.toVersion,
-          weights: JSON.stringify(change.weights),
-          note: change.note,
-        })
-        .run();
+      await tx.insert(rubricChangelog).values({
+        id: change.id,
+        at: change.at,
+        fromVersion: change.fromVersion,
+        toVersion: change.toVersion,
+        weights: JSON.stringify(change.weights),
+        note: change.note,
+      });
     }
+    await tx.execute(sql`SELECT setval(pg_get_serial_sequence('rubric_changelog', 'id'), GREATEST(COALESCE((SELECT MAX(id) FROM rubric_changelog), 1), 1), true)`);
   });
-  write();
-  return { ideas: loaded.length, runs: loadedRuns.length };
+  if (skipped) return { ideas: 0, runs: 0, skipped: true };
+  return { ideas: loaded.length, runs: loadedRuns.length, skipped: false };
 }
 
-export function previewImport(text: string): ImportReport {
-  const portfolio = loadPortfolio();
+export async function previewImport(text: string): Promise<ImportReport> {
+  const portfolio = await loadPortfolio();
   const value = parseJsonText(text);
   if (detectImport(value) !== "run") {
     throw new Error("Full-database restore is not previewed as a run. Import a { run, ideas } file.");
@@ -475,14 +477,14 @@ export function previewImport(text: string): ImportReport {
   return applyRun(portfolio.ideas, value, portfolio.settings.weights, portfolio.runs).report;
 }
 
-export function commitImport(text: string, actor: string): { report: ImportReport; backupPath: string } {
-  const portfolio = loadPortfolio();
+export async function commitImport(text: string, actor: string): Promise<{ report: ImportReport; backupPath: string }> {
+  const portfolio = await loadPortfolio();
   const value = parseJsonText(text);
   const shape = detectImport(value);
   if (shape !== "run") {
     const doc = value as ResearchDocument;
-    const backupPath = writeBackup("before-database-import");
-    replacePortfolio(doc, actor);
+    const backupPath = await writeBackup("before-database-import");
+    await replacePortfolio(doc, actor);
     return {
       backupPath,
       report: {
@@ -505,22 +507,37 @@ export function commitImport(text: string, actor: string): { report: ImportRepor
     };
   }
   const result = applyRun(portfolio.ideas, value, portfolio.settings.weights, portfolio.runs);
-  const backupPath = writeBackup(`ideas_before_run_${result.run.runNumber}`);
-  const sqlite = getSqlite();
-  const write = sqlite.transaction(() => {
-    persistIdeas(result.ideas);
-    persistRun(result.run);
+  const backupPath = await writeBackup(`ideas_before_run_${result.run.runNumber}`);
+  const db = await getDb();
+  await db.transaction(async (tx) => {
+    await persistIdeas(tx, result.ideas);
+    await persistRun(tx, result.run);
   });
-  write();
   return { report: result.report, backupPath };
 }
 
-export function writeBackup(label: string): string {
-  const dir = backupDir();
-  fs.mkdirSync(dir, { recursive: true });
-  const file = path.join(dir, `${label}.json`);
-  fs.writeFileSync(file, JSON.stringify(exportDocument(), null, 2));
-  return file;
+export async function writeBackup(label: string): Promise<string> {
+  const document = JSON.stringify(await exportDocument(), null, 2);
+  const db = await getDb();
+  const inserted = await db.insert(backups).values({
+    label,
+    createdAt: new Date().toISOString(),
+    document,
+  }).returning({ id: backups.id });
+  const id = inserted[0]?.id;
+  const stale = await db.select({ id: backups.id }).from(backups).orderBy(desc(backups.id));
+  if (stale.length > 20) {
+    await db.delete(backups).where(inArray(backups.id, stale.slice(20).map((row) => row.id)));
+  }
+  try {
+    const dir = backupDir();
+    fs.mkdirSync(dir, { recursive: true });
+    const file = path.join(dir, `${label}.json`);
+    fs.writeFileSync(file, document);
+    return file;
+  } catch {
+    return `database backup #${id ?? "?"}`;
+  }
 }
 
 export type TrackingPatch = {
@@ -535,8 +552,8 @@ export type TrackingPatch = {
   unlock?: boolean;
 };
 
-export function updateTracking(id: string, patch: TrackingPatch, actor: string): Idea {
-  const portfolio = loadPortfolio();
+export async function updateTracking(id: string, patch: TrackingPatch, actor: string): Promise<Idea> {
+  const portfolio = await loadPortfolio();
   const nextIdeas = portfolio.ideas.map((idea) => structuredClone(idea));
   const idea = nextIdeas.find((item) => item.id === id);
   if (!idea) throw new Error(`No idea with id ${id}.`);
@@ -561,13 +578,16 @@ export function updateTracking(id: string, patch: TrackingPatch, actor: string):
   idea.updatedAt = new Date().toISOString();
   idea.updatedBy = actor;
   recompute(nextIdeas, portfolio.settings.weights);
-  persistIdeas(nextIdeas);
+  const db = await getDb();
+  await db.transaction(async (tx) => {
+    await persistIdeas(tx, nextIdeas);
+  });
   return nextIdeas.find((item) => item.id === id)!;
 }
 
-export function saveWeights(weights: Weights, note: string, actor: string): { version: string } {
+export async function saveWeights(weights: Weights, note: string, actor: string): Promise<{ version: string }> {
   assertWeights(weights);
-  const portfolio = loadPortfolio();
+  const portfolio = await loadPortfolio();
   const fromVersion = portfolio.settings.rubricVersion;
   const toVersion = bumpVersion(fromVersion);
   const nextIdeas = portfolio.ideas.map((idea) => structuredClone(idea));
@@ -577,23 +597,42 @@ export function saveWeights(weights: Weights, note: string, actor: string): { ve
     idea.updatedAt = now;
     idea.updatedBy = actor;
   }
-  const sqlite = getSqlite();
-  const db = getDb();
-  const write = sqlite.transaction(() => {
-    persistSettings({ ...portfolio.settings, rubricVersion: toVersion, weights });
-    persistIdeas(nextIdeas);
-    db.insert(rubricChangelog)
-      .values({
-        at: now,
-        fromVersion,
-        toVersion,
-        weights: JSON.stringify(weights),
-        note: note.trim() || "Weights updated in IdeaLab.",
-      })
-      .run();
+  const db = await getDb();
+  await db.transaction(async (tx) => {
+    await persistSettings(tx, { ...portfolio.settings, rubricVersion: toVersion, weights });
+    await persistIdeas(tx, nextIdeas);
+    await tx.insert(rubricChangelog).values({
+      at: now,
+      fromVersion,
+      toVersion,
+      weights: JSON.stringify(weights),
+      note: note.trim() || "Weights updated in IdeaLab.",
+    });
   });
-  write();
   return { version: toVersion };
+}
+
+let ready: Promise<{ ideas: number; runs: number; skipped: boolean }> | null = null;
+
+export function ensureDatabase(): Promise<{ ideas: number; runs: number; skipped: boolean }> {
+  if (!ready) {
+    ready = seedIfEmpty("seed").catch((error) => {
+      ready = null;
+      throw error;
+    });
+  }
+  return ready;
+}
+
+export async function seedIfEmpty(actor = "seed"): Promise<{ ideas: number; runs: number; skipped: boolean }> {
+  await migrate();
+  const db = await getDb();
+  const [{ n }] = await db.select({ n: count() }).from(ideas);
+  if (Number(n) > 0) return { ideas: Number(n), runs: 0, skipped: true };
+  const result = await replacePortfolio(readResearchFile(), actor, { onlyIfEmpty: true });
+  if (!result.skipped) return result;
+  const [{ n: after }] = await db.select({ n: count() }).from(ideas);
+  return { ideas: Number(after), runs: 0, skipped: true };
 }
 
 export function ideasPath(): string {
@@ -601,7 +640,13 @@ export function ideasPath(): string {
 }
 
 export function readResearchFile(file = ideasPath()): ResearchDocument {
-  return JSON.parse(fs.readFileSync(file, "utf8")) as ResearchDocument;
+  try {
+    if (fs.existsSync(file)) return JSON.parse(fs.readFileSync(file, "utf8")) as ResearchDocument;
+  } catch {
+    // The serverless trace may not include the file on disk.
+  }
+  if (path.resolve(file) === path.resolve(ideasPath())) return bundledIdeas as unknown as ResearchDocument;
+  throw new Error(`Could not read ${file}`);
 }
 
 export function totalsMatchFile(idea: Idea, weights: Weights): boolean {

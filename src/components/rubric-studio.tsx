@@ -30,14 +30,14 @@ export function RubricStudio({ ideas, weights, version, changes }: { ideas: Idea
   function save() {
     setMessage("");
     startTransition(async () => {
-      try {
-        const result = await saveWeightsAction({ weights: draft, note });
-        setMessage(`Saved as rubric ${result.version}. Totals and the shortlist were recomputed.`);
-        setNote("");
-        router.refresh();
-      } catch (error) {
-        setMessage(error instanceof Error ? error.message : "Could not save weights.");
+      const result = await saveWeightsAction({ weights: draft, note });
+      if (!result.ok) {
+        setMessage(result.error);
+        return;
       }
+      setMessage(`Saved as rubric ${result.version}. Totals and the shortlist were recomputed.`);
+      setNote("");
+      router.refresh();
     });
   }
 

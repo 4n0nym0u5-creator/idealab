@@ -4,16 +4,17 @@ IdeaLab is a local research studio for a solo builder in Sydney. It keeps one gr
 
 The app is seeded with Run 1 (the baseline sweep) and Run 2 (a cybersecurity deep dive: 40 new ideas plus a partial rescore of `saas-bulk-exporter-pattern`).
 
+Browsing is public. Imports, tracking edits, status changes and rubric saves need `ADMIN_PASSWORD`.
+
 ## Stack
 
 - Next.js 15, React 19, TypeScript
 - Tailwind CSS
-- SQLite via `better-sqlite3` and Drizzle ORM
+- Postgres via Drizzle ORM and `postgres` (postgres.js). Neon’s pooled `DATABASE_URL` works, with `prepare: false` so the PgBouncer pooler accepts the queries.
+- Embedded Postgres (`@electric-sql/pglite`) when no database URL is set, so local dev and `npm test` need no server
 - Recharts for the score radar and the distribution chart
 
-There is no login. `src/lib/auth.ts` exposes `getActor()`, and every mutation calls it. That is the place to add a session later.
-
-SQLite is a file (`data/idealab.db`). That is a good fit for one user on a laptop or a small VM with a persistent disk. It is a poor fit for a stateless host that forgets the filesystem on every deploy.
+`src/lib/auth.ts` still exposes `getActor()`. Write actions also call `assertCanWrite()` in `src/lib/session.ts`, which checks an httpOnly cookie set from `ADMIN_PASSWORD`.
 
 ## Setup
 
@@ -27,7 +28,9 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-`db:setup` applies `drizzle/0001_init.sql` and loads `data/ideas.json` (the merged Run 1 + Run 2 database, 100 ideas). Run it again any time you want to reset the studio back to that file. Your notes, status locks and weight edits live only in the SQLite file, so a re-seed wipes them. Export first.
+With no `DATABASE_URL`, `db:setup` creates an embedded Postgres in `data/pglite` and, if that database is empty, loads `data/ideas.json` (100 ideas, both runs). It does not wipe a database that already has ideas. `npm run db:reset` replaces it from the file. Export first if you have notes you want to keep.
+
+To point the same scripts at Neon, export `DATABASE_URL` first. `db:setup` migrates and seeds only when the `ideas` table is empty.
 
 ## Scripts
 
@@ -35,10 +38,10 @@ Open [http://localhost:3000](http://localhost:3000).
 |---|---|
 | `npm run dev` | Development server |
 | `npm run db:migrate` | Create tables |
-| `npm run db:seed` | Replace the database from `data/ideas.json` |
-| `npm run db:setup` | Migrate, then seed |
+| `npm run db:seed` / `db:setup` | Migrate, then seed `data/ideas.json` only if the database is empty |
+| `npm run db:reset` | Replace the database from `data/ideas.json` |
 | `npm test` | Import Run 2 into a fresh Run 1 database and compare it with the merged file |
-| `npm run build` / `npm start` | Production build and server |
+| `npm run build` / `npm start` | Migrate and seed Postgres when `DATABASE_URL` is set, then build and serve |
 | `npm run typecheck` | `tsc --noEmit` |
 
 ## What you can do
@@ -80,7 +83,7 @@ An idea that is already in the database can be partial. Run 2’s last record on
 
 `avoid` sits beside `killed`. Kill flags, or a legal score of 0 or 1, force `killed`. Avoid flags, or an existing `avoid` status, keep the idea out of the shortlist without treating it as illegal. The shortlist is the top 10 ideas that are still automatic candidates. Feeders are ideas with willingness to pay at 2 or below and recurring revenue at 1 or below.
 
-The import writes a backup under `data/backups/` before it merges. `npm test` performs this merge from `data/ideas-run1.json` plus `data/run2.json` and checks it against `data/ideas.json`.
+The import writes a backup before it merges. On a writable disk that is a file under `data/backups/`. It is always also stored in the `backups` table, which is what persists on Vercel. `npm test` performs this merge from `data/ideas-run1.json` plus `data/run2.json` and checks it against `data/ideas.json`.
 
 A full IdeaLab export can also be imported. That path replaces the database, which is the restore path rather than a research merge.
 
@@ -94,21 +97,36 @@ A full IdeaLab export can also be imported. That path replaces the database, whi
 
 The methodology still talks about `merge.py`. IdeaLab is the merge now. It follows the same rules: dedupe by id, union evidence and flags, recompute totals from the current weights, recompute feeder / killed / shortlist, and leave human pipeline statuses alone.
 
-## Deploy
+## Deploy on Vercel
 
-Any Node 22 host with a persistent disk works. Set `DATABASE_PATH` to that disk (for example `/data/idealab.db`). On first boot, run `npm run db:setup` if the file is missing, then `npm run build` and `npm start`.
+Framework preset: **Next.js**. Node.js version: **22** (`engines.node` is `22.x`).
+
+| Setting | Value |
+|---|---|
+| Install command | default (`npm install`, or `npm ci` if Vercel uses the lockfile) |
+| Build command | `npm run build` (also set in `vercel.json`) |
+| Output | Next.js default. Do not override it. |
+
+`npm run build` runs `scripts/bootstrap.ts` before `next build`. When `DATABASE_URL` or `POSTGRES_URL` is present it migrates and, if `ideas` is empty, seeds all 100 ideas from `data/ideas.json`. A later deploy does not wipe notes or status locks. If the URL is missing at build time, the bootstrap step skips and the first request does the same migrate-and-seed.
+
+Attach **Neon Postgres** from the Vercel Marketplace. That integration creates the variables below. Leave them available to Production and Preview, including during the build, so the seed can run before the site goes live. The first request still seeds an empty database if the build could not see the URL.
+
+### Environment variables
+
+| Variable | Required | Purpose |
+|---|---|---|
+| `DATABASE_URL` | Yes on Vercel | Neon pooled Postgres URL. `POSTGRES_URL` and `POSTGRES_PRISMA_URL` are accepted if `DATABASE_URL` is unset. |
+| `ADMIN_PASSWORD` | Yes once the site is public | Unlocks imports, tracking edits, pipeline moves and rubric saves. Browsing and JSON export stay open. Use a long passphrase. |
+| `POSTGRES_URL` | No | Fallback connection string, same role as `DATABASE_URL`. |
+| `IDEAS_PATH` | No | Defaults to `data/ideas.json`. |
+| `BACKUP_DIR` | No | Where a writable disk also stores the pre-merge JSON. On Vercel the copy is kept in the `backups` table. |
+| `PGLITE_PATH` | No | Local embedded data directory. Defaults to `data/pglite`. Ignored when a Postgres URL is set. |
+
+The header shows an **Unlock** field when `ADMIN_PASSWORD` is set. A correct password sets an httpOnly cookie for 30 days (`idealab_admin`, HMAC of the password, Secure on Vercel). **Lock editing** clears it. With no password in local development, writes stay open. With no password in production, every write is rejected.
 
 ```bash
 docker build -t idealab .
-docker run --rm -p 3000:3000 -v idealab-data:/data idealab
+docker run --rm -p 3000:3000 -e DATABASE_URL=postgres://... -e ADMIN_PASSWORD=... idealab
 ```
 
-The image seeds `/data/idealab.db` on first start. Do not put this on a host that wipes the disk, and do not expose it publicly until `getActor()` is backed by a real login. The studio assumes one trusted user.
-
-## Environment
-
-| Variable | Default | Purpose |
-|---|---|---|
-| `DATABASE_PATH` | `data/idealab.db` | SQLite file |
-| `BACKUP_DIR` | `data/backups` | JSON snapshots taken before a merge |
-| `IDEAS_PATH` | `data/ideas.json` | File `db:seed` reads |
+Without `DATABASE_URL`, the container uses embedded Postgres on the `/data` volume and seeds it on first use. Set `ADMIN_PASSWORD` before exposing any host.

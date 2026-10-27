@@ -55,7 +55,7 @@ export function ImportFlow() {
         <h1>Import a research run</h1>
         <p className="lede">
           Drop a run file shaped like <code>data/run2.json</code>: a <code>run</code> object plus <code>ideas</code>.
-          A new idea needs the full record. An existing id can be a partial update with only scores, evidence and notes.
+          A new idea needs the full record. An existing id can be a partial update with only scores, evidence and notes. Merging asks for the admin password.
           Ideas are deduped by id, and every touch adds a score-history point.
         </p>
       </header>

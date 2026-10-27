@@ -1,6 +1,6 @@
-import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { doublePrecision, index, integer, pgTable, text } from "drizzle-orm/pg-core";
 
-export const settings = sqliteTable("settings", {
+export const settings = pgTable("settings", {
   id: integer("id").primaryKey(),
   schemaVersion: text("schema_version").notNull(),
   rubricVersion: text("rubric_version").notNull(),
@@ -8,7 +8,7 @@ export const settings = sqliteTable("settings", {
   weights: text("weights").notNull(),
 });
 
-export const runs = sqliteTable("runs", {
+export const runs = pgTable("runs", {
   runNumber: integer("run_number").primaryKey(),
   date: text("date").notNull(),
   author: text("author").notNull(),
@@ -19,7 +19,7 @@ export const runs = sqliteTable("runs", {
   focus: text("focus").notNull().default(""),
 });
 
-export const ideas = sqliteTable("ideas", {
+export const ideas = pgTable("ideas", {
   id: text("id").primaryKey(),
   title: text("title").notNull(),
   category: text("category").notNull(),
@@ -29,8 +29,8 @@ export const ideas = sqliteTable("ideas", {
   monetisation: text("monetisation").notNull(),
   priceHypothesis: text("price_hypothesis").notNull(),
   scores: text("scores").notNull(),
-  total: real("total").notNull(),
-  researchTotal: real("research_total").notNull(),
+  total: doublePrecision("total").notNull(),
+  researchTotal: doublePrecision("research_total").notNull(),
   status: text("status").notNull(),
   statusLocked: integer("status_locked").notNull().default(0),
   killFlags: text("kill_flags").notNull(),
@@ -51,13 +51,29 @@ export const ideas = sqliteTable("ideas", {
   position: integer("position").notNull().default(0),
   updatedAt: text("updated_at").notNull(),
   updatedBy: text("updated_by").notNull().default("local"),
-});
+}, (table) => [
+  index("ideas_status").on(table.status),
+  index("ideas_category").on(table.category),
+  index("ideas_total").on(table.total),
+]);
 
-export const rubricChangelog = sqliteTable("rubric_changelog", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const rubricChangelog = pgTable("rubric_changelog", {
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
   at: text("at").notNull(),
   fromVersion: text("from_version").notNull(),
   toVersion: text("to_version").notNull(),
   weights: text("weights").notNull(),
   note: text("note").notNull(),
+});
+
+export const backups = pgTable("backups", {
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+  label: text("label").notNull(),
+  createdAt: text("created_at").notNull(),
+  document: text("document").notNull(),
+});
+
+export const migrations = pgTable("_migrations", {
+  id: text("id").primaryKey(),
+  appliedAt: text("applied_at").notNull(),
 });

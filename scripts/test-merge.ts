@@ -3,10 +3,22 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import test from "node:test";
+import { adminToken, passwordMatches, tokenMatches } from "../src/lib/access";
 
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), "idealab-"));
-process.env.DATABASE_PATH = path.join(dir, "idealab.db");
+process.env.IDEALAB_DRIVER = "pglite";
+process.env.PGLITE_PATH = "memory";
 process.env.BACKUP_DIR = path.join(dir, "backups");
+delete process.env.DATABASE_URL;
+delete process.env.POSTGRES_URL;
+delete process.env.POSTGRES_PRISMA_URL;
+
+test("admin password compares without storing the secret", () => {
+  assert.equal(passwordMatches("correct horse", "correct horse"), true);
+  assert.equal(passwordMatches("nope", "correct horse"), false);
+  assert.equal(tokenMatches(adminToken("correct horse"), "correct horse"), true);
+  assert.equal(tokenMatches(adminToken("other"), "correct horse"), false);
+});
 
 function canonicalFromFile(idea: Record<string, unknown>) {
   return {
@@ -34,16 +46,18 @@ function canonicalFromFile(idea: Record<string, unknown>) {
 }
 
 test("run 2 import matches the merged research database", async () => {
+  const { closeDb } = await import("../src/lib/db");
   const { migrate } = await import("../src/lib/migrate");
   const { readResearchFile, replacePortfolio, commitImport, loadPortfolio, canonicalIdea, updateTracking, previewImport, exportDocument } = await import("../src/lib/store");
-  migrate();
+  try {
+  await migrate();
   const run1 = readResearchFile(path.join(process.cwd(), "data", "ideas-run1.json"));
-  const seeded = replacePortfolio(run1, "test");
+  const seeded = await replacePortfolio(run1, "test");
   assert.equal(seeded.ideas, 60);
   assert.equal(seeded.runs, 1);
 
   const run2Text = fs.readFileSync(path.join(process.cwd(), "data", "run2.json"), "utf8");
-  const preview = previewImport(run2Text);
+  const preview = await previewImport(run2Text);
   assert.equal(preview.ideasAdded, 40);
   assert.equal(preview.ideasRescored, 1);
   assert.equal(preview.added.length, 40);
@@ -56,9 +70,9 @@ test("run 2 import matches the merged research database", async () => {
   assert.ok(preview.shortlistEntered.some((idea) => idea.id === "sec-email-auth-monitor"));
   assert.ok(preview.shortlistLeft.some((idea) => idea.id === "wfh-hours-log-au"));
 
-  const committed = commitImport(run2Text, "test");
+  const committed = await commitImport(run2Text, "test");
   assert.match(committed.backupPath, /ideas_before_run_2/);
-  const portfolio = loadPortfolio();
+  const portfolio = await loadPortfolio();
   assert.equal(portfolio.ideas.length, 100);
   assert.equal(portfolio.runs.length, 2);
   assert.equal(portfolio.runs[1].focus, "Cybersecurity deep dive");
@@ -76,7 +90,7 @@ test("run 2 import matches the merged research database", async () => {
   assert.equal(portfolio.runs[1].ideasAdded, merged.runs[1].ideas_added);
   assert.equal(portfolio.runs[1].ideasRescored, merged.runs[1].ideas_rescored);
 
-  assert.throws(() => commitImport(run2Text, "test"), /already in the database/);
+  await assert.rejects(() => commitImport(run2Text, "test"), /already in the database/);
 
   const bulk = portfolio.ideas.find((idea) => idea.id === "saas-bulk-exporter-pattern");
   assert.ok(bulk);
@@ -90,7 +104,7 @@ test("run 2 import matches the merged research database", async () => {
   assert.equal(killed?.status, "killed");
   assert.ok(killed?.killFlags.includes("credential custody"));
 
-  updateTracking("mac-quicklook-data-viewer", { status: "building" }, "test");
+  await updateTracking("mac-quicklook-data-viewer", { status: "building" }, "test");
   const partialRun = JSON.stringify({
     run: { run_number: 3, date: "2026-11-01", author: "Test", focus: "Partial rescore", sources_swept: ["fixture"], notes: "Partial only." },
     ideas: [
@@ -114,14 +128,14 @@ test("run 2 import matches the merged research database", async () => {
       },
     ],
   });
-  const again = previewImport(partialRun);
+  const again = await previewImport(partialRun);
   const rescored = again.updated.find((idea) => idea.id === "mac-quicklook-data-viewer");
   assert.equal(rescored?.partial, true);
   assert.equal(rescored?.status, "building");
   const avoided = again.added.find((idea) => idea.id === "sec-soft-avoid-demo");
   assert.equal(avoided?.status, "avoid");
-  commitImport(partialRun, "test");
-  const after = loadPortfolio();
+  await commitImport(partialRun, "test");
+  const after = await loadPortfolio();
   const quick = after.ideas.find((idea) => idea.id === "mac-quicklook-data-viewer");
   assert.equal(quick?.status, "building");
   assert.equal(quick?.scoreHistory.length, 2);
@@ -132,7 +146,7 @@ test("run 2 import matches the merged research database", async () => {
   assert.equal(demo?.rank, null);
   assert.equal(after.ideas.filter((idea) => idea.status === "shortlist").length <= 10, true);
 
-  assert.throws(
+  await assert.rejects(
     () =>
       previewImport(
         JSON.stringify({
@@ -143,9 +157,12 @@ test("run 2 import matches the merged research database", async () => {
     /partial update/,
   );
 
-  const exported = exportDocument();
+  const exported = await exportDocument();
   const exportedBulk = (exported.ideas as Array<{ id: string; score_history: unknown[] }>).find((idea) => idea.id === "saas-bulk-exporter-pattern");
   assert.equal(exportedBulk?.score_history.length, 2);
   assert.equal(exported.schema_version, "1.0");
   assert.equal(exported.ideas.length, 101);
+  } finally {
+    await closeDb();
+  }
 });
