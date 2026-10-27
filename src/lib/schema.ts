@@ -8,6 +8,7 @@ export const settings = pgTable("settings", {
   weights: text("weights").notNull(),
   rubricHistory: text("rubric_history").notNull().default("[]"),
   customerTypes: text("customer_types").notNull().default("[\"consumer\",\"business\",\"both\"]"),
+  categoryOverrides: text("category_overrides").notNull().default("{}"),
 });
 
 export const runs = pgTable("runs", {
@@ -53,6 +54,9 @@ export const ideas = pgTable("ideas", {
   customerType: text("customer_type").notNull().default(""),
   aibuildReason: text("aibuild_reason").notNull().default(""),
   painPoints: text("pain_points").notNull().default("[]"),
+  secondaryCategories: text("secondary_categories").notNull().default("[]"),
+  categoryHistory: text("category_history").notNull().default("[]"),
+  bundleFit: text("bundle_fit").notNull().default("null"),
   pipelineOrder: integer("pipeline_order").notNull().default(0),
   position: integer("position").notNull().default(0),
   updatedAt: text("updated_at").notNull(),
@@ -62,6 +66,11 @@ export const ideas = pgTable("ideas", {
   index("ideas_category").on(table.category),
   index("ideas_total").on(table.total),
 ]);
+
+export const bundles = pgTable("bundles", {
+  id: text("id").primaryKey(),
+  document: text("document").notNull(),
+});
 
 export const rubricChangelog = pgTable("rubric_changelog", {
   id: integer("id").primaryKey().generatedByDefaultAsIdentity(),

@@ -68,7 +68,20 @@ X
 ```
 Also update the Metrics counts, the TableOfContents (if sections change) and the Page title (e.g. "Run N (date)").
 
-## ideas.json schema (schema_version 2, rubric v2.0)
+## Schema v3 additions (Run 5)
+- Idea fields: `secondary_categories[]` (old categories kept as tags), `category_history[{run,date,from,to,note}]`,
+  `bundle_fit{tier: launch|v2|later|feeder|exclude, module, note}` (set for every Life Admin idea), `history_note` (optional).
+- Run-file fields: per-idea `category_change` (moves an existing idea; old category goes to secondary_categories and is logged),
+  top-level `category_overrides{id:{category,note,bundle_fit?}}` and `bundles[]`.
+- Top-level db fields: `category_overrides` (sticky: if a later run, in any order, sends that id with another category,
+  merge.py keeps the override category and adds the incoming one to secondary_categories) and `bundles[]`
+  (bundle-level score, price, modules, scenarios; bundles are never shortlisted).
+- `category_overrides` already holds 10 Run 4 pain-idea ids (share-house-ledger-roster, chore-fairness-ledger,
+  subscription-audit-csv, moving-house-hub-au, household-docs-index, gift-budget-tracker-pain, school-holiday-care-planner,
+  school-notice-digest, home-maintenance-log-pain, receipt-shoebox-warranty). **Run 4 worker: merge with the current merge.py
+  (schema v3), not a copy from before Run 5**; the old one is runs/merge_before_run_5.py. Override handling was tested only in a sandbox copy.
+
+## ideas.json schema (schema_version 2, rubric v2.0; v3 fields above)
 ```
 { schema_version (2), rubric_version ("2.0"), weights{key:weight} (13 keys, sum 100), criteria_order[13 keys, aibuild last],
   customer_types ["consumer","business","both"],
@@ -92,3 +105,4 @@ Never compare totals across rubric versions.
 - Run 2 (27 Oct 2026): cybersecurity deep dive, 40 new ideas plus a re-score of `saas-bulk-exporter-pattern` (`build_run2.py` -> `runs/run2.json`; backup in `runs/ideas_before_run_2.json`). Security categories are prefixed `Security:`. The rubric.md addendum covers security legal levels. The Page now has a "Cybersecurity deep dive (Run 2)" section with its own `CYBER_DETAILS` array, so add a `DETAILS` entry for any new shortlist id.
 - File naming: Run 2 used `runs/run2.json`; keep `runs/runN.json` from now on.
 - Run 3 (27 Oct 2026): consumer sweep + **rubric v2.0** (`aibuild` criterion, weight 10; weights rebalanced; `customer_type` on every idea). Order used: backup → `migrate_v2.py` (backfill all 100, writes `runs/run3_rubric_v2_rescore.json`) → `build_run3.py` → `merge.py runs/run3.json` (35 new consumer ideas, 2 re-scores). Backup in `runs/ideas_before_run_3.json`. The Page has a "Consumer pass (Run 3)" section (consumer shortlist details live in `DETAILS`), an AI-buildability explainer, a v1 vs v2 table and a first-build plan.
+- Run 5 (27 Oct 2026): **Life Admin** category + bundle analysis. `build_run5.py` -> `runs/run5.json` (35 new ideas, 16 reclassified with `category_change`, 4 rescored, 10 Run 4 `category_overrides`) and `runs/run5_bundle.json` (Life Admin Pass model: pricing, scenarios, bundle score 68.8). Backups: `runs/ideas_before_run_5.json`, `runs/merge_before_run_5.py`. Result: schema v3, 170 ideas, runs [1,2,3,5]. Run 4 (pain-point pass) is owned by another worker and not merged yet. Page: `build_page_run5.py` builds EditCanvas edits from `page_live_before_run5.tsx` (a ReadCanvas snapshot; always rebuild the base from ReadCanvas, the live page can drift from local files) and writes `page_run5.canvas.tsx`; `page_live_after_run5.tsx` is the live source after the edit. The Page RAW array is now sorted at load (`IDEAS ... .sort(by total)`), so new rows can be appended.

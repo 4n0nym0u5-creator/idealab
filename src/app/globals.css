@@ -233,6 +233,12 @@ h3 { font-size: 20px; }
 .badge-business { background: color-mix(in srgb, #3d6ea8 16%, transparent); color: #3d6ea8; }
 .dark .badge-business { color: #9ec0ea; }
 .badge-both { background: color-mix(in srgb, var(--clay) 16%, transparent); color: var(--clay); }
+.badge-launch { background: color-mix(in srgb, var(--good) 18%, transparent); color: var(--good); }
+.badge-v2 { background: color-mix(in srgb, #3d6ea8 16%, transparent); color: #3d6ea8; }
+.dark .badge-v2 { color: #9ec0ea; }
+.badge-later { background: var(--sunken); color: var(--soft); }
+.badge-exclude { background: color-mix(in srgb, var(--bad) 14%, transparent); color: var(--bad); }
+.badge-tag { background: transparent; border: 1px solid var(--line); color: var(--soft); }
 
 .split { display: flex; height: 10px; border-radius: 99px; overflow: hidden; background: var(--sunken); }
 .split span { display: block; height: 100%; }

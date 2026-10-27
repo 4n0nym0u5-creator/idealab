@@ -35,8 +35,8 @@ export default async function DashboardPage() {
           <p className="kicker">Portfolio overview</p>
           <h1>A lab for small, low-risk products.</h1>
           <p className="lede">
-            {ideas.length} scored ideas across {portfolio.runs.length} research runs. Rubric {portfolio.settings.rubricVersion} scores AI-buildability for a non-engineer.
-            Shortlist is the top 10 automatic candidates. Run 3 is the consumer sweep.
+            {ideas.length} scored ideas across {portfolio.runs.length} research runs. Rubric {portfolio.settings.rubricVersion}.
+            Shortlist is the top 10 automatic candidates. Run 5 is the Life Admin bundle.
           </p>
         </header>
 
@@ -45,6 +45,7 @@ export default async function DashboardPage() {
           <Stat value={String(counts.shortlist ?? 0)} label="Shortlist" />
           <Stat value={String(counts.feeder ?? 0)} label="Feeders" />
           <Stat value={String(ideas.filter((idea) => idea.customerType === "consumer").length)} label="Consumer" />
+          <Stat value={String(ideas.filter((idea) => idea.category === "Life Admin").length)} label="Life Admin" />
           <Stat value={String(security.length)} label="Security" />
           <Stat value={String(killed.length)} label="Killed" />
           <Stat value={mean.toFixed(1)} label="Live average" />
@@ -83,6 +84,8 @@ export default async function DashboardPage() {
             <Link className="chip" href="/ideas?customer=consumer">Consumer · {ideas.filter((idea) => idea.customerType === "consumer").length}</Link>
             <Link className="chip" href="/ideas?customer=business">Business · {ideas.filter((idea) => idea.customerType === "business").length}</Link>
             <Link className="chip" href="/ideas?customer=both">Both · {ideas.filter((idea) => idea.customerType === "both").length}</Link>
+            <Link className="chip" href="/ideas?category=Life%20Admin">Life Admin · {ideas.filter((idea) => idea.category === "Life Admin").length}</Link>
+            {portfolio.bundles[0] ? <Link className="chip" href="/bundles">{portfolio.bundles[0].title} · {portfolio.bundles[0].total.toFixed(1)}</Link> : null}
           </div>
           <div className="list">
             {starters(live).map((idea) => (

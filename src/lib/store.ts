@@ -7,7 +7,8 @@ import { backupDir, getDb, type AppDatabase } from "./db";
 import { applyRun, detectImport, parseJsonText, weightsFromUnknown, type ImportReport } from "./merge";
 import { migrationApplied, migrate, recordMigration } from "./migrate";
 import { applyRubricRescore, rubricHistoryFromRescore, type RescoreFile } from "./rescore";
-import { backups, ideas, rubricChangelog, runs, settings } from "./schema";
+import { applyBundleAnalysis, bundleFromUnknown, canonicalBundle, canonicalOverrides, overridesFromUnknown, readStoredBundle } from "./bundles";
+import { backups, bundles, ideas, rubricChangelog, runs, settings } from "./schema";
 import { assertWeights, assignPresentation, bumpVersion, recompute, sanitizeOverrides, totalOf } from "./scoring";
 import { themeForCategory } from "./themes";
 import {
@@ -18,6 +19,10 @@ import {
   type Evidence,
   type Idea,
   type PainPoint,
+  type BundleFit,
+  type BundleRecord,
+  type CategoryEvent,
+  type CategoryOverride,
   type Portfolio,
   type RubricChange,
   type RubricVersionRecord,
@@ -99,6 +104,7 @@ function asRubricHistory(value: unknown): RubricVersionRecord[] {
 }
 
 const DATA_MIGRATION = "0002_rubric_v2_data";
+const DATA_MIGRATION_V3 = "0003_schema_v3_data";
 
 function rowToIdea(row: IdeaRow): Idea {
   const theme = themeForCategory(row.category);
@@ -137,6 +143,9 @@ function rowToIdea(row: IdeaRow): Idea {
     customerType: isCustomerType(row.customerType) ? row.customerType : "",
     aibuildReason: row.aibuildReason ?? "",
     painPoints: asPainPoints(parseJson(row.painPoints, [])),
+    secondaryCategories: parseJson<string[]>(row.secondaryCategories, []),
+    categoryHistory: parseJson<CategoryEvent[]>(row.categoryHistory, []),
+    bundleFit: parseJson<BundleFit | null>(row.bundleFit, null),
     pipelineOrder: row.pipelineOrder,
     position: row.position,
     updatedAt: row.updatedAt,
@@ -179,6 +188,9 @@ function ideaToRow(idea: Idea) {
     customerType: idea.customerType,
     aibuildReason: idea.aibuildReason,
     painPoints: JSON.stringify(idea.painPoints),
+    secondaryCategories: JSON.stringify(idea.secondaryCategories ?? []),
+    categoryHistory: JSON.stringify(idea.categoryHistory ?? []),
+    bundleFit: JSON.stringify(idea.bundleFit ?? null),
     pipelineOrder: idea.pipelineOrder,
     position: idea.position,
     updatedAt: idea.updatedAt,
@@ -222,9 +234,14 @@ export async function loadPortfolio(): Promise<Portfolio> {
       weights: parseJson<Weights>(settingsRow.weights, DEFAULT_WEIGHTS),
       rubricHistory: asRubricHistory(parseJson(settingsRow.rubricHistory, [])),
       customerTypes: parseJson<string[]>(settingsRow.customerTypes, ["consumer", "business", "both"]),
+      categoryOverrides: overridesFromUnknown(parseJson(settingsRow.categoryOverrides, {})),
     },
     runs: loadedRuns,
     ideas: assignPresentation(loadedIdeas),
+    bundles: (await db.select().from(bundles).orderBy(asc(bundles.id))).flatMap((row) => {
+      const bundle = readStoredBundle(parseJson(row.document, {}));
+      return bundle ? [bundle] : [];
+    }),
     changes,
   };
 }
@@ -277,6 +294,7 @@ async function persistSettings(db: Db, next: Settings): Promise<void> {
     weights: JSON.stringify(next.weights),
     rubricHistory: JSON.stringify(next.rubricHistory ?? []),
     customerTypes: JSON.stringify(next.customerTypes ?? ["consumer", "business", "both"]),
+    categoryOverrides: JSON.stringify(canonicalOverrides(next.categoryOverrides ?? {})),
   };
   await db.insert(settings).values(values).onConflictDoUpdate({
     target: settings.id,
@@ -287,6 +305,7 @@ async function persistSettings(db: Db, next: Settings): Promise<void> {
       weights: values.weights,
       rubricHistory: values.rubricHistory,
       customerTypes: values.customerTypes,
+      categoryOverrides: values.categoryOverrides,
     },
   });
 }
@@ -330,6 +349,9 @@ type RawIdea = {
   customer_type?: string;
   aibuild_reason?: string;
   pain_points?: PainPoint[];
+  secondary_categories?: string[];
+  category_history?: CategoryEvent[];
+  bundle_fit?: BundleFit | null;
   kill_flags?: string[];
   avoid_flags?: string[];
   evidence?: Evidence[];
@@ -350,6 +372,8 @@ export type ResearchDocument = {
   ideas: RawIdea[];
   customer_types?: string[];
   rubric_history?: unknown;
+  category_overrides?: unknown;
+  bundles?: unknown[];
   _idealab?: { rubric_changelog?: Array<Omit<RubricChange, "id"> & { id?: number }> };
 };
 
@@ -396,6 +420,9 @@ export function ideaFromDocument(raw: RawIdea, index: number, now: string): Idea
     customerType: raw.customer_type && isCustomerType(raw.customer_type) ? raw.customer_type : "",
     aibuildReason: raw.aibuild_reason ?? "",
     painPoints: asPainPoints(raw.pain_points),
+    secondaryCategories: raw.secondary_categories ?? [],
+    categoryHistory: raw.category_history ?? [],
+    bundleFit: raw.bundle_fit ?? null,
     pipelineOrder: app.pipeline_order ?? 0,
     position: app.position ?? index,
     updatedAt: app.updated_at ?? now,
@@ -438,6 +465,9 @@ export function canonicalIdea(idea: Idea) {
     ...(idea.customerType ? { customer_type: idea.customerType } : {}),
     ...(idea.aibuildReason ? { aibuild_reason: idea.aibuildReason } : {}),
     ...(idea.painPoints.length ? { pain_points: idea.painPoints } : {}),
+    ...(idea.secondaryCategories.length ? { secondary_categories: idea.secondaryCategories } : {}),
+    ...(idea.categoryHistory.length ? { category_history: idea.categoryHistory } : {}),
+    ...(idea.bundleFit ? { bundle_fit: idea.bundleFit } : {}),
   };
 }
 
@@ -469,6 +499,8 @@ export async function exportDocument(portfolio?: Portfolio) {
         ...(item.change ? { change: item.change } : {}),
       })),
     } : {}),
+    ...(Object.keys(source.settings.categoryOverrides).length ? { category_overrides: canonicalOverrides(source.settings.categoryOverrides) } : {}),
+    ...(source.bundles.length ? { bundles: source.bundles.map((bundle) => canonicalBundle(bundle)) } : {}),
     ideas: [...source.ideas]
       .sort((a, b) => a.position - b.position || a.id.localeCompare(b.id))
       .map((idea) => ({
@@ -494,6 +526,37 @@ export async function exportDocument(portfolio?: Portfolio) {
       rubric_changelog: source.changes,
     },
   };
+}
+
+function readBundleAnalysis(): unknown | null {
+  const file = path.join(process.cwd(), "data", "run5-bundle.json");
+  try {
+    if (fs.existsSync(file)) return JSON.parse(fs.readFileSync(file, "utf8"));
+  } catch {
+    return null;
+  }
+  return null;
+}
+
+function withAnalysis(list: BundleRecord[]): BundleRecord[] {
+  const analysis = readBundleAnalysis();
+  if (!analysis) return list;
+  return list.map((bundle) => applyBundleAnalysis(bundle, analysis));
+}
+
+function bundlesFromDocument(doc: ResearchDocument): BundleRecord[] {
+  return (doc.bundles ?? []).flatMap((raw) => {
+    const bundle = bundleFromUnknown(raw);
+    return bundle ? [bundle] : [];
+  });
+}
+
+async function persistBundle(db: Db, bundle: BundleRecord): Promise<void> {
+  const document = JSON.stringify(bundle);
+  await db.insert(bundles).values({ id: bundle.id, document }).onConflictDoUpdate({
+    target: bundles.id,
+    set: { document },
+  });
 }
 
 export async function replacePortfolio(
@@ -544,16 +607,19 @@ export async function replacePortfolio(
     await tx.delete(rubricChangelog);
     await tx.delete(ideas);
     await tx.delete(runs);
+    await tx.delete(bundles);
     await tx.delete(settings);
     await persistSettings(tx, {
-      schemaVersion: doc.schema_version ?? "1.0",
+      schemaVersion: String(doc.schema_version ?? "1.0"),
       rubricVersion: doc.rubric_version ?? "1.0",
       criteriaOrder,
       weights,
       rubricHistory: asRubricHistory(doc.rubric_history),
       customerTypes: doc.customer_types ?? ["consumer", "business", "both"],
+      categoryOverrides: overridesFromUnknown(doc.category_overrides),
     });
     for (const run of loadedRuns) await persistRun(tx, run);
+    for (const bundle of withAnalysis(bundlesFromDocument(doc))) await persistBundle(tx, bundle);
     for (const idea of loaded) await tx.insert(ideas).values(ideaToRow(idea));
     for (const change of doc._idealab?.rubric_changelog ?? []) {
       await tx.insert(rubricChangelog).values({
@@ -579,6 +645,7 @@ function contextFromImport(portfolio: Portfolio, value: unknown): Settings & { c
   let rubricHistory = portfolio.settings.rubricHistory;
   let schemaVersion = portfolio.settings.schemaVersion;
   const customerTypes = portfolio.settings.customerTypes;
+  const categoryOverrides = portfolio.settings.categoryOverrides;
   let changed = false;
   const nextWeights = weightsFromUnknown(record.weights);
   if (nextWeights) {
@@ -607,11 +674,17 @@ function contextFromImport(portfolio: Portfolio, value: unknown): Settings & { c
       changed = true;
     }
   }
-  if (typeof record.schema_version === "string" && record.schema_version) schemaVersion = record.schema_version;
+  if (typeof record.schema_version === "string" || typeof record.schema_version === "number") {
+    const nextSchema = String(record.schema_version);
+    if (Number(nextSchema) > Number(schemaVersion)) {
+      schemaVersion = nextSchema;
+      changed = true;
+    }
+  }
   for (const key of criteriaOrder) {
     if (weights[key] === undefined && !isOptionalCriterion(key)) weights[key] = 0;
   }
-  return { schemaVersion, rubricVersion, criteriaOrder, weights, rubricHistory, customerTypes, changed };
+  return { schemaVersion, rubricVersion, criteriaOrder, weights, rubricHistory, customerTypes, categoryOverrides, changed };
 }
 
 export async function previewImport(text: string): Promise<ImportReport> {
@@ -621,7 +694,12 @@ export async function previewImport(text: string): Promise<ImportReport> {
     throw new Error("Full-database restore is not previewed as a run. Import a { run, ideas } file.");
   }
   const context = contextFromImport(portfolio, value);
-  return applyRun(portfolio.ideas, value, context.weights, portfolio.runs, { criteriaOrder: context.criteriaOrder }).report;
+  return applyRun(portfolio.ideas, value, context.weights, portfolio.runs, {
+    criteriaOrder: context.criteriaOrder,
+    rubricVersion: context.rubricVersion,
+    categoryOverrides: portfolio.settings.categoryOverrides,
+    bundles: portfolio.bundles,
+  }).report;
 }
 
 export async function commitImport(text: string, actor: string): Promise<{ report: ImportReport; backupPath: string }> {
@@ -654,7 +732,12 @@ export async function commitImport(text: string, actor: string): Promise<{ repor
     };
   }
   const context = contextFromImport(portfolio, value);
-  const result = applyRun(portfolio.ideas, value, context.weights, portfolio.runs, { criteriaOrder: context.criteriaOrder });
+  const result = applyRun(portfolio.ideas, value, context.weights, portfolio.runs, {
+    criteriaOrder: context.criteriaOrder,
+    rubricVersion: context.rubricVersion,
+    categoryOverrides: portfolio.settings.categoryOverrides,
+    bundles: portfolio.bundles,
+  });
   const backupPath = await writeBackup(`ideas_before_run_${result.run.runNumber}`);
   const db = await getDb();
   await db.transaction(async (tx) => {
@@ -666,8 +749,12 @@ export async function commitImport(text: string, actor: string): Promise<{ repor
         weights: context.weights,
         rubricHistory: context.rubricHistory,
         customerTypes: context.customerTypes,
+        categoryOverrides: result.categoryOverrides,
       });
+    } else if (JSON.stringify(result.categoryOverrides) !== JSON.stringify(portfolio.settings.categoryOverrides)) {
+      await persistSettings(tx, { ...portfolio.settings, categoryOverrides: result.categoryOverrides });
     }
+    for (const bundle of withAnalysis(result.bundles)) await persistBundle(tx, bundle);
     await persistIdeas(tx, result.ideas);
     await persistRun(tx, result.run);
   });
@@ -791,12 +878,16 @@ export async function seedIfEmpty(actor = "seed"): Promise<{ ideas: number; runs
     const result = await replacePortfolio(readResearchFile(), actor, { onlyIfEmpty: true });
     if (!result.skipped) {
       await recordMigration(DATA_MIGRATION);
+      await recordMigration(DATA_MIGRATION_V3);
       return result;
     }
   }
-  if (!(await migrationApplied(DATA_MIGRATION))) {
+  const needsV2 = !(await migrationApplied(DATA_MIGRATION));
+  const needsV3 = !(await migrationApplied(DATA_MIGRATION_V3));
+  if (needsV2 || needsV3) {
     const upgraded = await upgradeResearchData(readResearchFile(), actor);
-    await recordMigration(DATA_MIGRATION);
+    if (needsV2) await recordMigration(DATA_MIGRATION);
+    if (needsV3) await recordMigration(DATA_MIGRATION_V3);
     return { ideas: upgraded.ideas, runs: upgraded.runs, skipped: false };
   }
   const [{ n: after }] = await db.select({ n: count() }).from(ideas);
@@ -823,6 +914,7 @@ export async function commitRescore(file: RescoreFile, actor = "rescore"): Promi
       weights,
       rubricHistory: rubricHistoryFromRescore(file),
       customerTypes: ["consumer", "business", "both"],
+      categoryOverrides: portfolio.settings.categoryOverrides,
     });
     await persistIdeas(tx, nextIdeas);
   });
@@ -893,14 +985,16 @@ export async function upgradeResearchData(doc: ResearchDocument, actor = "migrat
   const db = await getDb();
   await db.transaction(async (tx) => {
     await persistSettings(tx, {
-      schemaVersion: doc.schema_version ?? "2",
+      schemaVersion: String(doc.schema_version ?? "2"),
       rubricVersion: doc.rubric_version ?? "2.0",
       criteriaOrder,
       weights,
       rubricHistory: asRubricHistory(doc.rubric_history),
       customerTypes: doc.customer_types ?? ["consumer", "business", "both"],
+      categoryOverrides: overridesFromUnknown(doc.category_overrides),
     });
     for (const run of loadedRuns) await persistRun(tx, run);
+    for (const bundle of withAnalysis(bundlesFromDocument(doc))) await persistBundle(tx, bundle);
     await persistIdeas(tx, next);
   });
   return { ideas: next.length, runs: loadedRuns.length, preserved };

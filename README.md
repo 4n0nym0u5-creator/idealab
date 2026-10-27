@@ -86,19 +86,24 @@ An idea that is already in the database can be partial. Run 2’s last record on
 
 Score history keeps one entry per run and rubric version. A rescore under the same run and version replaces that entry. Totals from v1.0 and v2.0 are stored as scored and are not compared with each other.
 
-The import writes a backup before it merges. On a writable disk that is a file under `data/backups/`. It is always also stored in the `backups` table, which is what persists on Vercel. `npm test` checks Run 2 against `data/ideas-v1.json`, then the rubric v2 rescore plus `data/run3.json` against `data/ideas.json`.
+The import writes a backup before it merges. On a writable disk that is a file under `data/backups/`. It is always also stored in the `backups` table, which is what persists on Vercel. `npm test` checks Run 2 against `data/ideas-v1.json`, the rubric v2 rescore plus `data/run3.json` against `data/ideas-v2.json`, and Run 5 against `data/ideas.json`.
+
+Schema v3 adds `secondary_categories`, `category_history`, and `bundle_fit` on each idea, plus top-level `category_overrides` and `bundles`. A category override sticks: a later import that sends a different category for that id keeps the override and stores the incoming category as a secondary tag. The same stickiness applies to an idea that already has category history, unless that record includes `category_change`. Bundles are scored with the idea rubric and are not shortlisted.
 
 A full IdeaLab export can also be imported. That path replaces the database, which is the restore path rather than a research merge.
 
 ## Research files
 
-- `data/ideas.json` — canonical database after Run 3 (135 ideas, rubric v2.0; what `db:seed` loads)
+- `data/ideas.json` — canonical database after Run 5 (170 ideas, rubric v2.0, schema 3; what `db:seed` loads). Run 4 is not in this file.
+- `data/ideas-v2.json` — the Run 3 database (135 ideas), kept so the importer test can replay Run 5
 - `data/ideas-v1.json` — the Run 2 database, kept so the importer test can replay the v1 to v2 path
+- `data/run5.json` — Run 5 import (35 new ideas, 16 rescores, Life Admin category and the Life Admin Pass bundle)
+- `data/run5-bundle.json` — revenue scenarios, price comparison and pricing evidence for the Life Admin Pass
 - `data/run3.json` — Run 3 import (35 new ideas, 2 rescores)
 - `data/run3-rubric-v2-rescore.json` — the rubric v2 backfill for the original 100 ideas
 - `data/ideas-run1.json` — Run 1 only, used by the import test
 - `data/run2.json` — the cybersecurity run, including the partial rescore
-- `research/rubric.md` — rubric v2.0, including AI-buildability and the Run 2 security addendum
+- `research/rubric.md` — rubric v2.0, including AI-buildability, the Run 2 security addendum, and the Run 5 “Dates, not documents” note
 - `research/runbook.md` — how a later research run is collected
 
 The methodology still talks about `merge.py`. IdeaLab is the merge now. It follows the same rules: dedupe by id, union evidence and flags, recompute totals from the current weights, recompute feeder / killed / shortlist, and leave human pipeline statuses alone.
@@ -113,7 +118,7 @@ Framework preset: **Next.js**. Node.js version: **22** (`engines.node` is `22.x`
 | Build command | `npm run build` (also set in `vercel.json`) |
 | Output | Next.js default. Do not override it. |
 
-`npm run build` runs `scripts/bootstrap.ts` before `next build`. When `DATABASE_URL` or `POSTGRES_URL` is present it migrates and, if `ideas` is empty, seeds all 135 ideas from `data/ideas.json`. If the database already has the Run 1 and Run 2 portfolio, the same step applies migration `0002_rubric_v2` (new columns) and a one-time data upgrade `0002_rubric_v2_data`. That upgrade overlays the v2 research file: 135 ideas, 3 runs, rubric 2.0. It keeps user notes, MVP and distribution notes, risks, score overrides, pipeline order, and any status you locked or set by hand (`backlog`, `researching`, `building`, `launched`, `parked`, `rejected`, `avoid`). It does not delete ideas that exist only in the database, and it does not wipe the database. A second deploy sees the migration id and leaves the data alone. If the URL is missing at build time, the bootstrap step skips and the first request does the same migrate, seed-if-empty, or one-time upgrade.
+`npm run build` runs `scripts/bootstrap.ts` before `next build`. When `DATABASE_URL` or `POSTGRES_URL` is present it migrates and, if `ideas` is empty, seeds all 170 ideas from `data/ideas.json` and records both data migrations. Production already applied `0002_rubric_v2` and `0002_rubric_v2_data` (135 ideas, rubric 2.0). This deploy applies `0003_schema_v3` (secondary categories, category history, bundle fit, category overrides, and the bundles table) and a one-time overlay `0003_schema_v3_data`. That overlay loads the schema 3 research file: 170 ideas, 4 runs (1, 2, 3 and 5), the Life Admin category, sticky category overrides, and the Life Admin Pass bundle with its revenue scenarios. It keeps user notes, MVP and distribution notes, risks, score overrides, pipeline order, and any status you locked or set by hand (`backlog`, `researching`, `building`, `launched`, `parked`, `rejected`, `avoid`). It does not delete ideas that exist only in the database, and it does not wipe the database. A second deploy sees `0003_schema_v3_data` and leaves the data alone. An empty database seeds the 170-idea file in one step and records both markers, so it does not upgrade twice. Run 4 forum pain points are not part of this import. If the URL is missing at build time, the bootstrap step skips and the first request does the same migrate, seed-if-empty, or one-time upgrade.
 
 Attach **Neon Postgres** from the Vercel Marketplace. That integration creates the variables below. Leave them available to Production and Preview, including during the build, so the seed can run before the site goes live. The first request still seeds an empty database if the build could not see the URL.
 

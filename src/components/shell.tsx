@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Columns3, Download, GitCompare, History, LayoutDashboard, Library, Moon, Scale, Search, Sun } from "lucide-react";
+import { Columns3, Download, GitCompare, History, LayoutDashboard, Library, Moon, Package, Scale, Search, Sun } from "lucide-react";
 import { AdminLock } from "./admin-lock";
 import type { WriteMode } from "@/lib/access";
 
 const LINKS = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/ideas", label: "Ideas", icon: Library },
+  { href: "/bundles", label: "Bundles", icon: Package },
   { href: "/pipeline", label: "Pipeline", icon: Columns3 },
   { href: "/compare", label: "Compare", icon: GitCompare },
   { href: "/rubric", label: "Rubric", icon: Scale },

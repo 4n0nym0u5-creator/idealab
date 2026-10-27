@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
+import { PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart, ResponsiveContainer, BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
 import { DEFAULT_ORDER, criteriaInOrder, type Criterion, type Scores } from "@/lib/criteria";
 
 export function useDark() {
@@ -64,6 +64,25 @@ export function DistributionChart({ bins }: { bins: { label: string; count: numb
             <Tooltip contentStyle={{ background: "var(--elev)", border: "1px solid var(--line)", borderRadius: 12 }} />
             <Bar dataKey="count" fill={dark ? "#8fd4b0" : "#1e6b4a"} radius={[6, 6, 0, 0]} />
           </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </ClientOnly>
+  );
+}
+
+export function RevenueChart({ points }: { points: { month: number; revenue: number; paid: number }[] }) {
+  const dark = useDark();
+  return (
+    <ClientOnly height={280}>
+      <div style={{ width: "100%", height: 280 }} aria-label="Revenue scenario">
+        <ResponsiveContainer>
+          <LineChart data={points}>
+            <CartesianGrid stroke={dark ? "#322f29" : "#ddd4c6"} />
+            <XAxis dataKey="month" tick={{ fill: dark ? "#8d867b" : "#8a8175", fontSize: 11 }} />
+            <YAxis tick={{ fill: dark ? "#8d867b" : "#8a8175", fontSize: 11 }} width={48} />
+            <Tooltip contentStyle={{ background: "var(--elev)", border: "1px solid var(--line)", borderRadius: 12 }} />
+            <Line type="monotone" dataKey="revenue" name="Net revenue so far (A$)" stroke={dark ? "#8fd4b0" : "#1e6b4a"} strokeWidth={2} dot={false} />
+          </LineChart>
         </ResponsiveContainer>
       </div>
     </ClientOnly>
