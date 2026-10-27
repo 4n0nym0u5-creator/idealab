@@ -86,6 +86,8 @@ export default async function DashboardPage() {
             <Link className="chip" href="/ideas?customer=both">Both · {ideas.filter((idea) => idea.customerType === "both").length}</Link>
             <Link className="chip" href="/ideas?category=Life%20Admin">Life Admin · {ideas.filter((idea) => idea.category === "Life Admin").length}</Link>
             {portfolio.bundles[0] ? <Link className="chip" href="/bundles">{portfolio.bundles[0].title} · {portfolio.bundles[0].total.toFixed(1)}</Link> : null}
+            <Link className="chip" href="/ideas?evidence=1">Complaint evidence · {ideas.filter((idea) => idea.complaintFrequency != null).length}</Link>
+            <Link className="chip" href="/pain">Pain clusters · {portfolio.painClusters.length}</Link>
           </div>
           <div className="list">
             {starters(live).map((idea) => (

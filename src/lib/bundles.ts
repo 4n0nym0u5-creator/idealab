@@ -30,6 +30,7 @@ export function overridesFromUnknown(value: unknown): Record<string, CategoryOve
       ...(typeof row.run === "number" ? { run: row.run } : {}),
       note: typeof row.note === "string" ? row.note : "",
       ...(fit ? { bundleFit: fit } : {}),
+      ...(typeof row.merged_into === "string" && row.merged_into ? { mergedInto: row.merged_into } : {}),
     };
   }
   return overrides;
@@ -293,6 +294,7 @@ export function canonicalOverrides(overrides: Record<string, CategoryOverride>) 
       ...(override.run !== undefined ? { run: override.run } : {}),
       note: override.note,
       ...(override.bundleFit ? { bundle_fit: override.bundleFit } : {}),
+      ...(override.mergedInto ? { merged_into: override.mergedInto } : {}),
     };
   }
   return document;

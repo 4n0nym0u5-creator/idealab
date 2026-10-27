@@ -1,8 +1,9 @@
 import { z } from "zod";
 import { isCriterionKey, isOptionalCriterion, type CriterionKey, type Scores, type Weights } from "./criteria";
 import { mergeBundles, overridesFromUnknown } from "./bundles";
+import { aliasesFromUnknown, clustersFromUnknown, methodFromUnknown, resolveAlias, run4MergeFromUnknown } from "./pain";
 import { recompute, totalOf } from "./scoring";
-import { isCustomerType, isManualStatus, isStatus, type BundleFit, type BundleRecord, type CategoryEvent, type CategoryOverride, type Evidence, type Idea, type PainPoint, type Run, type ScoreSnapshot, type Status } from "./types";
+import { isCustomerType, isManualStatus, isStatus, type BundleFit, type BundleRecord, type CategoryEvent, type CategoryOverride, type Evidence, type Idea, type PainCluster, type PainMethod, type PainPoint, type Run, type ScoreSnapshot, type Status } from "./types";
 
 export class ImportError extends Error {
   constructor(message: string) {
@@ -53,6 +54,17 @@ const incomingIdeaSchema = z
       note: z.string().optional(),
     }).optional(),
     history_note: z.string().optional(),
+    complaint_frequency: z.number().min(0).max(5).optional(),
+    pain_cluster_ids: z.array(z.string()).optional(),
+    related_pain_cluster_ids: z.array(z.string()).optional(),
+    merged_ids: z.array(z.string()).optional(),
+    related_ids: z.array(z.string()).optional(),
+    run4_merge: z.array(z.object({
+      run4_id: z.string(),
+      title: z.string().optional(),
+      suggested_scores: z.record(z.string(), z.number()).optional(),
+      note: z.string().optional(),
+    })).optional(),
     status: z.string().optional(),
     kill_flags: z.array(z.string()).optional(),
     avoid_flags: z.array(z.string()).optional(),
@@ -225,6 +237,12 @@ function blankIdea(id: string, position: number, now: string): Idea {
     secondaryCategories: [],
     categoryHistory: [],
     bundleFit: null,
+    complaintFrequency: null,
+    painClusterIds: [],
+    relatedPainClusterIds: [],
+    mergedIds: [],
+    relatedIds: [],
+    run4Merge: [],
     pipelineOrder: 0,
     position,
     updatedAt: now,
@@ -363,6 +381,9 @@ export type ApplyRunOptions = {
   rubricVersion?: string;
   categoryOverrides?: Record<string, CategoryOverride>;
   bundles?: BundleRecord[];
+  idAliases?: Record<string, string>;
+  painClusters?: PainCluster[];
+  painMethod?: PainMethod | null;
 };
 
 function addSecondary(idea: Idea, category: string | undefined) {
@@ -380,7 +401,7 @@ function sameHistorySlot(item: ScoreSnapshot, runNumber: number, rubricVersion: 
   return item.run === runNumber && (item.rubricVersion || "") === (rubricVersion || "");
 }
 
-export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, runs: Run[] = [], options: ApplyRunOptions = {}): { ideas: Idea[]; run: Run; report: ImportReport; categoryOverrides: Record<string, CategoryOverride>; bundles: BundleRecord[] } {
+export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, runs: Run[] = [], options: ApplyRunOptions = {}): { ideas: Idea[]; run: Run; report: ImportReport; categoryOverrides: Record<string, CategoryOverride>; bundles: BundleRecord[]; idAliases: Record<string, string>; painClusters: PainCluster[]; painMethod: PainMethod | null } {
   const parsed = parseRunFile(file);
   const runNumber = parsed.run.run_number;
   if (runs.some((run) => run.runNumber === runNumber)) {
@@ -391,6 +412,9 @@ export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, ru
   const needsCustomer = Number(rubricVersion.split(".")[0] || "0") >= 2 || order.includes("aibuild");
   const source = file as Record<string, unknown>;
   const categoryOverrides = { ...(options.categoryOverrides ?? {}), ...overridesFromUnknown(source.category_overrides) };
+  const idAliases = { ...(options.idAliases ?? {}), ...aliasesFromUnknown(source.id_aliases), ...aliasesFromUnknown(source.merged_map) };
+  const painClusters = Array.isArray(source.pain_clusters) && source.pain_clusters.length ? clustersFromUnknown(source.pain_clusters) : options.painClusters ?? [];
+  const painMethod = source.pain_method ? methodFromUnknown(source.pain_method) ?? options.painMethod ?? null : options.painMethod ?? null;
 
   const ideas = inputIdeas.map((idea) => structuredClone(idea));
   const byId = new Map(ideas.map((idea) => [idea.id, idea]));
@@ -399,7 +423,9 @@ export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, ru
   let nextPosition = ideas.reduce((max, idea) => Math.max(max, idea.position), -1) + 1;
   const changes: (ReturnType<typeof applyIncoming> & { id: string; previousTotal: number | null; previousStatus: Status | null; isNew: boolean })[] = [];
 
-  for (const incoming of parsed.ideas) {
+  for (const rawIncoming of parsed.ideas) {
+    const resolvedId = resolveAlias(rawIncoming.id, idAliases);
+    const incoming = resolvedId === rawIncoming.id ? rawIncoming : { ...rawIncoming, id: resolvedId };
     const existing = byId.get(incoming.id);
     for (const key of Object.keys(incoming.scores)) {
       if (!isCriterionKey(key)) throw new ImportError(`${incoming.id} has an invalid score key: ${key}`);
@@ -429,6 +455,12 @@ export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, ru
       current.firstSeenRun = runNumber;
       current.scoreHistory = [];
       current.secondaryCategories = [];
+      current.complaintFrequency = null;
+      current.painClusterIds = [];
+      current.relatedPainClusterIds = [];
+      current.mergedIds = [];
+      current.relatedIds = [];
+      current.run4Merge = [];
       current.status = incoming.status && isStatus(incoming.status) ? incoming.status : "candidate";
       ideas.push(current);
       byId.set(current.id, current);
@@ -459,6 +491,13 @@ export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, ru
       if (!current.bundleFit && override.bundleFit) current.bundleFit = override.bundleFit;
     }
     for (const category of incoming.secondary_categories ?? []) addSecondary(current, category);
+    if (typeof incoming.complaint_frequency === "number") current.complaintFrequency = incoming.complaint_frequency;
+    if (incoming.pain_cluster_ids) current.painClusterIds = [...incoming.pain_cluster_ids];
+    if (incoming.related_pain_cluster_ids) current.relatedPainClusterIds = [...incoming.related_pain_cluster_ids];
+    if (incoming.merged_ids) current.mergedIds = [...new Set([...current.mergedIds, ...incoming.merged_ids])].sort();
+    if (incoming.related_ids) current.relatedIds = [...new Set([...current.relatedIds, ...incoming.related_ids])];
+    if (incoming.run4_merge) current.run4Merge = run4MergeFromUnknown(incoming.run4_merge);
+    if (resolvedId !== rawIncoming.id && !current.mergedIds.includes(rawIncoming.id)) current.mergedIds = [...current.mergedIds, rawIncoming.id].sort();
     if (change) {
       addSecondary(current, change.from);
       current.category = change.to;
@@ -546,6 +585,9 @@ export function applyRun(inputIdeas: Idea[], file: unknown, weights: Weights, ru
     ideas,
     run,
     categoryOverrides,
+    idAliases,
+    painClusters,
+    painMethod,
     bundles: mergeBundles(options.bundles ?? [], source.bundles, {
       runNumber,
       date: parsed.run.date,

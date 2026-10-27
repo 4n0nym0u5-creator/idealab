@@ -232,7 +232,17 @@ export function IdeaDetail({ idea, weights, neighbors, criteriaOrder }: { idea: 
 
       <section className="panel stack">
         <h2>Pain points and evidence</h2>
-        <p className="small muted">Forum pain-point mining lands here: clusters, raw mention counts, sources and quotes. Complaint frequency is an optional criterion, so a later run can attach it without a code change.</p>
+        <p className="small muted">Complaint frequency is evidence from Run 4. It is not weighted and it does not change the total. The optional complaint-frequency criterion can still hold an integer score if a later run sends one.</p>
+        {idea.complaintFrequency != null ? <p><span className="badge badge-evidence">CFS {idea.complaintFrequency.toFixed(2)} · evidence, not scored</span></p> : null}
+        {idea.painClusterIds.length ? (
+          <div className="stack">
+            <p className="small muted">Linked clusters. The first one is the primary cluster, and the CFS above is its maximum.</p>
+            {idea.painClusterIds.map((id) => <div key={id}><Link href={`/pain/${id}`}>{id}</Link></div>)}
+          </div>
+        ) : null}
+        {idea.relatedPainClusterIds.length ? <p className="small">Related clusters: {idea.relatedPainClusterIds.map((id) => <Link key={id} href={`/pain/${id}`}>{id}</Link>)}</p> : null}
+        {idea.relatedIds.length ? <p className="small">Related ideas: {idea.relatedIds.map((id) => <Link key={id} href={`/ideas/${id}`}>{id}</Link>)}</p> : null}
+        {idea.run4Merge.length ? idea.run4Merge.map((item) => <p key={item.run4Id} className="small muted">Folded from {item.run4Id}: {item.note}</p>) : null}
         {idea.painPoints.length ? idea.painPoints.map((point) => (
           <article key={point.id} className="stack">
             <strong>{point.label}</strong>
@@ -240,7 +250,7 @@ export function IdeaDetail({ idea, weights, neighbors, criteriaOrder }: { idea: 
             {point.quotes.map((quote) => <blockquote key={quote} className="small">{quote}</blockquote>)}
             {point.sources.map((source) => <p key={source.url} className="small"><a href={source.url}>{domainOf(source.url)}</a> — {source.note}</p>)}
           </article>
-        )) : <p className="small">No pain clusters are attached to this idea yet.</p>}
+        )) : idea.painClusterIds.length ? null : <p className="small">No pain clusters are attached to this idea yet.</p>}
       </section>
 
       <section className="panel stack">

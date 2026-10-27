@@ -30,6 +30,7 @@ export default async function RunsPage() {
             <p className="small">
               <Link href={`/ideas?run=${run.runNumber}`}>{added.length} ideas first seen in this run</Link>
               {rescored.length ? ` · Re-scored: ${rescored.map((idea) => idea.title).join(", ")}` : ""}
+              {run.runNumber === 4 ? <> · <Link href="/pain">Pain clusters</Link></> : null}
             </p>
           </article>
         );

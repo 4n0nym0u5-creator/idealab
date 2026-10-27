@@ -239,6 +239,9 @@ h3 { font-size: 20px; }
 .badge-later { background: var(--sunken); color: var(--soft); }
 .badge-exclude { background: color-mix(in srgb, var(--bad) 14%, transparent); color: var(--bad); }
 .badge-tag { background: transparent; border: 1px solid var(--line); color: var(--soft); }
+.badge-evidence { background: color-mix(in srgb, var(--mid) 16%, transparent); color: var(--ink); }
+.cfs-bar { display: block; height: 8px; border-radius: 99px; background: var(--sunken); overflow: hidden; }
+.cfs-bar > span { display: block; height: 100%; background: var(--good); }
 
 .split { display: flex; height: 10px; border-radius: 99px; overflow: hidden; background: var(--sunken); }
 .split span { display: block; height: 100%; }

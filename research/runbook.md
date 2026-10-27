@@ -106,3 +106,35 @@ Never compare totals across rubric versions.
 - File naming: Run 2 used `runs/run2.json`; keep `runs/runN.json` from now on.
 - Run 3 (27 Oct 2026): consumer sweep + **rubric v2.0** (`aibuild` criterion, weight 10; weights rebalanced; `customer_type` on every idea). Order used: backup → `migrate_v2.py` (backfill all 100, writes `runs/run3_rubric_v2_rescore.json`) → `build_run3.py` → `merge.py runs/run3.json` (35 new consumer ideas, 2 re-scores). Backup in `runs/ideas_before_run_3.json`. The Page has a "Consumer pass (Run 3)" section (consumer shortlist details live in `DETAILS`), an AI-buildability explainer, a v1 vs v2 table and a first-build plan.
 - Run 5 (27 Oct 2026): **Life Admin** category + bundle analysis. `build_run5.py` -> `runs/run5.json` (35 new ideas, 16 reclassified with `category_change`, 4 rescored, 10 Run 4 `category_overrides`) and `runs/run5_bundle.json` (Life Admin Pass model: pricing, scenarios, bundle score 68.8). Backups: `runs/ideas_before_run_5.json`, `runs/merge_before_run_5.py`. Result: schema v3, 170 ideas, runs [1,2,3,5]. Run 4 (pain-point pass) is owned by another worker and not merged yet. Page: `build_page_run5.py` builds EditCanvas edits from `page_live_before_run5.tsx` (a ReadCanvas snapshot; always rebuild the base from ReadCanvas, the live page can drift from local files) and writes `page_run5.canvas.tsx`; `page_live_after_run5.tsx` is the live source after the edit. The Page RAW array is now sorted at load (`IDEAS ... .sort(by total)`), so new rows can be appended.
+
+## Schema v4 additions (Run 4 merge, 27 Oct 2026)
+- Idea fields:
+  - `complaint_frequency`: CFS 0–5, the highest CFS among the linked clusters. Evidence only, not part of `total`.
+  - `pain_cluster_ids`: the primary cluster comes first.
+  - `related_pain_cluster_ids`: clusters from another idea's `overlaps_also`.
+  - `merged_ids`: Run 4 ids that were folded into this id.
+  - `run4_merge`: `[{run4_id, title, suggested_scores, note}]`.
+  - `related_ids`: on new ideas, pointing to the nearest existing ideas.
+- Top-level keys:
+  - `pain_clusters`: 53 clusters, sorted by CFS and ready to display. Each has id, rank, statement, customer_type, cfs, subscores, counts, communities{count, source_types, top[]}, recency_24m_share, engagement, app_reviews, existing_solutions, why_people_still_complain, quotes[{quote, title, url, community, date, score, comments}], linked_idea_ids and related_idea_ids.
+  - `pain_method`: version, generated, doc, thresholds and coverage_notes.
+  - `id_aliases`: incoming id → existing id. merge.py redirects aliases automatically.
+- merge.py:
+  - accepts `pain_clusters`, `pain_method` and `merged_map`;
+  - keeps `db.runs` sorted by run_number.
+  - Pre-v4 copy: `runs/merge_before_run_4.py`.
+- Merging a pain run in future:
+  1. Run `python3 build_run4_merge.py`. It writes the clean import `runs/run4.json`. Edit its MERGE set, which lists ideas with the same core job as their `overlaps_existing_id`.
+  2. Run `python3 merge.py runs/runN.json`.
+  - For merged ids, the builder sends the **existing** scores, so totals don't move, and appends notes rather than replacing them.
+
+## Run 4 history (merged 27 Oct 2026, after Run 5)
+- Source: the forum pain-point worker. Files: `pain_points.json`, `pain_method.md`, `runs/run4_pain_ideas.json` (raw, untouched). Clean import: `runs/run4.json`.
+- 34 pain-led ideas:
+  - 17 folded into existing ids, for example seating-chart-rsvp-reflow → wedding-seating-planner and gift-budget-tracker-pain → gift-list-budget-tracker. See `id_aliases`.
+  - 17 added as new ideas, giving 187 in total.
+  - The Life Admin `category_overrides` applied to chore-fairness-ledger and school-notice-digest. The other 8 override ids were merged and are marked `merged_into`.
+- 53 clusters were stored. No rescoring and no rubric change.
+- Shortlist changes: nosub-app-directory (78.6) and chore-fairness-ledger (76.0) came in. xero-invoice-chaser-lite and appstore-screenshot-maker (76.0 / 75.8) dropped to candidate.
+- Caveat: Run 4's notes call nosub-app-directory a feeder (traffic to the other apps) when it stands alone. Its rubric status is shortlist because wtp 2 / recurring 2 sits just above the feeder rule.
+- Backup: `runs/ideas_before_run_4.json`.

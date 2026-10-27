@@ -77,6 +77,80 @@ export type CategoryOverride = {
   run?: number;
   note: string;
   bundleFit?: BundleFit | null;
+  mergedInto?: string;
+};
+
+export type PainQuote = {
+  quote: string;
+  title: string;
+  url: string;
+  community: string;
+  date: string | null;
+  score: number | null;
+  comments: number | null;
+};
+
+export type PainCluster = {
+  id: string;
+  rank: number;
+  statement: string;
+  customerType: string;
+  cfs: number;
+  subscores: { volume: number; breadth: number; recency: number; engagement: number };
+  counts: {
+    mentions: number;
+    mentionsBroad: number;
+    mentionsCapped: number;
+    estRelevantMentions: number;
+    estRelevantPer100k: number;
+    bySource: Record<string, number>;
+    selfPromoExcluded: number;
+    precisionUsed: number;
+    precisionAudit: { relevant: number; sampled: number } | null;
+  };
+  communities: { count: number; sourceTypes: number; top: Array<{ name: string; mentions: number }> };
+  recency24mShare: number;
+  engagement: {
+    engagedMentions: number;
+    scoreSum: number;
+    commentsSum: number;
+    scoreMedian: number | null;
+    commentsMedian: number | null;
+  };
+  appReviews: {
+    reviewsSampled: number | null;
+    appstoreLowStarShare: number | null;
+    topLowStarThemes: Array<{ theme: string; shareOfLow: number }>;
+  };
+  existingSolutions: string[];
+  whyPeopleStillComplain: string;
+  quotes: PainQuote[];
+  linkedIdeaIds: string[];
+  relatedIdeaIds: string[];
+};
+
+export type PainMethod = {
+  version: string;
+  generated: string;
+  doc: string;
+  sourceFile: string;
+  thresholds: {
+    volume: number[];
+    breadth: number[];
+    recency: number[];
+    engagement: number[];
+    weights: { volume: number; breadth: number; recency: number; engagement: number };
+    perCommunityCap: number;
+    defaultPrecisionUnaudited: number;
+  };
+  coverageNotes: string[];
+};
+
+export type Run4Merge = {
+  run4Id: string;
+  title: string;
+  suggestedScores: Scores;
+  note: string;
 };
 
 export type BundlePrice = {
@@ -175,6 +249,12 @@ export type Idea = {
   secondaryCategories: string[];
   categoryHistory: CategoryEvent[];
   bundleFit: BundleFit | null;
+  complaintFrequency: number | null;
+  painClusterIds: string[];
+  relatedPainClusterIds: string[];
+  mergedIds: string[];
+  relatedIds: string[];
+  run4Merge: Run4Merge[];
   pipelineOrder: number;
   position: number;
   updatedAt: string;
@@ -212,6 +292,8 @@ export type Settings = {
   rubricHistory: RubricVersionRecord[];
   customerTypes: string[];
   categoryOverrides: Record<string, CategoryOverride>;
+  idAliases: Record<string, string>;
+  painMethod: PainMethod | null;
 };
 
 export type RubricChange = {
@@ -228,6 +310,7 @@ export type Portfolio = {
   runs: Run[];
   ideas: Idea[];
   bundles: BundleRecord[];
+  painClusters: PainCluster[];
   changes: RubricChange[];
 };
 

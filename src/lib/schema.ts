@@ -9,6 +9,8 @@ export const settings = pgTable("settings", {
   rubricHistory: text("rubric_history").notNull().default("[]"),
   customerTypes: text("customer_types").notNull().default("[\"consumer\",\"business\",\"both\"]"),
   categoryOverrides: text("category_overrides").notNull().default("{}"),
+  idAliases: text("id_aliases").notNull().default("{}"),
+  painMethod: text("pain_method").notNull().default("null"),
 });
 
 export const runs = pgTable("runs", {
@@ -57,6 +59,12 @@ export const ideas = pgTable("ideas", {
   secondaryCategories: text("secondary_categories").notNull().default("[]"),
   categoryHistory: text("category_history").notNull().default("[]"),
   bundleFit: text("bundle_fit").notNull().default("null"),
+  complaintFrequency: doublePrecision("complaint_frequency"),
+  painClusterIds: text("pain_cluster_ids").notNull().default("[]"),
+  relatedPainClusterIds: text("related_pain_cluster_ids").notNull().default("[]"),
+  mergedIds: text("merged_ids").notNull().default("[]"),
+  relatedIds: text("related_ids").notNull().default("[]"),
+  run4Merge: text("run4_merge").notNull().default("[]"),
   pipelineOrder: integer("pipeline_order").notNull().default(0),
   position: integer("position").notNull().default(0),
   updatedAt: text("updated_at").notNull(),
@@ -66,6 +74,11 @@ export const ideas = pgTable("ideas", {
   index("ideas_category").on(table.category),
   index("ideas_total").on(table.total),
 ]);
+
+export const painClusters = pgTable("pain_clusters", {
+  id: text("id").primaryKey(),
+  document: text("document").notNull(),
+});
 
 export const bundles = pgTable("bundles", {
   id: text("id").primaryKey(),

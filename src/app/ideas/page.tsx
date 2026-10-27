@@ -3,7 +3,7 @@ import { withPortfolio } from "@/components/gate";
 
 export const metadata = { title: "Ideas" };
 
-export default async function IdeasPage({ searchParams }: { searchParams: Promise<{ q?: string; status?: string; theme?: string; run?: string; customer?: string; lens?: string; category?: string; tier?: string }> }) {
+export default async function IdeasPage({ searchParams }: { searchParams: Promise<{ q?: string; status?: string; theme?: string; run?: string; customer?: string; lens?: string; category?: string; tier?: string; evidence?: string }> }) {
   const params = await searchParams;
   return withPortfolio((portfolio) => (
     <IdeasExplorer
@@ -17,6 +17,7 @@ export default async function IdeasPage({ searchParams }: { searchParams: Promis
       initialLens={params.lens ?? ""}
       initialCategory={params.category ?? ""}
       initialTier={params.tier ?? ""}
+      initialEvidence={params.evidence ?? ""}
     />
   ));
 }
