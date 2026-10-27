@@ -1,0 +1,279 @@
+"use client";
+
+import Link from "next/link";
+import { useEffect, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { CRITERIA, SECURITY_LEGAL_ADDENDUM, type CriterionKey } from "@/lib/criteria";
+import { saveTrackingAction } from "@/lib/actions";
+import { buildBrief } from "@/lib/brief";
+import { domainOf, formatDate } from "@/lib/format";
+import { contribution, workingScores } from "@/lib/scoring";
+import { STATUS_META, type Idea, type Status } from "@/lib/types";
+import type { Weights } from "@/lib/criteria";
+import { ScoreRadar } from "./charts";
+import { Sparkline } from "./sparkline";
+import { FlagList, ScoreMeter, StatusBadge, meterColor } from "./ui";
+
+export function IdeaDetail({ idea, weights, neighbors }: { idea: Idea; weights: Weights; neighbors: { prev?: { id: string; title: string }; next?: { id: string; title: string } } }) {
+  const scores = workingScores(idea);
+  const brief = buildBrief(idea, weights);
+  const [status, setStatus] = useState<Status>(idea.status);
+  const [userNotes, setUserNotes] = useState(idea.userNotes);
+  const [mvp, setMvp] = useState(idea.mvp);
+  const [distribution, setDistribution] = useState(idea.distribution);
+  const [risks, setRisks] = useState(idea.risks);
+  const [liabilityNotes, setLiabilityNotes] = useState(idea.liabilityNotes);
+  const [overrides, setOverrides] = useState<Partial<Record<CriterionKey, number>>>({ ...idea.scoreOverrides });
+  const [message, setMessage] = useState("");
+  const [pending, startTransition] = useTransition();
+  const router = useRouter();
+  useEffect(() => {
+    setStatus(idea.status);
+    setUserNotes(idea.userNotes);
+    setMvp(idea.mvp);
+    setDistribution(idea.distribution);
+    setRisks(idea.risks);
+    setLiabilityNotes(idea.liabilityNotes);
+    setOverrides({ ...idea.scoreOverrides });
+  }, [idea]);
+
+  function save(unlock = false) {
+    setMessage("");
+    startTransition(async () => {
+      try {
+        await saveTrackingAction({
+          id: idea.id,
+          status: unlock ? undefined : status,
+          userNotes,
+          mvp,
+          distribution,
+          risks,
+          liabilityNotes,
+          scoreOverrides: overrides,
+          unlock,
+        });
+        setMessage(unlock ? "Returned to automatic status." : "Saved.");
+        router.refresh();
+      } catch (error) {
+        setMessage(error instanceof Error ? error.message : "Could not save.");
+      }
+    });
+  }
+
+  return (
+    <div className="page">
+      <p className="small"><Link href="/ideas">Ideas</Link> · <Link href={`/compare?ids=${idea.id}`}>Compare</Link></p>
+      <header className="feature">
+        <div className="stack">
+          <div className="chips">
+            <StatusBadge status={idea.status} />
+            {brief.security ? <span className="badge badge-security">Cybersecurity · {brief.subtype}</span> : <span className="badge">{idea.category}</span>}
+            <span className="badge">{idea.platform}</span>
+            <span className="badge">Seen in run {idea.firstSeenRun}</span>
+            <span className="badge">Scored in run {idea.lastScoredRun}</span>
+            {idea.statusLocked ? <span className="badge">Status locked</span> : null}
+          </div>
+          <h1 style={{ fontSize: "clamp(36px, 4vw, 56px)" }}>{idea.title}</h1>
+          <p className="lede">{idea.problem}</p>
+          <p className="small muted">For {idea.targetUsers}</p>
+          <ScoreMeter scores={scores} />
+        </div>
+        <div>
+          <div className="score-figure">{idea.total.toFixed(1)}</div>
+          <p className="faint small">{idea.rank ? `Live rank ${idea.rank}` : "Outside the live ranking"}{idea.total !== idea.researchTotal ? ` · research total ${idea.researchTotal.toFixed(1)}` : ""}</p>
+        </div>
+      </header>
+
+      {brief.security ? (
+        <section className="panel stack">
+          <h2>Security design rules</h2>
+          <p className="small muted">{SECURITY_LEGAL_ADDENDUM.versionNote}</p>
+          <ul className="small">{SECURITY_LEGAL_ADDENDUM.rules.map((rule) => <li key={rule}>{rule}</li>)}</ul>
+        </section>
+      ) : null}
+
+      {brief.liability.length ? (
+        <section className="callout">
+          <strong>Liability and soft risk</strong>
+          <ul>{brief.liability.map((line) => <li key={line}>{line}</li>)}</ul>
+        </section>
+      ) : null}
+
+      {idea.killFlags.length ? (
+        <section className="callout danger stack">
+          <strong>Hard kill flags</strong>
+          <FlagList flags={idea.killFlags} tone="killed" />
+          <p className="small">Any kill flag forces status to killed, regardless of the total. The idea stays in the database so a later run does not research it again.</p>
+        </section>
+      ) : null}
+      {idea.avoidFlags.length || idea.status === "avoid" ? (
+        <section className="callout stack">
+          <strong>Avoid</strong>
+          <FlagList flags={idea.avoidFlags} tone="avoid" />
+          <p className="small">Avoid sits beside killed. It keeps an idea out of the shortlist without calling it illegal. A rescore will not promote it.</p>
+        </section>
+      ) : null}
+
+      <section className="grid-2">
+        <div className="panel">
+          <h2>Score shape</h2>
+          <ScoreRadar series={[{ name: idea.title, scores, color: "#1e6b4a" }]} />
+        </div>
+        <div className="panel">
+          <h2>Points by criterion</h2>
+          <div className="bars">
+            {CRITERIA.map((criterion) => {
+              const points = contribution(scores[criterion.key], weights[criterion.key]);
+              return (
+                <div key={criterion.key} className="bar-row">
+                  <span>{criterion.short}</span>
+                  <div className="track" title={`${scores[criterion.key]}/5 × weight ${weights[criterion.key]}`}><span style={{ width: `${(points / Math.max(weights[criterion.key], 1)) * 100}%`, background: meterColor(scores[criterion.key]) }} /></div>
+                  <span className="num">{points.toFixed(1)}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Criterion</th><th>Score</th><th>Weight</th><th>Points</th><th>What this score means</th></tr>
+          </thead>
+          <tbody>
+            {CRITERIA.map((criterion) => (
+              <tr key={criterion.key}>
+                <td>{criterion.label}{criterion.inverted ? <span className="faint"> · inverted</span> : null}{idea.scoreOverrides[criterion.key] !== undefined ? <span className="faint"> · override</span> : null}</td>
+                <td className="num">{scores[criterion.key]}</td>
+                <td className="num">{weights[criterion.key]}</td>
+                <td className="num">{contribution(scores[criterion.key], weights[criterion.key]).toFixed(1)}</td>
+                <td className="small muted">{criterion.levels[scores[criterion.key]]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+
+      <section className="grid-2">
+        <article className="panel stack">
+          <h2>Reasoning</h2>
+          <p>{brief.reasoning}</p>
+        </article>
+        <article className="panel stack">
+          <h2>Monetisation</h2>
+          <p><strong>{brief.monetisation.model}</strong></p>
+          <p>{brief.monetisation.price}</p>
+          <p className="small muted">{brief.monetisation.reading}</p>
+        </article>
+        <article className="panel stack">
+          <h2>MVP scope</h2>
+          {brief.mvp.yours ? <p>{brief.mvp.yours}</p> : null}
+          <p className="small muted">{brief.mvp.implied}</p>
+        </article>
+        <article className="panel stack">
+          <h2>Distribution</h2>
+          {brief.distribution.yours ? <p>{brief.distribution.yours}</p> : null}
+          <p className="small muted">{brief.distribution.implied}</p>
+        </article>
+      </section>
+
+      <section className="grid-2">
+        <article className="panel stack">
+          <h2>Risks the scores already show</h2>
+          {brief.risks.yours ? <p>{brief.risks.yours}</p> : null}
+          {brief.risks.weak.length ? (
+            <ul className="small">{brief.risks.weak.map((item) => <li key={item.label}><strong>{item.label} {item.score}/5.</strong> {item.text}</li>)}</ul>
+          ) : <p className="small muted">No criterion is at 2 or below.</p>}
+        </article>
+        <article className="panel stack">
+          <h2>Sources</h2>
+          {idea.evidence.length ? idea.evidence.map((item) => (
+            <p key={item.url} className="small"><a href={item.url} target="_blank" rel="noreferrer">{domainOf(item.url)}</a> — {item.note}</p>
+          )) : <p className="small muted">No sources recorded.</p>}
+          {idea.competitors.length ? <p className="small muted">Competitors: {idea.competitors.join(", ")}</p> : null}
+        </article>
+      </section>
+
+      <section className="panel stack">
+        <h2>Score history</h2>
+        {idea.scoreHistory.length > 1 ? (
+          <Sparkline points={idea.scoreHistory.map((item) => item.total)} labels={idea.scoreHistory.map((item) => `R${item.run}`)} />
+        ) : (
+          <p className="small muted">Scored once, in run {idea.scoreHistory[0]?.run ?? idea.firstSeenRun} on {formatDate(idea.scoreHistory[0]?.date ?? "")}.</p>
+        )}
+        <div className="list">
+          {idea.scoreHistory.map((item) => (
+            <div key={item.run} className="row" style={{ gridTemplateColumns: "80px 1fr auto" }}>
+              <span className="num">{item.total.toFixed(1)}</span>
+              <span>Run {item.run} · {formatDate(item.date)}</span>
+              <span className="small faint">{CRITERIA.map((criterion) => item.scores[criterion.key]).join("")}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="panel stack">
+        <h2>Tracking</h2>
+        <div className="grid-2">
+          <label className="field">Status
+            <select value={status} onChange={(event) => setStatus(event.target.value as Status)}>
+              {Object.entries(STATUS_META).map(([value, meta]) => <option key={value} value={value}>{meta.label} — {meta.hint}</option>)}
+            </select>
+          </label>
+          <label className="field">Your notes
+            <textarea value={userNotes} onChange={(event) => setUserNotes(event.target.value)} />
+          </label>
+          <label className="field">MVP note
+            <textarea value={mvp} onChange={(event) => setMvp(event.target.value)} />
+          </label>
+          <label className="field">Distribution note
+            <textarea value={distribution} onChange={(event) => setDistribution(event.target.value)} />
+          </label>
+          <label className="field">Risk note
+            <textarea value={risks} onChange={(event) => setRisks(event.target.value)} />
+          </label>
+          <label className="field">Liability note
+            <textarea value={liabilityNotes} onChange={(event) => setLiabilityNotes(event.target.value)} placeholder="Separate from research notes. Shown in the liability callout." />
+          </label>
+        </div>
+        <details>
+          <summary>Manual score overrides</summary>
+          <p className="small muted">Overrides change the working total and can move automatic statuses. Research scores and score history stay intact. Export still writes the research scores.</p>
+          <div className="filters" style={{ marginTop: 10 }}>
+            {CRITERIA.map((criterion) => (
+              <label key={criterion.key} className="small">{criterion.short}
+                <select
+                  className="control"
+                  value={overrides[criterion.key] ?? ""}
+                  onChange={(event) => {
+                    const value = event.target.value;
+                    setOverrides((current) => {
+                      const next = { ...current };
+                      if (value === "") delete next[criterion.key];
+                      else next[criterion.key] = Number(value);
+                      return next;
+                    });
+                  }}
+                >
+                  <option value="">Research ({idea.scores[criterion.key]})</option>
+                  {[0, 1, 2, 3, 4, 5].map((score) => <option key={score} value={score}>{score}</option>)}
+                </select>
+              </label>
+            ))}
+          </div>
+        </details>
+        <div className="filters">
+          <button className="btn btn-primary" type="button" disabled={pending} onClick={() => save(false)}>{pending ? "Saving" : "Save tracking"}</button>
+          {idea.statusLocked || idea.status === "avoid" ? <button className="btn" type="button" disabled={pending} onClick={() => save(true)}>Return to automatic status</button> : null}
+          {message ? <span className="small muted">{message}</span> : null}
+        </div>
+      </section>
+
+      <div className="filters">
+        {neighbors.prev ? <Link className="btn" href={`/ideas/${neighbors.prev.id}`}>Previous · {neighbors.prev.title}</Link> : null}
+        {neighbors.next ? <Link className="btn" href={`/ideas/${neighbors.next.id}`}>Next · {neighbors.next.title}</Link> : null}
+      </div>
+    </div>
+  );
+}

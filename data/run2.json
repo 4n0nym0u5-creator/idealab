@@ -1,0 +1,1610 @@
+{
+  "run": {
+    "run_number": 2,
+    "date": "2026-10-27",
+    "author": "Grok Bot",
+    "focus": "Cybersecurity deep dive",
+    "sources_swept": [
+      "TrustMRR security category + SSL/DNS/DMARC startup pages",
+      "Objective Development / Little Snitch, Objective-See",
+      "ASD/ACSC small business guide, Essential Eight, Annual Cyber Threat Report 2024-25",
+      "Home Affairs ransomware payment reporting (Cyber Security Act 2024)",
+      "OAIC small business exemption + NDB scheme",
+      "HIBP pricing and Terms of Use",
+      "NASC Targeting Scams 2025",
+      "AU cyber insurance proposal forms (CFC, DUAL)",
+      "Essential Eight SaaS (EssentialScore, CyberSmart360)",
+      "Workspace/M365 audit tools (ArgusSec, Snoka, FailSafe)",
+      "Security questionnaire tools",
+      "Digital legacy tools",
+      "Data broker removal (Delisted)",
+      "StepSecurity / tj-actions incident",
+      "Mac login item tools (LoginToggle, AgentView, Lingon)"
+    ],
+    "notes": "Security-specific legal guidance added to rubric.md as a clarification (rubric stays v1.0, no re-weighting). Revenue figures come from search-result summaries of the cited pages; re-open them to verify before relying on them."
+  },
+  "ideas": [
+    {
+      "id": "sec-ssl-domain-expiry-monitor",
+      "title": "SSL certificate, domain expiry & DNS change monitor",
+      "category": "Security: monitoring",
+      "platform": "Web SaaS",
+      "problem": "Expired certs and lapsed domains take sites and email down; renewal automation fails silently",
+      "target_users": "Agencies, SMBs, indie devs, MSPs",
+      "monetisation": "Subscription per domain bucket",
+      "price_hypothesis": "US$9-29/mo",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 4,
+        "recurring": 5,
+        "build": 3,
+        "maint": 3,
+        "distro": 4,
+        "compete": 2,
+        "defend": 3,
+        "synergy": 3,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://trustmrr.com/startup/trackssl",
+          "note": "TrackSSL: SSL cert monitoring, $5,276 MRR, 221 active subs, $195k all-time (TrustMRR, Oct 2026)"
+        },
+        {
+          "url": "https://trustmrr.com/startup/kit-domains.md",
+          "note": "Kit.domains: domain expiry/SSL/DNS monitor, $118 MRR, 4 subs"
+        },
+        {
+          "url": "https://trustmrr.com/startup/uptimeobserver",
+          "note": "UptimeObserver: uptime/SSL/DNS monitor, $130 MRR, 22 subs"
+        },
+        {
+          "url": "https://trustmrr.com/startup/dns-monit",
+          "note": "DNS Monit: DNS/SPF/DKIM/DMARC monitor, $137 all-time, lifetime deal"
+        }
+      ],
+      "competitors": [
+        "TrackSSL",
+        "UptimeRobot",
+        "Better Stack",
+        "Kit.domains"
+      ],
+      "notes": "Proven by TrackSSL. Monitors only public certs/DNS of domains the user adds (passive, like a browser). Liability: a missed alert is a silent failure, so you need redundant checks, alert-delivery tests, and ToS liability caps. Agency multi-client dashboard is the wedge."
+    },
+    {
+      "id": "sec-email-auth-monitor",
+      "title": "SPF/DKIM/DMARC checker + plain-English DMARC report monitor",
+      "category": "Security: monitoring",
+      "platform": "Web SaaS",
+      "problem": "Gmail/Yahoo bulk-sender rules made DMARC mandatory-ish; SMB owners can't read XML aggregate reports or fix SPF lookups",
+      "target_users": "SMBs, agencies, newsletter senders",
+      "monetisation": "Free checker + subscription monitor",
+      "price_hypothesis": "US$9-19/mo per domain",
+      "scores": {
+        "legal": 4,
+        "pain": 4,
+        "breadth": 4,
+        "wtp": 4,
+        "recurring": 5,
+        "build": 3,
+        "maint": 2,
+        "distro": 4,
+        "compete": 2,
+        "defend": 3,
+        "synergy": 3,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.startups.fyi/product/dmarclytics",
+          "note": "Dmarclytics: solo DMARC/SPF/DKIM monitor, $100/mo"
+        },
+        {
+          "url": "https://getlatka.com/companies/dmarcly",
+          "note": "DMARCLY: $157.1k annual revenue (Apr 2021) before acquisition"
+        },
+        {
+          "url": "https://trustmrr.com/startup/dns-monit",
+          "note": "DNS Monit: DNS/SPF/DKIM/DMARC monitor, $137 all-time, lifetime deal"
+        },
+        {
+          "url": "https://trustmrr.com/startup/outboundqa",
+          "note": "OutboundQA: email infra pre-flight ($49 one-time / $79/mo), no active subs, listed for sale"
+        }
+      ],
+      "competitors": [
+        "dmarcian",
+        "EasyDMARC",
+        "Postmark DMARC digests (free)",
+        "Valimail"
+      ],
+      "notes": "DNS lookups are public. DMARC reports contain sender IPs and metadata only, so state retention in the privacy policy. Crowded, and indie results are mixed (Dmarclytics $100/mo, DNS Monit $137 all-time). Win with a single fix-it wizard per sender (Xero, Mailchimp, M365)."
+    },
+    {
+      "id": "sec-e8-checklist-au",
+      "title": "Essential Eight Maturity Level 1 self-assessment & evidence tracker (AU SMB)",
+      "category": "Security: SMB admin",
+      "platform": "Web",
+      "problem": "SMBs are told to 'do the Essential Eight' but the ASD material is written for IT staff",
+      "target_users": "AU SMBs, bookkeepers, MSPs",
+      "monetisation": "Free assessment + one-time report or subscription",
+      "price_hypothesis": "A$99 one-time or A$29/mo",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 2,
+        "defend": 2,
+        "synergy": 2,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://essentialscore.com.au/",
+          "note": "EssentialScore: free 74-question E8 self-assessment, $99 one-time policies + gap report"
+        },
+        {
+          "url": "https://cybersmart360.com/plans-pricing/",
+          "note": "CyberSmart360: E8 compliance SaaS $49/mo founding, $89/mo from Nov 2026"
+        },
+        {
+          "url": "https://www.cyber.gov.au/publication/annual-cyber-threat-report-2024-2025",
+          "note": "ASD Annual Cyber Threat Report 2024-25: avg self-reported small-business cybercrime cost $56,600 (+14%); 84,700+ reports"
+        },
+        {
+          "url": "https://www.cyber.gov.au/business-government/small-business-cyber-security/small-business-hub/small-business-cyber-security-guide",
+          "note": "ACSC small business cyber security guide (MFA, updates, backups first)"
+        }
+      ],
+      "competitors": [
+        "EssentialScore",
+        "CyberSmart360",
+        "Veritas Cyber",
+        "CCP free checklist"
+      ],
+      "notes": "Never call it certification or compliance. It's a self-assessment with an 'as reported by you' disclaimer. Avoid storing evidence files (screenshots can hold credentials). The market already has 4+ AU entrants, so the edge would be distribution through accountants."
+    },
+    {
+      "id": "sec-cyber-insurance-prep",
+      "title": "Cyber insurance application prep pack (MFA, backups, admin evidence)",
+      "category": "Security: SMB admin",
+      "platform": "Web",
+      "problem": "Proposal forms ask yes/no questions (MFA everywhere? tested backups?); a wrong 'yes' risks a denied claim",
+      "target_users": "SMBs renewing cyber cover, brokers",
+      "monetisation": "Per-renewal report or broker subscription",
+      "price_hypothesis": "A$49 per renewal; A$29/mo broker",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 3,
+        "maint": 4,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.cfc.com/media/4drmuvdy/cyber-one-page-application-aus-v10.pdf",
+          "note": "AU SME cyber insurance applications ask about MFA, backups, admin accounts"
+        },
+        {
+          "url": "https://au.dualinsurance.com/hubfs/DUAL%20ANZ/DUAL%20Australia/AUS%20proposal%20forms/DUAL-AUS-Cyber-Proposal-Form.pdf",
+          "note": "DUAL AU cyber proposal form"
+        },
+        {
+          "url": "https://www.cyber.gov.au/publication/annual-cyber-threat-report-2024-2025",
+          "note": "ASD Annual Cyber Threat Report 2024-25: avg self-reported small-business cybercrime cost $56,600 (+14%); 84,700+ reports"
+        }
+      ],
+      "competitors": [
+        "Broker checklists",
+        "Insurer portals"
+      ],
+      "notes": "The tool must never fill in the insurer's form or tell the user an answer. It explains what each question means and lists the evidence to collect. Duty of disclosure stays with the insured, so carry a strong disclaimer. Brokers are the distribution channel."
+    },
+    {
+      "id": "sec-workspace-config-audit-local",
+      "title": "Local read-only Google Workspace / M365 security config audit",
+      "category": "Security: SMB admin",
+      "platform": "Mac app / CLI (runs locally)",
+      "problem": "Small orgs never check MFA enforcement, admin count, mail forwarding rules or external sharing",
+      "target_users": "SMBs, MSPs, IT generalists",
+      "monetisation": "One-time per tenant or MSP subscription",
+      "price_hypothesis": "US$49 one-time; US$19/mo MSP",
+      "scores": {
+        "legal": 4,
+        "pain": 4,
+        "breadth": 3,
+        "wtp": 4,
+        "recurring": 3,
+        "build": 2,
+        "maint": 3,
+        "distro": 3,
+        "compete": 1,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 3
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://argussec.io/pricing.html",
+          "note": "ArgusSec: free OSS Google Workspace audit (227 checks), EUR 15/mo hosted"
+        },
+        {
+          "url": "https://snoka.app/",
+          "note": "Snoka: free local read-only Google Workspace scanner"
+        },
+        {
+          "url": "https://optiflowlabs.ai/",
+          "note": "FailSafe: M365/Workspace posture from $49/mo"
+        }
+      ],
+      "competitors": [
+        "ArgusSec (free OSS)",
+        "Snoka (free)",
+        "FailSafe",
+        "Microsoft Secure Score"
+      ],
+      "notes": "Run it locally so admin tokens and findings never leave the device. That reduces breach and NDB exposure, because no hosted copy of the org's config exists. Use read-only scopes only. Google admin directory scopes need verification. Free OSS competitors are strong."
+    },
+    {
+      "id": "sec-offboarding-access-review",
+      "title": "Staff offboarding & quarterly access-review checklist across SaaS",
+      "category": "Security: SMB admin",
+      "platform": "Web / Sheets",
+      "problem": "When staff leave, shared passwords and SaaS accounts linger; nobody reviews who has access",
+      "target_users": "SMBs 5-50 staff, practice managers",
+      "monetisation": "Subscription per org",
+      "price_hypothesis": "A$15-29/mo",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 3,
+        "defend": 3,
+        "synergy": 3,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.cyber.gov.au/business-government/small-business-cyber-security/small-business-hub/small-business-cyber-security-guide",
+          "note": "ACSC small business cyber security guide (MFA, updates, backups first)"
+        },
+        {
+          "url": "https://www.cyber.gov.au/publication/annual-cyber-threat-report-2024-2025",
+          "note": "ASD Annual Cyber Threat Report 2024-25: avg self-reported small-business cybercrime cost $56,600 (+14%); 84,700+ reports"
+        }
+      ],
+      "competitors": [
+        "Rippling/BambooHR (heavy)",
+        "Spreadsheets",
+        "Torii/Zluri (enterprise)"
+      ],
+      "notes": "Advisory checklist plus a manual app inventory, with optional read-only user lists from Google/M365. It stores no credentials and makes no automated deprovisioning (avoids fail-silently liability). Recurring reminders give natural retention."
+    },
+    {
+      "id": "sec-phishing-micro-training",
+      "title": "2-minute monthly phishing-awareness lessons for small teams",
+      "category": "Security: SMB admin",
+      "platform": "Web / email digest",
+      "problem": "SMB staff click BEC and invoice-fraud emails; enterprise training is overkill",
+      "target_users": "SMBs, clubs, practices",
+      "monetisation": "Per-seat subscription",
+      "price_hypothesis": "A$2-4/seat/mo",
+      "scores": {
+        "legal": 4,
+        "pain": 2,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 4,
+        "maint": 4,
+        "distro": 2,
+        "compete": 1,
+        "defend": 2,
+        "synergy": 2,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.cyber.gov.au/publication/annual-cyber-threat-report-2024-2025",
+          "note": "ASD Annual Cyber Threat Report 2024-25: avg self-reported small-business cybercrime cost $56,600 (+14%); 84,700+ reports"
+        },
+        {
+          "url": "https://www.cyber.gov.au/business-government/small-business-cyber-security/small-business-hub/small-business-cyber-security-guide",
+          "note": "ACSC small business cyber security guide (MFA, updates, backups first)"
+        }
+      ],
+      "competitors": [
+        "KnowBe4",
+        "M365 Attack Simulation",
+        "Free ACSC material"
+      ],
+      "notes": "Education only: no simulated phishing sends (spoofing creates deliverability, consent and ToS problems). Heavily saturated, so it's a feature of the offboarding/E8 product rather than a standalone idea."
+    },
+    {
+      "id": "sec-vendor-questionnaire-bank",
+      "title": "Security questionnaire answer bank & export for tiny SaaS",
+      "category": "Security: developer",
+      "platform": "Web",
+      "problem": "Indie SaaS founders lose deals to 200-row spreadsheets asking about encryption, backups, MFA",
+      "target_users": "Indie SaaS founders, small agencies",
+      "monetisation": "Subscription",
+      "price_hypothesis": "US$19-39/mo",
+      "scores": {
+        "legal": 3,
+        "pain": 4,
+        "breadth": 4,
+        "wtp": 4,
+        "recurring": 4,
+        "build": 3,
+        "maint": 3,
+        "distro": 3,
+        "compete": 3,
+        "defend": 3,
+        "synergy": 4,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://securityq.tech/",
+          "note": "SecurityQ: security questionnaire answering tool"
+        },
+        {
+          "url": "https://www.questshield.app/",
+          "note": "QuestShield: questionnaire tool for startups"
+        },
+        {
+          "url": "https://www.complyjet.com/products/questionnaire-automation",
+          "note": "ComplyJet questionnaire automation (bundled compliance)"
+        },
+        {
+          "url": "https://trustmrr.com/category/security",
+          "note": "TrustMRR security category: 190 startups with verified revenue; Comp AI (SOC 2/ISO) $736k last 30d; Cloud Backup for Podio $2.4k MRR"
+        }
+      ],
+      "competitors": [
+        "SecurityQ",
+        "QuestShield",
+        "ComplyJet",
+        "Vanta/Drata (enterprise)"
+      ],
+      "notes": "User-authored answers library. Optional AI drafting is BYOK and always marked 'review before sending'. Liability: a false answer becomes a contractual misrepresentation by the user, so the tool never invents controls. Good synergy with your indie-dev audience."
+    },
+    {
+      "id": "sec-trust-page-generator",
+      "title": "Trust/security page + security.txt + privacy policy starter for indie apps",
+      "category": "Security: developer",
+      "platform": "Web",
+      "problem": "Indie apps need a privacy policy, security.txt and data-handling page to pass buyer and store review",
+      "target_users": "Indie devs (incl. your own portfolio)",
+      "monetisation": "Free generator (feeder)",
+      "price_hypothesis": "Free / US$9",
+      "scores": {
+        "legal": 3,
+        "pain": 2,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 1,
+        "build": 1,
+        "maint": 5,
+        "distro": 5,
+        "compete": 4,
+        "defend": 1,
+        "synergy": 5,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.oaic.gov.au/privacy/privacy-guidance-for-organisations-and-government-agencies/organisations/small-business",
+          "note": "OAIC: most businesses at or under A$3m turnover exempt from Privacy Act, with exceptions"
+        }
+      ],
+      "competitors": [
+        "Termly",
+        "iubenda",
+        "GetTerms (AU)"
+      ],
+      "notes": "Feeder for the portfolio. Templates are not legal advice; generate from the user's own answers only. Good SEO."
+    },
+    {
+      "id": "sec-vibe-app-scanner",
+      "title": "Owner-verified security check for vibe-coded apps (exposed keys, Supabase RLS, headers)",
+      "category": "Security: developer",
+      "platform": "Web + GitHub App",
+      "problem": "AI-built apps ship with leaked API keys in bundles, open Supabase tables and missing headers",
+      "target_users": "Vibe coders, indie hackers, no-code builders",
+      "monetisation": "Subscription + one-off report",
+      "price_hypothesis": "US$19 report; US$15-29/mo",
+      "scores": {
+        "legal": 3,
+        "pain": 4,
+        "breadth": 4,
+        "wtp": 4,
+        "recurring": 3,
+        "build": 3,
+        "maint": 3,
+        "distro": 4,
+        "compete": 2,
+        "defend": 3,
+        "synergy": 5,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://trustmrr.com/startup/checkvibe",
+          "note": "CheckVibe: scanner for AI-built apps, $807 MRR, 32 subs, $12,205 all-time (Oct 2026)"
+        }
+      ],
+      "competitors": [
+        "CheckVibe",
+        "Snyk (dev-heavy)",
+        "Supabase advisors"
+      ],
+      "notes": "Hard rule: scan only after domain ownership is proven (DNS TXT or file) or a connected repo. Unauthorised testing of others' systems risks Criminal Code Part 10.7. Never claim 'secure': report findings with a 'not a pen test' disclaimer. CheckVibe shows demand ($12k all-time) and also competition."
+    },
+    {
+      "id": "sec-security-headers-csp-builder",
+      "title": "Security headers & CSP builder/checker",
+      "category": "Security: developer",
+      "platform": "Web (client-side)",
+      "problem": "CSP is hard to write; headers are misconfigured",
+      "target_users": "Web devs",
+      "monetisation": "Free (feeder)",
+      "price_hypothesis": "Free",
+      "scores": {
+        "legal": 4,
+        "pain": 2,
+        "breadth": 1,
+        "wtp": 1,
+        "recurring": 5,
+        "build": 5,
+        "maint": 4,
+        "distro": 4,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [],
+      "competitors": [
+        "securityheaders.com",
+        "Mozilla Observatory"
+      ],
+      "notes": "Passive fetch of public headers only. A free SEO feeder for the developer security cluster."
+    },
+    {
+      "id": "sec-gha-workflow-hardener",
+      "title": "GitHub Actions workflow hardener (pin SHAs, least-privilege permissions)",
+      "category": "Security: developer",
+      "platform": "CLI + GitHub App",
+      "problem": "Supply-chain attacks via unpinned actions (tj-actions); default token permissions too broad",
+      "target_users": "OSS maintainers, small dev teams",
+      "monetisation": "Free CLI + paid private-repo app",
+      "price_hypothesis": "US$9-19/mo per org",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 4,
+        "maint": 3,
+        "distro": 3,
+        "compete": 2,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.stepsecurity.io/pricing",
+          "note": "StepSecurity Harden-Runner: free for public repos; private repos need Enterprise"
+        },
+        {
+          "url": "https://www.stepsecurity.io/blog/harden-runner-detection-tj-actions-changed-files-action-is-compromised",
+          "note": "tj-actions/changed-files compromise: pin actions to commit SHA"
+        }
+      ],
+      "competitors": [
+        "StepSecurity",
+        "zizmor (OSS)",
+        "Dependabot",
+        "OpenSSF Scorecard"
+      ],
+      "notes": "Read-only analysis plus suggested PRs the user merges. It never auto-pushes. Well served by free tools, so it fits as a feeder/upsell to the vibe-app scanner."
+    },
+    {
+      "id": "sec-secret-precommit-mac",
+      "title": "Local secret scanner & .env hygiene menu-bar app",
+      "category": "Security: developer",
+      "platform": "macOS",
+      "problem": "Devs commit keys; .env files sprawl across projects",
+      "target_users": "Developers",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$9-15",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 2,
+        "recurring": 1,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [],
+      "competitors": [
+        "gitleaks (free)",
+        "trufflehog (free)",
+        "GitHub push protection"
+      ],
+      "notes": "Runs locally and never uploads. Free CLIs dominate, so it's a feeder unless bundled with the dev disk reclaimer or dev-env-diff."
+    },
+    {
+      "id": "sec-dependency-licence-report",
+      "title": "Dependency licence + vulnerability handover report for agencies",
+      "category": "Security: developer",
+      "platform": "CLI / web",
+      "problem": "Agencies must hand clients a licence and vuln summary; tools are enterprise-priced",
+      "target_users": "Dev agencies, freelancers",
+      "monetisation": "Per-report or subscription",
+      "price_hypothesis": "US$19/report",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 2,
+        "build": 4,
+        "maint": 3,
+        "distro": 3,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "evidence": [],
+      "competitors": [
+        "Snyk",
+        "FOSSA",
+        "GitHub dependency review"
+      ],
+      "notes": "Licence 'compliance' wording is legal-adjacent: present facts (SPDX ids), not legal conclusions. Low defensibility."
+    },
+    {
+      "id": "sec-mac-login-items-auditor",
+      "title": "Mac login items & launch agents auditor (signed? who made it? when added?)",
+      "category": "Security: Mac endpoint",
+      "platform": "macOS",
+      "problem": "Macs accumulate background agents from uninstalled apps; users can't tell what's legit",
+      "target_users": "Mac users, IT helpers, family tech support",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$9-15 one-time",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 1,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 2,
+        "defend": 2,
+        "synergy": 5,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://versily.com/products/logintoggle",
+          "note": "LoginToggle: $9 one-time login items/launch agents manager"
+        },
+        {
+          "url": "https://bitfalls.com/apps/agentview",
+          "note": "AgentView: $11.99 one-time LaunchAgents/cron inspector"
+        },
+        {
+          "url": "https://www.peterborgapps.com/lingon/index.html",
+          "note": "Lingon Pro: $23.99 one-time launchd editor"
+        },
+        {
+          "url": "https://objective-see.org/tools.html",
+          "note": "Objective-See: free open-source Mac security tools (LuLu, KnockKnock, BlockBlock), nonprofit + Patreon"
+        }
+      ],
+      "competitors": [
+        "KnockKnock (free)",
+        "LoginToggle",
+        "AgentView",
+        "Lingon",
+        "System Settings Login Items"
+      ],
+      "notes": "Read-only by default. Disabling needs a confirm plus undo, and never deletes. Don't claim 'malware detection', which makes it a security product with a silent-failure risk. Present it as 'what runs on your Mac'. Fits the Mac shell. Free Objective-See tools cap the price."
+    },
+    {
+      "id": "sec-mac-privacy-permissions-auditor",
+      "title": "Mac privacy permissions auditor (camera, mic, screen recording, full disk, accessibility)",
+      "category": "Security: Mac endpoint",
+      "platform": "macOS",
+      "problem": "Users forget which apps were granted screen recording or accessibility; System Settings is scattered",
+      "target_users": "Mac users, journalists, remote workers",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$9-15 one-time",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 1,
+        "build": 3,
+        "maint": 2,
+        "distro": 4,
+        "compete": 2,
+        "defend": 3,
+        "synergy": 5,
+        "platform": 2
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://objective-see.org/tools.html",
+          "note": "Objective-See: free open-source Mac security tools (LuLu, KnockKnock, BlockBlock), nonprofit + Patreon"
+        }
+      ],
+      "competitors": [
+        "System Settings",
+        "Privacy-focused cleaners"
+      ],
+      "notes": "Reading the TCC database needs Full Disk Access and an undocumented format that changes with each macOS release (maintenance and platform risk). Read-only; it links to the right Settings pane."
+    },
+    {
+      "id": "sec-mac-network-monitor-lite",
+      "title": "Lightweight per-app network connection viewer (no firewall)",
+      "category": "Security: Mac endpoint",
+      "platform": "macOS",
+      "problem": "Users want to see what apps phone home without a full firewall",
+      "target_users": "Privacy-minded Mac users",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$15-25",
+      "scores": {
+        "legal": 4,
+        "pain": 2,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 1,
+        "build": 2,
+        "maint": 3,
+        "distro": 3,
+        "compete": 1,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 3
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://obdev.at/littlesnitch",
+          "note": "Little Snitch: $59 licence, 20+ years, Mac network monitor"
+        },
+        {
+          "url": "https://www.firmenatlas.com/firma/244130s",
+          "note": "Objective Development GmbH (Little Snitch, LaunchBar): 2025 profit EUR 492.5k, about 7 staff"
+        },
+        {
+          "url": "https://objective-see.org/tools.html",
+          "note": "Objective-See: free open-source Mac security tools (LuLu, KnockKnock, BlockBlock), nonprofit + Patreon"
+        }
+      ],
+      "competitors": [
+        "Little Snitch",
+        "LuLu (free)",
+        "Murus"
+      ],
+      "notes": "Little Snitch proves a 20-year business (Objective Development: 2025 profit EUR 492.5k), but it's entrenched and LuLu is free. Network Extension entitlement adds build risk. Viewer-only keeps the liability low."
+    },
+    {
+      "id": "sec-screenshot-redactor",
+      "title": "Auto-redact secrets & personal info in screenshots before sharing (local OCR)",
+      "category": "Security: Mac endpoint",
+      "platform": "macOS / web (local)",
+      "problem": "People paste screenshots with API keys, emails, card digits or addresses into Slack, Reddit and support tickets",
+      "target_users": "Devs, support staff, creators",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$12-19",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 1,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 5,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [],
+      "competitors": [
+        "CleanShot X (manual blur)",
+        "Shottr",
+        "Redactor tools"
+      ],
+      "notes": "Local OCR (Vision framework), so no upload. Silent-failure risk (missed redaction), so always show a preview with 'review before sharing' and never claim completeness. Strong fit with the Mac shell and the local-first theme."
+    },
+    {
+      "id": "sec-clipboard-secret-guard",
+      "title": "Clipboard secret guard (auto-clear copied keys/passwords, warn on paste)",
+      "category": "Security: Mac endpoint",
+      "platform": "macOS",
+      "problem": "Secrets linger in clipboard history managers and get pasted into the wrong window",
+      "target_users": "Developers, admins",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$5-9",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 2,
+        "recurring": 1,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [],
+      "competitors": [
+        "Password managers' auto-clear",
+        "Clipboard managers"
+      ],
+      "notes": "Feeder. Pattern-based detection stays local."
+    },
+    {
+      "id": "sec-local-file-encrypt-share",
+      "title": "Drag-drop file encryption for sharing (recipient decrypts in browser, locally)",
+      "category": "Security: consumer privacy",
+      "platform": "macOS + static web decryptor",
+      "problem": "Sending tax returns, IDs and contracts by email in the clear; zip passwords are weak",
+      "target_users": "Freelancers, bookkeepers, families",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$15-19",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 1,
+        "build": 3,
+        "maint": 4,
+        "distro": 3,
+        "compete": 2,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [],
+      "competitors": [
+        "Keka/7-Zip",
+        "Bitwarden Send",
+        "Cryptomator",
+        "Proton Drive links"
+      ],
+      "notes": "Crypto must use vetted libraries (age/libsodium), never home-rolled, and you need an independent review before launch. A bug fails silently with catastrophic results. You hold no keys or files, so there's no custody."
+    },
+    {
+      "id": "sec-account-recovery-planner",
+      "title": "Account recovery planner (where each recovery method and backup code lives, never the codes)",
+      "category": "Security: families & creators",
+      "platform": "Local-first web / iOS",
+      "problem": "People get locked out of Apple, Google, myGov or email after losing a phone; recovery info is scattered",
+      "target_users": "Everyone, especially families and older users",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$9-15",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 2,
+        "build": 4,
+        "maint": 5,
+        "distro": 3,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://quietkeep.co/digital-legacy-planner",
+          "note": "Quietkeep: $14.99 one-time offline digital legacy planner"
+        },
+        {
+          "url": "https://eternalvault.app/blog/best-digital-legacy-planning-tools-2026/",
+          "note": "Digital legacy tools comparison 2026 (crowded)"
+        }
+      ],
+      "competitors": [
+        "Quietkeep",
+        "LifeScribe Vault",
+        "Password manager emergency kits"
+      ],
+      "notes": "Records locations and instructions only, never passwords or codes, so a leak isn't catastrophic. Local-first with printable output. Pairs with the legacy planner."
+    },
+    {
+      "id": "sec-digital-legacy-organiser",
+      "title": "Digital legacy organiser & executor instructions",
+      "category": "Security: families & creators",
+      "platform": "Local-first web / iOS",
+      "problem": "Families can't find or close a deceased person's accounts, subscriptions or photos",
+      "target_users": "Older adults, estate planners",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$15-29",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 2,
+        "build": 4,
+        "maint": 5,
+        "distro": 3,
+        "compete": 2,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://quietkeep.co/digital-legacy-planner",
+          "note": "Quietkeep: $14.99 one-time offline digital legacy planner"
+        },
+        {
+          "url": "https://eternalvault.app/blog/best-digital-legacy-planning-tools-2026/",
+          "note": "Digital legacy tools comparison 2026 (crowded)"
+        }
+      ],
+      "competitors": [
+        "Quietkeep",
+        "Eternal Vault",
+        "Digital Descendant",
+        "MORTL"
+      ],
+      "notes": "Not a will and not legal advice: link to state succession info. Very crowded. Stores no credentials."
+    },
+    {
+      "id": "sec-2fa-passkey-checkup",
+      "title": "Personal 2FA/passkey coverage checkup (guided, nothing stored server-side)",
+      "category": "Security: consumer privacy",
+      "platform": "Web (local)",
+      "problem": "People don't know which accounts lack 2FA or passkeys",
+      "target_users": "Everyone",
+      "monetisation": "Free (feeder)",
+      "price_hypothesis": "Free / tip",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 2,
+        "recurring": 1,
+        "build": 5,
+        "maint": 4,
+        "distro": 4,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 5,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [],
+      "competitors": [
+        "2fa.directory",
+        "Password manager watchtower",
+        "Apple Passwords recommendations"
+      ],
+      "notes": "Feeder for the recovery planner. Never asks for credentials. Account-setting links change often."
+    },
+    {
+      "id": "sec-password-export-auditor",
+      "title": "Local password export auditor (reuse, weak, pwned via k-anonymity)",
+      "category": "Security: consumer privacy",
+      "platform": "Local app",
+      "problem": "Users without a manager don't know their reused/pwned passwords",
+      "target_users": "Consumers",
+      "monetisation": "Free (feeder)",
+      "price_hypothesis": "Free",
+      "scores": {
+        "legal": 2,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 1,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 1,
+        "defend": 0,
+        "synergy": 3,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://haveibeenpwned.com/subscription",
+          "note": "HIBP API: Core from $4.39/mo; Pwned Passwords free (k-anonymity)"
+        }
+      ],
+      "competitors": [
+        "Apple Passwords",
+        "Chrome Password Checkup",
+        "1Password Watchtower"
+      ],
+      "notes": "Avoid. It handles plaintext password exports, so any leak or telemetry bug is a disaster, and platforms already do this for free. Recorded so future runs skip it."
+    },
+    {
+      "id": "sec-family-breach-dashboard",
+      "title": "Family breach-exposure dashboard via HIBP API",
+      "category": "Security: consumer privacy",
+      "platform": "Web",
+      "problem": "Families want one place to see which members' emails appeared in breaches",
+      "target_users": "Households",
+      "monetisation": "Subscription",
+      "price_hypothesis": "US$2-4/mo",
+      "scores": {
+        "legal": 3,
+        "pain": 2,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 3,
+        "build": 3,
+        "maint": 4,
+        "distro": 3,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 2,
+        "platform": 1
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://haveibeenpwned.com/subscription",
+          "note": "HIBP API: Core from $4.39/mo; Pwned Passwords free (k-anonymity)"
+        },
+        {
+          "url": "https://haveibeenpwned.com/TermsOfUse",
+          "note": "HIBP ToS: no third-party/reseller use unless plan permits; no building a similar breach search service"
+        }
+      ],
+      "competitors": [
+        "HIBP notify (free)",
+        "Google dark web report",
+        "Firefox Monitor"
+      ],
+      "notes": "HIBP ToS restricts third-party/reseller use and bans building a similar breach search service. You also have to verify each email's owner. Free alternatives are everywhere, so the platform risk is high."
+    },
+    {
+      "id": "sec-data-broker-optout-diy",
+      "title": "DIY data-broker opt-out tracker (templates + re-listing reminders)",
+      "category": "Security: consumer privacy",
+      "platform": "Web / iOS",
+      "problem": "Paid removal services cost US$100+/yr; DIY takes many hours and brokers relist",
+      "target_users": "Privacy-conscious consumers (mostly US)",
+      "monetisation": "One-time or annual",
+      "price_hypothesis": "US$19 or US$12/yr",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 4,
+        "maint": 3,
+        "distro": 2,
+        "compete": 4,
+        "defend": 2,
+        "synergy": 2,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://danochoa.com/notes/delisted-free-on-purpose",
+          "note": "Delisted: free, donation-funded data-broker removal by one founder"
+        }
+      ],
+      "competitors": [
+        "DeleteMe",
+        "Incogni",
+        "Optery",
+        "Delisted (free)"
+      ],
+      "notes": "The user sends every request themselves and the tool holds no identity documents, which keeps liability low. Broker forms change constantly (maintenance). Mostly a US market, so it's a weak fit with the AU home market."
+    },
+    {
+      "id": "sec-data-broker-agent-service",
+      "title": "Done-for-you data-broker removal as authorised agent",
+      "category": "Security: consumer privacy",
+      "platform": "Service + web",
+      "problem": "Same as DIY, but users want it fully handled",
+      "target_users": "Consumers",
+      "monetisation": "Subscription",
+      "price_hypothesis": "US$8-12/mo",
+      "scores": {
+        "legal": 2,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 4,
+        "recurring": 5,
+        "build": 2,
+        "maint": 1,
+        "distro": 3,
+        "compete": 3,
+        "defend": 1,
+        "synergy": 1,
+        "platform": 2
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://danochoa.com/notes/delisted-free-on-purpose",
+          "note": "Delisted: free, donation-funded data-broker removal by one founder"
+        }
+      ],
+      "competitors": [
+        "DeleteMe",
+        "Incogni",
+        "Optery",
+        "Kanary"
+      ],
+      "notes": "Avoid for a solo builder: you hold identity documents and act legally as an agent (CCPA authorised-agent rules), it needs ops-heavy maintenance, and VC-funded players dominate."
+    },
+    {
+      "id": "sec-scam-text-explainer",
+      "title": "Suspicious text/email explainer (red flags + where to report; never says 'safe')",
+      "category": "Security: families & creators",
+      "platform": "Web / iOS share sheet",
+      "problem": "Scam texts are convincing; older relatives forward them asking 'is this real?'",
+      "target_users": "Families, older adults",
+      "monetisation": "Free (feeder) or tip",
+      "price_hypothesis": "Free",
+      "scores": {
+        "legal": 3,
+        "pain": 4,
+        "breadth": 5,
+        "wtp": 1,
+        "recurring": 1,
+        "build": 1,
+        "maint": 4,
+        "distro": 4,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 2,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.nasc.gov.au/system/files/targeting-scams-report-2025.pdf",
+          "note": "NASC Targeting Scams 2025: 29,058 text-scam reports, $17.98m lost via SMS"
+        }
+      ],
+      "competitors": [
+        "Scamwatch",
+        "Bank scam checkers",
+        "Norton Genie"
+      ],
+      "notes": "Liability: a 'safe' verdict on a scam invites reliance claims. Show only red flags plus 'verify via the official number', and link to Scamwatch reporting. Process locally or BYOK and keep no message logs. Feeder with high AU search volume."
+    },
+    {
+      "id": "sec-family-tech-checkup",
+      "title": "Home tech security checkup for parents/grandparents (printable)",
+      "category": "Security: families & creators",
+      "platform": "Web",
+      "problem": "Adult children do ad-hoc tech support; no checklist for router, updates, backups, scams",
+      "target_users": "Families",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$9",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 2,
+        "recurring": 2,
+        "build": 5,
+        "maint": 4,
+        "distro": 3,
+        "compete": 1,
+        "defend": 3,
+        "synergy": 5,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.cyber.gov.au/business-government/small-business-cyber-security/small-business-hub/small-business-cyber-security-guide",
+          "note": "ACSC small business cyber security guide (MFA, updates, backups first)"
+        }
+      ],
+      "competitors": [
+        "Free government guides"
+      ],
+      "notes": "Advisory checklist only. Good feeder bundle with the recovery planner."
+    },
+    {
+      "id": "sec-creator-account-hardening",
+      "title": "Creator account takeover prevention kit (YouTube/Instagram/TikTok)",
+      "category": "Security: families & creators",
+      "platform": "Web / Notion-style kit",
+      "problem": "Channel hijacks via fake sponsorship malware and session theft; recovery is slow",
+      "target_users": "Creators, small agencies",
+      "monetisation": "One-time + team review subscription",
+      "price_hypothesis": "US$19-29",
+      "scores": {
+        "legal": 4,
+        "pain": 4,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 2,
+        "build": 5,
+        "maint": 3,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [],
+      "competitors": [
+        "Platform help pages",
+        "Agency checklists"
+      ],
+      "notes": "Checklist plus team access review. Stores no credentials. Underserved, with a clear audience on creator forums."
+    },
+    {
+      "id": "sec-incident-response-plan-au",
+      "title": "One-page incident response plan + links to official NDB & ransomware-reporting guidance (AU SMB)",
+      "category": "Security: SMB admin",
+      "platform": "Web",
+      "problem": "SMBs freeze during an incident and don't know who to call or what must be reported",
+      "target_users": "AU SMBs",
+      "monetisation": "One-time",
+      "price_hypothesis": "A$49-99",
+      "scores": {
+        "legal": 2,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 2,
+        "build": 5,
+        "maint": 4,
+        "distro": 3,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 2,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.homeaffairs.gov.au/cyber-security-subsite/files/factsheet-ransomware-payment-reporting.pdf",
+          "note": "Cyber Security Act 2024: ransomware payment report within 72h for businesses with turnover of A$3m or more (from 30 May 2025)"
+        },
+        {
+          "url": "https://www.oaic.gov.au/privacy/notifiable-data-breaches/preventing-preparing-for-and-responding-to-data-breaches/data-breach-preparation-and-response/part-4-notifiable-data-breach-ndb-scheme",
+          "note": "OAIC NDB scheme guidance"
+        },
+        {
+          "url": "https://www.oaic.gov.au/privacy/privacy-guidance-for-organisations-and-government-agencies/organisations/small-business",
+          "note": "OAIC: most businesses at or under A$3m turnover exempt from Privacy Act, with exceptions"
+        }
+      ],
+      "competitors": [
+        "ACSC templates (free)",
+        "MSP templates"
+      ],
+      "notes": "Legal score 2: deciding whether an NDB notification or a 72-hour ransomware report is required is legal advice. The tool may only link to the OAIC/ASD official guidance and can't make the decision. Keep it as a contacts/roles runbook."
+    },
+    {
+      "id": "sec-backup-restore-test-log",
+      "title": "Backup restore-test reminder & log (Essential Eight 'tested backups')",
+      "category": "Security: SMB admin",
+      "platform": "Web / Sheets add-on",
+      "problem": "Everyone has backups; nobody tests restores until it's too late",
+      "target_users": "SMBs, MSPs",
+      "monetisation": "Subscription",
+      "price_hypothesis": "A$9-15/mo",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 5,
+        "maint": 5,
+        "distro": 2,
+        "compete": 4,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.cyber.gov.au/business-government/small-business-cyber-security/small-business-hub/small-business-cyber-security-guide",
+          "note": "ACSC small business cyber security guide (MFA, updates, backups first)"
+        },
+        {
+          "url": "https://essentialscore.com.au/",
+          "note": "EssentialScore: free 74-question E8 self-assessment, $99 one-time policies + gap report"
+        }
+      ],
+      "competitors": [
+        "MSP checklists",
+        "Backup vendor reports"
+      ],
+      "notes": "A log of human-performed tests, so it makes no claim that backups work. Low build/maintenance effort, but weak distribution on its own; best as part of the E8 tracker."
+    },
+    {
+      "id": "sec-dangling-dns-check",
+      "title": "Dangling DNS / subdomain takeover check for your own domains",
+      "category": "Security: monitoring",
+      "platform": "Web SaaS",
+      "problem": "Old CNAMEs to deleted Heroku/S3/Vercel apps can be taken over",
+      "target_users": "Agencies, dev teams",
+      "monetisation": "Subscription add-on",
+      "price_hypothesis": "US$9/mo",
+      "scores": {
+        "legal": 3,
+        "pain": 2,
+        "breadth": 2,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 4,
+        "maint": 3,
+        "distro": 2,
+        "compete": 2,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://trustmrr.com/startup/dns-monit",
+          "note": "DNS Monit: DNS/SPF/DKIM/DMARC monitor, $137 all-time, lifetime deal"
+        }
+      ],
+      "competitors": [
+        "Commercial ASM tools",
+        "OSS scanners"
+      ],
+      "notes": "Verified domains only. Better as a feature of the SSL/DNS monitor than as a standalone product."
+    },
+    {
+      "id": "sec-privacy-data-register-au",
+      "title": "Personal-information register & APP-aligned privacy policy builder (AU SMB)",
+      "category": "Security: SMB admin",
+      "platform": "Web",
+      "problem": "AU Privacy Act changes (Dec 2026 transparency rules) and NDB duties confuse SMBs that aren't exempt",
+      "target_users": "AU SMBs over A$3m turnover, health providers",
+      "monetisation": "Subscription",
+      "price_hypothesis": "A$19-29/mo",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 4,
+        "maint": 3,
+        "distro": 3,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 2,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.oaic.gov.au/privacy/privacy-guidance-for-organisations-and-government-agencies/organisations/small-business",
+          "note": "OAIC: most businesses at or under A$3m turnover exempt from Privacy Act, with exceptions"
+        },
+        {
+          "url": "https://rulesmate.com.au/insights/privacy-act-2026-smb-guide",
+          "note": "Privacy Act changes from 10 Dec 2026 for SMBs; small-business exemption removal not yet law"
+        },
+        {
+          "url": "https://www.oaic.gov.au/privacy/notifiable-data-breaches/preventing-preparing-for-and-responding-to-data-breaches/data-breach-preparation-and-response/part-4-notifiable-data-breach-ndb-scheme",
+          "note": "OAIC NDB scheme guidance"
+        }
+      ],
+      "competitors": [
+        "Law firm templates",
+        "OneTrust (enterprise)"
+      ],
+      "notes": "Template plus inventory only, not legal advice. The proposed removal of the small-business exemption would expand the market if it passes, so re-check each run."
+    },
+    {
+      "id": "sec-mac-camera-mic-log",
+      "title": "Camera/mic usage log & alert for Mac",
+      "category": "Security: Mac endpoint",
+      "platform": "macOS",
+      "problem": "Users want a history of which app used the camera/mic",
+      "target_users": "Remote workers, privacy-minded",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$5-9",
+      "scores": {
+        "legal": 5,
+        "pain": 2,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 1,
+        "build": 5,
+        "maint": 4,
+        "distro": 3,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 5,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://objective-see.org/tools.html",
+          "note": "Objective-See: free open-source Mac security tools (LuLu, KnockKnock, BlockBlock), nonprofit + Patreon"
+        }
+      ],
+      "competitors": [
+        "Micro Snitch",
+        "OverSight (free)",
+        "macOS indicators"
+      ],
+      "notes": "Feeder: free OverSight and the built-in indicator cap willingness to pay."
+    },
+    {
+      "id": "sec-qr-link-previewer",
+      "title": "QR code & short-link previewer (true destination before opening)",
+      "category": "Security: families & creators",
+      "platform": "iOS / web",
+      "problem": "Quishing: QR codes on parking meters and letters lead to phishing sites",
+      "target_users": "Everyone",
+      "monetisation": "Free (feeder)",
+      "price_hypothesis": "Free",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 1,
+        "recurring": 1,
+        "build": 5,
+        "maint": 4,
+        "distro": 3,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 5,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "evidence": [
+        {
+          "url": "https://www.nasc.gov.au/system/files/targeting-scams-report-2025.pdf",
+          "note": "NASC Targeting Scams 2025: 29,058 text-scam reports, $17.98m lost via SMS"
+        }
+      ],
+      "competitors": [
+        "Camera app preview",
+        "Link expanders"
+      ],
+      "notes": "Shows the destination only, never a 'safe' verdict. Feeder."
+    },
+    {
+      "id": "sec-website-vuln-scanner-any",
+      "title": "Scan any website for vulnerabilities (no ownership check)",
+      "category": "Security: developer",
+      "platform": "Web",
+      "problem": "Users want to scan sites they don't own",
+      "target_users": "-",
+      "monetisation": "-",
+      "price_hypothesis": "-",
+      "scores": {
+        "legal": 0,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 4,
+        "recurring": 3,
+        "build": 2,
+        "maint": 2,
+        "distro": 3,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 2,
+        "platform": 0
+      },
+      "kill_flags": [
+        "unauthorised scanning of third-party systems",
+        "dual-use/offensive tooling"
+      ],
+      "evidence": [],
+      "competitors": [
+        "-"
+      ],
+      "notes": "Killed: unauthorised scanning of third-party systems (Criminal Code Part 10.7), dual-use, and host ToS."
+    },
+    {
+      "id": "sec-osint-people-lookup",
+      "title": "Email/phone OSINT people lookup",
+      "category": "Security: consumer privacy",
+      "platform": "Web",
+      "problem": "Find accounts and info linked to a person",
+      "target_users": "-",
+      "monetisation": "-",
+      "price_hypothesis": "-",
+      "scores": {
+        "legal": 0,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 4,
+        "recurring": 3,
+        "build": 2,
+        "maint": 1,
+        "distro": 2,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 2,
+        "platform": 0
+      },
+      "kill_flags": [
+        "privacy/stalking dual-use",
+        "scraping against ToS"
+      ],
+      "evidence": [],
+      "competitors": [
+        "-"
+      ],
+      "notes": "Killed: privacy harm, stalking/doxxing risk, Privacy Act and APP collection issues, and scraping against ToS."
+    },
+    {
+      "id": "sec-indie-password-manager",
+      "title": "Build-your-own password manager / credential vault",
+      "category": "Security: consumer privacy",
+      "platform": "Cross-platform",
+      "problem": "Users want a simpler password manager",
+      "target_users": "-",
+      "monetisation": "-",
+      "price_hypothesis": "-",
+      "scores": {
+        "legal": 1,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 4,
+        "recurring": 5,
+        "build": 1,
+        "maint": 1,
+        "distro": 2,
+        "compete": 1,
+        "defend": 2,
+        "synergy": 2,
+        "platform": 0
+      },
+      "kill_flags": [
+        "credential custody",
+        "catastrophic breach liability"
+      ],
+      "evidence": [],
+      "competitors": [
+        "1Password",
+        "Bitwarden",
+        "Apple Passwords"
+      ],
+      "notes": "Killed: credential custody. A breach is catastrophic, there's NDB exposure, and you'd be up against free platform managers."
+    },
+    {
+      "id": "sec-parental-monitoring",
+      "title": "Parental monitoring / device tracking app",
+      "category": "Security: families & creators",
+      "platform": "Mobile",
+      "problem": "Parents want to monitor kids' devices",
+      "target_users": "-",
+      "monetisation": "-",
+      "price_hypothesis": "-",
+      "scores": {
+        "legal": 0,
+        "pain": 4,
+        "breadth": 3,
+        "wtp": 4,
+        "recurring": 3,
+        "build": 2,
+        "maint": 1,
+        "distro": 2,
+        "compete": 1,
+        "defend": 0,
+        "synergy": 1,
+        "platform": 1
+      },
+      "kill_flags": [
+        "children's data",
+        "stalkerware/dual-use"
+      ],
+      "evidence": [],
+      "competitors": [
+        "Qustodio",
+        "Apple Screen Time"
+      ],
+      "notes": "Killed: children's data, stalkerware risk, and app store policy."
+    },
+    {
+      "id": "saas-bulk-exporter-pattern",
+      "scores": {
+        "legal": 4,
+        "pain": 4,
+        "breadth": 3,
+        "wtp": 4,
+        "recurring": 4,
+        "build": 4,
+        "maint": 3,
+        "distro": 5,
+        "compete": 4,
+        "defend": 2,
+        "synergy": 5,
+        "platform": 2
+      },
+      "evidence": [
+        {
+          "url": "https://trustmrr.com/category/security",
+          "note": "Cloud Backup for Podio: scheduled backup of one SaaS via API, $2.4k MRR (TrustMRR security category)"
+        }
+      ],
+      "competitors": [
+        "Cloud Backup for Podio (example)"
+      ],
+      "notes": "Template idea: repeat per target. Use official APIs/OAuth only; never scrape against ToS. Aim to get listed as the vendor's integration partner. R2: recurring 3->4, because 'scheduled backup' framing (a security angle) supports subscriptions, per Cloud Backup for Podio."
+    }
+  ]
+}

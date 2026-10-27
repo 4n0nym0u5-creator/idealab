@@ -1,0 +1,3540 @@
+{
+  "schema_version": "1.0",
+  "rubric_version": "1.0",
+  "weights": {
+    "legal": 16,
+    "pain": 11,
+    "breadth": 8,
+    "wtp": 10,
+    "recurring": 8,
+    "build": 8,
+    "maint": 8,
+    "distro": 11,
+    "compete": 6,
+    "defend": 4,
+    "synergy": 5,
+    "platform": 5
+  },
+  "criteria_order": [
+    "legal",
+    "pain",
+    "breadth",
+    "wtp",
+    "recurring",
+    "build",
+    "maint",
+    "distro",
+    "compete",
+    "defend",
+    "synergy",
+    "platform"
+  ],
+  "runs": [
+    {
+      "run_number": 1,
+      "date": "2026-10-27",
+      "author": "SideHustle (Grok Bot)",
+      "ideas_added": 60,
+      "ideas_rescored": 0,
+      "sources_swept": [
+        "shojimac.com",
+        "trustmrr.com (utilities)",
+        "setapp.com tech-talks",
+        "indiehackers.com",
+        "starterstory.com",
+        "reddit (r/SideProject, r/SaaS, r/ausbusiness, r/AusElectricians, r/AustralianTeachers, r/AppIdeas) via search summaries",
+        "stealwhatworks.com",
+        "adsx.com (Shopify)",
+        "revenuecat.com",
+        "developers.google.com (OAuth/CASA)",
+        "ato.gov.au (GST)",
+        "dodopayments.com",
+        "microconf.com"
+      ],
+      "notes": "Baseline run. Reddit threads could not be fetched directly (blocked); their content is from search-engine summaries and should be re-verified."
+    }
+  ],
+  "ideas": [
+    {
+      "id": "mac-display-arrangement-restorer",
+      "title": "Display arrangement and resolution restorer",
+      "category": "Mac OS-gap utility",
+      "platform": "macOS",
+      "problem": "macOS forgets monitor arrangement, main display, resolution and scaling after dock/undock or sleep; users re-fix it in System Settings daily",
+      "target_users": "Mac laptop users with docks/2+ monitors (devs, designers, hybrid workers)",
+      "monetisation": "One-time + optional 2-Mac licence",
+      "price_hypothesis": "US$12-19 one-time",
+      "scores": {
+        "legal": 5,
+        "pain": 4,
+        "breadth": 3,
+        "wtp": 4,
+        "recurring": 1,
+        "build": 3,
+        "maint": 3,
+        "distro": 4,
+        "compete": 3,
+        "defend": 3,
+        "synergy": 5,
+        "platform": 3
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "BetterDisplay",
+        "displayplacer (CLI, free)",
+        "Lunar"
+      ],
+      "notes": "Shares Shoji-style menu-bar + Accessibility/CoreGraphics shell. Private display APIs = OS update risk.",
+      "total": 71.6,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 71.6,
+          "scores": {
+            "legal": 5,
+            "pain": 4,
+            "breadth": 3,
+            "wtp": 4,
+            "recurring": 1,
+            "build": 3,
+            "maint": 3,
+            "distro": 4,
+            "compete": 3,
+            "defend": 3,
+            "synergy": 5,
+            "platform": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "mac-quicklook-data-viewer",
+      "title": "Instant CSV / JSON / Parquet / log viewer (Quick Look + app)",
+      "category": "Mac OS-gap utility",
+      "platform": "macOS",
+      "problem": "Opening a 200 MB CSV or JSON on Mac means Excel/Numbers hangs or raw text; Quick Look shows nothing useful",
+      "target_users": "Analysts, devs, ops, students who receive data files",
+      "monetisation": "One-time; Setapp; Homebrew cask",
+      "price_hypothesis": "US$15-25 one-time",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 1,
+        "build": 4,
+        "maint": 4,
+        "distro": 5,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 5,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "shortlist",
+      "evidence": [
+        {
+          "url": "https://setapp.com/tech-talks/macmd-viewer-story",
+          "note": "MacMD Viewer: $19.99 one-time, ~$3k/mo by Jul 2026, organic search, direct+Homebrew+Setapp"
+        }
+      ],
+      "competitors": [
+        "Tad (free)",
+        "Modern CSV",
+        "QuickLook plugins (free, unmaintained)"
+      ],
+      "notes": "Direct analogue of MacMD Viewer: owns 'how to open X file on Mac' queries.",
+      "total": 74.6,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 74.6,
+          "scores": {
+            "legal": 5,
+            "pain": 3,
+            "breadth": 4,
+            "wtp": 3,
+            "recurring": 1,
+            "build": 4,
+            "maint": 4,
+            "distro": 5,
+            "compete": 3,
+            "defend": 2,
+            "synergy": 5,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "mac-downloads-auto-tidy",
+      "title": "Downloads & Desktop auto-tidy with simple rules",
+      "category": "Mac OS-gap utility",
+      "platform": "macOS",
+      "problem": "Downloads/Desktop silt up; Hazel is powerful but complex and pricey",
+      "target_users": "Every Mac user; esp. freelancers handling client files",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$9-15 one-time",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 1,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 5,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "Hazel",
+        "Folder Colorizer",
+        "Automator (built-in)"
+      ],
+      "notes": "Must move to Trash, never delete, and keep an undo log to keep data-loss liability low.",
+      "total": 70.8,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 70.8,
+          "scores": {
+            "legal": 4,
+            "pain": 3,
+            "breadth": 5,
+            "wtp": 3,
+            "recurring": 1,
+            "build": 4,
+            "maint": 4,
+            "distro": 4,
+            "compete": 3,
+            "defend": 2,
+            "synergy": 5,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "mac-meeting-ready-toggle",
+      "title": "Meeting/present-ready toggle",
+      "category": "Mac OS-gap utility",
+      "platform": "macOS",
+      "problem": "Before screen-sharing: hide desktop icons, silence notifications, hide private windows, close Slack, set layout; done by hand every call",
+      "target_users": "Remote workers, consultants, teachers, streamers",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$9-12 one-time",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 1,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 5,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "Presentify",
+        "One Switch",
+        "Shoji (No peek/Clean Space)"
+      ],
+      "notes": "",
+      "total": 70.2,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 70.2,
+          "scores": {
+            "legal": 5,
+            "pain": 3,
+            "breadth": 4,
+            "wtp": 3,
+            "recurring": 1,
+            "build": 4,
+            "maint": 4,
+            "distro": 3,
+            "compete": 3,
+            "defend": 2,
+            "synergy": 5,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "mac-dev-disk-reclaimer",
+      "title": "Developer disk reclaimer (node_modules, DerivedData, Docker, caches)",
+      "category": "Mac OS-gap utility",
+      "platform": "macOS",
+      "problem": "256-512 GB Macs fill up with rebuildable dev caches; users don't know what is safe to remove",
+      "target_users": "Developers and students on small SSDs",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$12-19 one-time",
+      "scores": {
+        "legal": 4,
+        "pain": 4,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 1,
+        "build": 4,
+        "maint": 3,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 5,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "DevCleaner",
+        "npkill (free)",
+        "CleanMyMac"
+      ],
+      "notes": "Only remove regenerable artefacts; move to Trash; show what each is.",
+      "total": 68.2,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 68.2,
+          "scores": {
+            "legal": 4,
+            "pain": 4,
+            "breadth": 3,
+            "wtp": 3,
+            "recurring": 1,
+            "build": 4,
+            "maint": 3,
+            "distro": 4,
+            "compete": 3,
+            "defend": 2,
+            "synergy": 5,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "mac-per-app-audio",
+      "title": "Per-app volume and output routing",
+      "category": "Mac OS-gap utility",
+      "platform": "macOS",
+      "problem": "macOS has no per-app volume; music drowns calls, browser tabs blast",
+      "target_users": "Remote workers, streamers, gamers",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$15-25 one-time",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 4,
+        "recurring": 1,
+        "build": 2,
+        "maint": 2,
+        "distro": 4,
+        "compete": 2,
+        "defend": 3,
+        "synergy": 4,
+        "platform": 3
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "SoundSource ($39)",
+        "Background Music (free)"
+      ],
+      "notes": "Audio driver/tap APIs are fiddly and break across macOS versions.",
+      "total": 65.6,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 65.6,
+          "scores": {
+            "legal": 5,
+            "pain": 3,
+            "breadth": 4,
+            "wtp": 4,
+            "recurring": 1,
+            "build": 2,
+            "maint": 2,
+            "distro": 4,
+            "compete": 2,
+            "defend": 3,
+            "synergy": 4,
+            "platform": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "mac-local-file-converter",
+      "title": "Local any-format file converter",
+      "category": "Local-first file/media",
+      "platform": "macOS/Windows",
+      "problem": "Online converters upload private files; formats like HEIC/WebP/MKV/odd docs confuse people",
+      "target_users": "Broad consumers + office workers",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$19-29 one-time",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 1,
+        "build": 3,
+        "maint": 3,
+        "distro": 5,
+        "compete": 2,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [
+        {
+          "url": "https://trustmrr.com/startup/how-to-convert",
+          "note": "How to Convert (Australian founder): $29 one-time, $60.6k all-time, local file conversion"
+        }
+      ],
+      "competitors": [
+        "How to Convert",
+        "Permute",
+        "CloudConvert"
+      ],
+      "notes": "Proven by an Australian founder; incumbents now exist, so pick a sub-niche (e.g. photo/video for real-estate or e-commerce sellers).",
+      "total": 71.8,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 71.8,
+          "scores": {
+            "legal": 5,
+            "pain": 3,
+            "breadth": 5,
+            "wtp": 3,
+            "recurring": 1,
+            "build": 3,
+            "maint": 3,
+            "distro": 5,
+            "compete": 2,
+            "defend": 2,
+            "synergy": 4,
+            "platform": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "mac-menubar-overflow",
+      "title": "Menu-bar icon overflow manager",
+      "category": "Mac OS-gap utility",
+      "platform": "macOS",
+      "problem": "Notch hides menu-bar icons",
+      "target_users": "MacBook users",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$8-15",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 1,
+        "build": 3,
+        "maint": 3,
+        "distro": 3,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 2
+      },
+      "kill_flags": [],
+      "status": "feeder",
+      "evidence": [],
+      "competitors": [
+        "Bartender",
+        "Ice (free)"
+      ],
+      "notes": "Saturated; macOS itself keeps changing this.",
+      "total": 58.8,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 58.8,
+          "scores": {
+            "legal": 5,
+            "pain": 3,
+            "breadth": 4,
+            "wtp": 2,
+            "recurring": 1,
+            "build": 3,
+            "maint": 3,
+            "distro": 3,
+            "compete": 1,
+            "defend": 1,
+            "synergy": 4,
+            "platform": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "mac-clipboard-plain",
+      "title": "Clipboard history / paste plain text",
+      "category": "Mac OS-gap utility",
+      "platform": "macOS",
+      "problem": "Formatting junk on paste; lost clipboard items",
+      "target_users": "Everyone",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$5-10",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 2,
+        "recurring": 1,
+        "build": 5,
+        "maint": 5,
+        "distro": 3,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "feeder",
+      "evidence": [],
+      "competitors": [
+        "Maccy (free)",
+        "Paste",
+        "Raycast (free)"
+      ],
+      "notes": "Clipboard holds passwords; privacy expectation high. Market saturated with free options.",
+      "total": 65.6,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 65.6,
+          "scores": {
+            "legal": 4,
+            "pain": 3,
+            "breadth": 5,
+            "wtp": 2,
+            "recurring": 1,
+            "build": 5,
+            "maint": 5,
+            "distro": 3,
+            "compete": 1,
+            "defend": 1,
+            "synergy": 4,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "mac-novelty-viral",
+      "title": "Novelty/delight Mac app (SlapMac-style)",
+      "category": "Mac OS-gap utility",
+      "platform": "macOS",
+      "problem": "Fun, shareable novelty",
+      "target_users": "Social audiences",
+      "monetisation": "One-time micro-price",
+      "price_hypothesis": "US$5",
+      "scores": {
+        "legal": 5,
+        "pain": 1,
+        "breadth": 4,
+        "wtp": 1,
+        "recurring": 0,
+        "build": 5,
+        "maint": 5,
+        "distro": 2,
+        "compete": 3,
+        "defend": 0,
+        "synergy": 3,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "feeder",
+      "evidence": [
+        {
+          "url": "https://casedistillery.com/blog/issue-020",
+          "note": "SlapMac: $5 Mac novelty app, ~$5k in 72h from one reel to existing audience"
+        }
+      ],
+      "competitors": [],
+      "notes": "Only works with an existing audience; spiky, not a business.",
+      "total": 57.6,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 57.6,
+          "scores": {
+            "legal": 5,
+            "pain": 1,
+            "breadth": 4,
+            "wtp": 1,
+            "recurring": 0,
+            "build": 5,
+            "maint": 5,
+            "distro": 2,
+            "compete": 3,
+            "defend": 0,
+            "synergy": 3,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "saas-bulk-exporter-pattern",
+      "title": "Bulk exporter for a popular SaaS that lacks one (official API)",
+      "category": "SaaS missing-button integration",
+      "platform": "Chrome ext / web app",
+      "problem": "Popular tools (meeting recorders, design, forms, survey, newsletter platforms) lack bulk export/backup; users do it one by one",
+      "target_users": "Business users of the target SaaS (85% business emails in TranscriptExporter case)",
+      "monetisation": "One-time + small sync subscription",
+      "price_hypothesis": "US$19-39 one-time; US$5-9/mo auto-sync",
+      "scores": {
+        "legal": 4,
+        "pain": 4,
+        "breadth": 3,
+        "wtp": 4,
+        "recurring": 3,
+        "build": 4,
+        "maint": 3,
+        "distro": 5,
+        "compete": 4,
+        "defend": 2,
+        "synergy": 5,
+        "platform": 2
+      },
+      "kill_flags": [],
+      "status": "shortlist",
+      "evidence": [
+        {
+          "url": "https://indiehacker.news/post/chrome-extension-20k-2-month-genie-3-worlds-human-effort/",
+          "note": "TranscriptExporter: 822 sales at $29 + $6.99/mo tier, ~$20k in 5 months; rebuilt on official Fathom API"
+        },
+        {
+          "url": "https://www.andystearman.com/work/design-exporter",
+          "note": "DesignExporter: Canva bulk export via approved Connect API (same founder playbook)"
+        }
+      ],
+      "competitors": [
+        "Varies per target; often none"
+      ],
+      "notes": "Template idea: repeat per target. Use official APIs/OAuth only; never scrape against ToS. Aim to get listed as the vendor's integration partner.",
+      "total": 74.8,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 74.8,
+          "scores": {
+            "legal": 4,
+            "pain": 4,
+            "breadth": 3,
+            "wtp": 4,
+            "recurring": 3,
+            "build": 4,
+            "maint": 3,
+            "distro": 5,
+            "compete": 4,
+            "defend": 2,
+            "synergy": 5,
+            "platform": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "saas-newsletter-backup",
+      "title": "Newsletter archive backup/export (Substack/beehiiv/ConvertKit)",
+      "category": "SaaS missing-button integration",
+      "platform": "Web app",
+      "problem": "Writers want portable archives and subscriber-safe backups",
+      "target_users": "Newsletter creators",
+      "monetisation": "Subscription",
+      "price_hypothesis": "US$5/mo or US$39/yr",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 2,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 4,
+        "maint": 3,
+        "distro": 4,
+        "compete": 4,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 2
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [],
+      "notes": "Subscriber lists are personal information: keep exports client-side or never store them.",
+      "total": 67.4,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 67.4,
+          "scores": {
+            "legal": 4,
+            "pain": 3,
+            "breadth": 2,
+            "wtp": 3,
+            "recurring": 4,
+            "build": 4,
+            "maint": 3,
+            "distro": 4,
+            "compete": 4,
+            "defend": 2,
+            "synergy": 4,
+            "platform": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai-chat-organiser",
+      "title": "Folders/search/export for ChatGPT, Claude, Gemini",
+      "category": "SaaS missing-button integration",
+      "platform": "Chrome ext",
+      "problem": "Chat history is unsearchable and unorganised",
+      "target_users": "Heavy AI users",
+      "monetisation": "Freemium subscription",
+      "price_hypothesis": "US$4-10/mo",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 4,
+        "maint": 2,
+        "distro": 4,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 1
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [
+        {
+          "url": "https://www.indiehackers.com/product/easy-folders/6-months-post-launch-my-chrome-extension-has-hit-3-700-in-mrr-and-42-000-in-total-revenue--O3qs28VAnAkcJw0j--M",
+          "note": "Easy Folders: ChatGPT/Claude organiser $3.7k MRR, $42k total in 6 months"
+        },
+        {
+          "url": "https://trustmrr.com/startup/ai-toolbox",
+          "note": "AI Toolbox: ~$24k last-30-day revenue, organic SEO, no chat content leaves browser"
+        }
+      ],
+      "competitors": [
+        "Easy Folders",
+        "AI Toolbox",
+        "Superpower ChatGPT",
+        "native projects/folders"
+      ],
+      "notes": "Proven revenue but saturated, and the AI vendors keep shipping these features natively; DOM breakage constant.",
+      "total": 65.2,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 65.2,
+          "scores": {
+            "legal": 4,
+            "pain": 3,
+            "breadth": 5,
+            "wtp": 3,
+            "recurring": 4,
+            "build": 4,
+            "maint": 2,
+            "distro": 4,
+            "compete": 1,
+            "defend": 1,
+            "synergy": 4,
+            "platform": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "tab-session-projects",
+      "title": "Tab/session saver by project",
+      "category": "Browser productivity",
+      "platform": "Chrome ext",
+      "problem": "Tab overload",
+      "target_users": "Knowledge workers",
+      "monetisation": "Freemium",
+      "price_hypothesis": "US$3-5/mo",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 2,
+        "recurring": 3,
+        "build": 4,
+        "maint": 3,
+        "distro": 3,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 3,
+        "platform": 2
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "OneTab",
+        "Workona",
+        "Arc/Chrome tab groups"
+      ],
+      "notes": "",
+      "total": 64.2,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 64.2,
+          "scores": {
+            "legal": 5,
+            "pain": 3,
+            "breadth": 5,
+            "wtp": 2,
+            "recurring": 3,
+            "build": 4,
+            "maint": 3,
+            "distro": 3,
+            "compete": 1,
+            "defend": 1,
+            "synergy": 3,
+            "platform": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "canva-figma-batch-export",
+      "title": "Batch asset export/rename for design tools",
+      "category": "SaaS missing-button integration",
+      "platform": "Figma plugin / Canva app",
+      "problem": "Exporting many frames/designs with correct names and sizes is manual",
+      "target_users": "Designers, social media managers",
+      "monetisation": "One-time or subscription via plugin checkout",
+      "price_hypothesis": "US$5-10/mo",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 4,
+        "maint": 3,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 2
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [
+        {
+          "url": "https://stealwhatworks.com/blogs/news/figma-plugins-still-make-money-now",
+          "note": "Figma native checkout takes 15%; pro recurring workflows beat generic utilities"
+        },
+        {
+          "url": "https://www.andystearman.com/work/design-exporter",
+          "note": "DesignExporter: Canva bulk export via approved Connect API (same founder playbook)"
+        }
+      ],
+      "competitors": [
+        "Many free Figma export plugins",
+        "DesignExporter"
+      ],
+      "notes": "",
+      "total": 69.4,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 69.4,
+          "scores": {
+            "legal": 5,
+            "pain": 3,
+            "breadth": 3,
+            "wtp": 3,
+            "recurring": 3,
+            "build": 4,
+            "maint": 3,
+            "distro": 4,
+            "compete": 3,
+            "defend": 2,
+            "synergy": 4,
+            "platform": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "gcal-time-audit",
+      "title": "Calendar time audit: where did my week go",
+      "category": "Workspace add-on",
+      "platform": "Google Workspace / web",
+      "problem": "People and managers can't see how meeting time splits across projects/clients without manual tallying",
+      "target_users": "Managers, consultants, freelancers billing by client",
+      "monetisation": "Subscription",
+      "price_hypothesis": "US$4-8/mo per user",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 3
+      },
+      "kill_flags": [],
+      "status": "shortlist",
+      "evidence": [],
+      "competitors": [
+        "Clockwise",
+        "Reclaim (stats)",
+        "Timing (Mac)"
+      ],
+      "notes": "Read-only calendar scope (sensitive, not restricted): no CASA. Could also be a Mac app reading local Calendar.",
+      "total": 75.2,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 75.2,
+          "scores": {
+            "legal": 5,
+            "pain": 3,
+            "breadth": 4,
+            "wtp": 3,
+            "recurring": 4,
+            "build": 4,
+            "maint": 4,
+            "distro": 4,
+            "compete": 3,
+            "defend": 2,
+            "synergy": 4,
+            "platform": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "sheets-data-cleaner-au",
+      "title": "Sheets/CSV contact & address cleaner (AU/NZ formats)",
+      "category": "Workspace add-on",
+      "platform": "Google Sheets / web",
+      "problem": "Messy phone numbers, postcodes, states, names, duplicates in club/business lists",
+      "target_users": "Small businesses, club secretaries, event organisers",
+      "monetisation": "Subscription or credits",
+      "price_hypothesis": "US$5-9/mo",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 3
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [
+        {
+          "url": "https://www.starterstory.com/stories/sync2sheets-give-notion-the-superpowers-of-google-sheets",
+          "note": "Sync2Sheets: Sheets add-on for Notion, $9k MRR, Marketplace search-driven"
+        },
+        {
+          "url": "https://vancelucas.com/blog/how-i-built-a-google-sheets-extension-making-1-6k-mrr/",
+          "note": "BudgetSheet: Sheets extension $1.6k MRR"
+        }
+      ],
+      "competitors": [
+        "Power Tools add-on",
+        "Remove Duplicates add-on"
+      ],
+      "notes": "Process in-sheet; do not store lists server-side (Privacy Act/APP).",
+      "total": 68.8,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 68.8,
+          "scores": {
+            "legal": 4,
+            "pain": 3,
+            "breadth": 3,
+            "wtp": 3,
+            "recurring": 3,
+            "build": 4,
+            "maint": 4,
+            "distro": 4,
+            "compete": 3,
+            "defend": 2,
+            "synergy": 4,
+            "platform": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "forms-certificates",
+      "title": "Workshop certificates/badges from Google Forms or CSV",
+      "category": "Workspace add-on",
+      "platform": "Google Workspace / web",
+      "problem": "Trainers and event hosts hand-make attendance certificates",
+      "target_users": "Trainers, RTO-adjacent workshops, clubs, schools (adult attendees)",
+      "monetisation": "Subscription / credits",
+      "price_hypothesis": "US$7-12/mo",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 2,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 3
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "Certifier",
+        "Autocrat (free)",
+        "Canva"
+      ],
+      "notes": "Avoid emailing via Gmail restricted scope; generate PDFs/zip or send via own transactional mail.",
+      "total": 70.8,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 70.8,
+          "scores": {
+            "legal": 5,
+            "pain": 3,
+            "breadth": 3,
+            "wtp": 3,
+            "recurring": 3,
+            "build": 4,
+            "maint": 4,
+            "distro": 4,
+            "compete": 2,
+            "defend": 2,
+            "synergy": 4,
+            "platform": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "sheets-mailmerge-gmail",
+      "title": "Sheets to Gmail mail-merge / PDF invoices",
+      "category": "Workspace add-on",
+      "platform": "Google Workspace",
+      "problem": "Personalised bulk emails/PDFs",
+      "target_users": "SMBs",
+      "monetisation": "Subscription",
+      "price_hypothesis": "US$10-20/mo",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 4,
+        "recurring": 4,
+        "build": 3,
+        "maint": 3,
+        "distro": 4,
+        "compete": 1,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 1
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [
+        {
+          "url": "https://developers.google.com/identity/protocols/oauth2/production-readiness/restricted-scope-verification",
+          "note": "Gmail/Drive restricted scopes need annual third-party CASA assessment"
+        }
+      ],
+      "competitors": [
+        "YAMM",
+        "GMass",
+        "Mailmeteor"
+      ],
+      "notes": "Gmail send scope is restricted -> annual CASA assessment; spam-law exposure (Spam Act 2003). Saturated.",
+      "total": 62.2,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 62.2,
+          "scores": {
+            "legal": 3,
+            "pain": 3,
+            "breadth": 4,
+            "wtp": 4,
+            "recurring": 4,
+            "build": 3,
+            "maint": 3,
+            "distro": 4,
+            "compete": 1,
+            "defend": 2,
+            "synergy": 3,
+            "platform": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "xero-invoice-chaser-lite",
+      "title": "Polite overdue-invoice reminders on top of Xero (sole traders)",
+      "category": "SMB admin papercut",
+      "platform": "Web app + Xero App Store",
+      "problem": "Sole traders hate chasing late payers; Xero's built-in reminders are basic",
+      "target_users": "AU/NZ/UK sole traders and micro businesses on Xero",
+      "monetisation": "Subscription",
+      "price_hypothesis": "A$12-19/mo",
+      "scores": {
+        "legal": 4,
+        "pain": 5,
+        "breadth": 4,
+        "wtp": 5,
+        "recurring": 5,
+        "build": 3,
+        "maint": 3,
+        "distro": 4,
+        "compete": 2,
+        "defend": 3,
+        "synergy": 3,
+        "platform": 3
+      },
+      "kill_flags": [],
+      "status": "shortlist",
+      "evidence": [
+        {
+          "url": "https://www.reddit.com/r/ausbusiness/comments/1vg6q8z/australian_tradie_business_owners_which_admin/",
+          "note": "AU tradies: fragmented quote->invoice->reminder admin is top frustration (search summary; thread not directly readable)"
+        }
+      ],
+      "competitors": [
+        "Chaser",
+        "Paidnice (AU)",
+        "Xero built-in reminders"
+      ],
+      "notes": "Not financial advice; it sends the user's own reminders. Comply with Spam Act (transactional OK). Xero density in AU is a home advantage.",
+      "total": 77.4,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 77.4,
+          "scores": {
+            "legal": 4,
+            "pain": 5,
+            "breadth": 4,
+            "wtp": 5,
+            "recurring": 5,
+            "build": 3,
+            "maint": 3,
+            "distro": 4,
+            "compete": 2,
+            "defend": 3,
+            "synergy": 3,
+            "platform": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "tradie-job-photo-report",
+      "title": "Job-site photo log to branded PDF report (before/after, timestamped)",
+      "category": "SMB admin papercut",
+      "platform": "iOS/Android (PWA ok)",
+      "problem": "Tradies take photos for proof of work/defects but send messy camera-roll dumps",
+      "target_users": "Tradies, cleaners, property maintenance, inspectors",
+      "monetisation": "Subscription",
+      "price_hypothesis": "A$9-15/mo",
+      "scores": {
+        "legal": 4,
+        "pain": 4,
+        "breadth": 3,
+        "wtp": 4,
+        "recurring": 4,
+        "build": 3,
+        "maint": 3,
+        "distro": 3,
+        "compete": 2,
+        "defend": 3,
+        "synergy": 4,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [
+        {
+          "url": "https://www.reddit.com/r/ausbusiness/comments/1vg6q8z/australian_tradie_business_owners_which_admin/",
+          "note": "AU tradies: fragmented quote->invoice->reminder admin is top frustration (search summary; thread not directly readable)"
+        }
+      ],
+      "competitors": [
+        "CompanyCam",
+        "ServiceM8 (photos)",
+        "Fergus"
+      ],
+      "notes": "Position as documentation, not an inspection/compliance certificate.",
+      "total": 69.8,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 69.8,
+          "scores": {
+            "legal": 4,
+            "pain": 4,
+            "breadth": 3,
+            "wtp": 4,
+            "recurring": 4,
+            "build": 3,
+            "maint": 3,
+            "distro": 3,
+            "compete": 2,
+            "defend": 3,
+            "synergy": 4,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "electrician-point-quoter",
+      "title": "Price-per-point quote builder for electricians/plumbers",
+      "category": "SMB admin papercut",
+      "platform": "Web/mobile",
+      "problem": "Generic job tools quote poorly for per-point pricing with photos",
+      "target_users": "AU electricians/plumbers (sole traders)",
+      "monetisation": "Subscription",
+      "price_hypothesis": "A$15-25/mo",
+      "scores": {
+        "legal": 4,
+        "pain": 4,
+        "breadth": 2,
+        "wtp": 4,
+        "recurring": 5,
+        "build": 3,
+        "maint": 2,
+        "distro": 2,
+        "compete": 2,
+        "defend": 3,
+        "synergy": 2,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [
+        {
+          "url": "https://www.reddit.com/r/AusElectricians/comments/1sdodaf/quoting_system/",
+          "note": "Electricians find ServiceM8 quoting weak for price-per-point and photos (search summary)"
+        }
+      ],
+      "competitors": [
+        "ServiceM8",
+        "Fergus",
+        "Quotient",
+        "Tradify"
+      ],
+      "notes": "Narrow but high WTP; needs real tradie partners to design.",
+      "total": 64.0,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 64.0,
+          "scores": {
+            "legal": 4,
+            "pain": 4,
+            "breadth": 2,
+            "wtp": 4,
+            "recurring": 5,
+            "build": 3,
+            "maint": 2,
+            "distro": 2,
+            "compete": 2,
+            "defend": 3,
+            "synergy": 2,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "shopify-cutoff-banner",
+      "title": "Shipping cut-off & holiday-closure banner (AU couriers)",
+      "category": "Shopify app",
+      "platform": "Shopify",
+      "problem": "Merchants hand-edit banners for Christmas/AusPost cut-offs and closures every year",
+      "target_users": "Small Shopify merchants, AU first",
+      "monetisation": "Subscription (Shopify billing)",
+      "price_hypothesis": "US$4-9/mo",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 3
+      },
+      "kill_flags": [],
+      "status": "shortlist",
+      "evidence": [
+        {
+          "url": "https://www.adsx.com/blog/how-much-shopify-app-developers-make",
+          "note": "Shopify: most apps earn little; solo middle $2k-20k MRR after 12+ months; 0% rev share on first $1M"
+        }
+      ],
+      "competitors": [
+        "Many countdown/banner apps"
+      ],
+      "notes": "Never promise delivery dates; show merchant-entered cut-offs only (ACL misleading-claims risk sits with merchant text).",
+      "total": 72.6,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 72.6,
+          "scores": {
+            "legal": 5,
+            "pain": 3,
+            "breadth": 3,
+            "wtp": 3,
+            "recurring": 4,
+            "build": 4,
+            "maint": 4,
+            "distro": 4,
+            "compete": 3,
+            "defend": 2,
+            "synergy": 3,
+            "platform": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "shopify-reorder-po",
+      "title": "Low-stock reorder sheet & supplier PO generator",
+      "category": "Shopify app",
+      "platform": "Shopify",
+      "problem": "Tiny merchants reorder from memory/spreadsheets",
+      "target_users": "Small product merchants",
+      "monetisation": "Subscription",
+      "price_hypothesis": "US$9-19/mo",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 4,
+        "recurring": 5,
+        "build": 3,
+        "maint": 3,
+        "distro": 4,
+        "compete": 3,
+        "defend": 3,
+        "synergy": 3,
+        "platform": 3
+      },
+      "kill_flags": [],
+      "status": "shortlist",
+      "evidence": [
+        {
+          "url": "https://www.adsx.com/blog/how-much-shopify-app-developers-make",
+          "note": "Shopify: most apps earn little; solo middle $2k-20k MRR after 12+ months; 0% rev share on first $1M"
+        }
+      ],
+      "competitors": [
+        "Stocky (discontinued by Shopify)",
+        "Prediko",
+        "Inventory Planner"
+      ],
+      "notes": "Shopify sunset its free Stocky app, leaving a gap; verify current status each run.",
+      "total": 73.8,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 73.8,
+          "scores": {
+            "legal": 5,
+            "pain": 3,
+            "breadth": 3,
+            "wtp": 4,
+            "recurring": 5,
+            "build": 3,
+            "maint": 3,
+            "distro": 4,
+            "compete": 3,
+            "defend": 3,
+            "synergy": 3,
+            "platform": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "club-volunteer-roster",
+      "title": "Club volunteer/canteen roster with swap and reminders",
+      "category": "Community admin",
+      "platform": "Web/PWA",
+      "problem": "Club secretaries chase volunteers via group chats and spreadsheets",
+      "target_users": "Community sports/hobby clubs, schools' P&C",
+      "monetisation": "Subscription per club",
+      "price_hypothesis": "A$15-29/mo",
+      "scores": {
+        "legal": 3,
+        "pain": 4,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 5,
+        "build": 3,
+        "maint": 2,
+        "distro": 3,
+        "compete": 2,
+        "defend": 3,
+        "synergy": 3,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [
+        {
+          "url": "https://clubvolunteer.com.au/pricing",
+          "note": "ClubVolunteer (AU) charges from $29/mo for club volunteer rosters: proves WTP, also a competitor"
+        }
+      ],
+      "competitors": [
+        "ClubVolunteer",
+        "ClubApp",
+        "RosterMeIn (free)",
+        "SignUpGenius"
+      ],
+      "notes": "Collect adults only; children's data and Working-with-Children contexts raise risk.",
+      "total": 63.6,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 63.6,
+          "scores": {
+            "legal": 3,
+            "pain": 4,
+            "breadth": 3,
+            "wtp": 3,
+            "recurring": 5,
+            "build": 3,
+            "maint": 2,
+            "distro": 3,
+            "compete": 2,
+            "defend": 3,
+            "synergy": 3,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "event-run-sheet",
+      "title": "Event run-sheet / cue-sheet builder with live share link",
+      "category": "Events & occasions",
+      "platform": "Web app",
+      "problem": "Run sheets live in Word/Excel; last-minute changes don't reach crew",
+      "target_users": "Event organisers, wedding coordinators, MCs, conference volunteers",
+      "monetisation": "Per-event + subscription for pros",
+      "price_hypothesis": "US$15/event or US$12/mo",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "status": "shortlist",
+      "evidence": [],
+      "competitors": [
+        "Google Docs",
+        "Shoflo",
+        "Planning Pod"
+      ],
+      "notes": "",
+      "total": 74.0,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 74.0,
+          "scores": {
+            "legal": 5,
+            "pain": 3,
+            "breadth": 3,
+            "wtp": 3,
+            "recurring": 3,
+            "build": 4,
+            "maint": 4,
+            "distro": 4,
+            "compete": 3,
+            "defend": 2,
+            "synergy": 4,
+            "platform": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "event-badge-checkin",
+      "title": "CSV to name badges + QR check-in for meetups",
+      "category": "Events & occasions",
+      "platform": "Web app (local-first)",
+      "problem": "Organisers hand-make badges and paper check-in lists",
+      "target_users": "Meetup/workshop organisers",
+      "monetisation": "Per-event",
+      "price_hypothesis": "US$9-19/event",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 2,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "Luma (free check-in)",
+        "Avery templates"
+      ],
+      "notes": "Process attendee lists locally.",
+      "total": 69.2,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 69.2,
+          "scores": {
+            "legal": 4,
+            "pain": 3,
+            "breadth": 3,
+            "wtp": 3,
+            "recurring": 2,
+            "build": 4,
+            "maint": 4,
+            "distro": 4,
+            "compete": 3,
+            "defend": 2,
+            "synergy": 4,
+            "platform": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "wedding-seating-planner",
+      "title": "Drag-and-drop seating chart planner",
+      "category": "Events & occasions",
+      "platform": "Web app",
+      "problem": "Seating charts are painful, with constraints (couples, feuds, dietary flags)",
+      "target_users": "Couples, event planners",
+      "monetisation": "One-time per event; pro subscription",
+      "price_hypothesis": "US$19-39 one-time",
+      "scores": {
+        "legal": 5,
+        "pain": 4,
+        "breadth": 3,
+        "wtp": 4,
+        "recurring": 1,
+        "build": 4,
+        "maint": 4,
+        "distro": 5,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "status": "shortlist",
+      "evidence": [],
+      "competitors": [
+        "AllSeated",
+        "Table Planner",
+        "Zola (free)"
+      ],
+      "notes": "Strong search intent, episodic, refundable per ACL.",
+      "total": 76.2,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 76.2,
+          "scores": {
+            "legal": 5,
+            "pain": 4,
+            "breadth": 3,
+            "wtp": 4,
+            "recurring": 1,
+            "build": 4,
+            "maint": 4,
+            "distro": 5,
+            "compete": 3,
+            "defend": 2,
+            "synergy": 3,
+            "platform": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "caption-subtitle-fixer",
+      "title": "Subtitle/caption fixer (SRT/VTT shift, merge, convert)",
+      "category": "Local-first file/media",
+      "platform": "Web (WASM)",
+      "problem": "Out-of-sync or wrong-format captions",
+      "target_users": "Video editors, teachers, creators",
+      "monetisation": "Freemium web tool; ads or small one-time",
+      "price_hypothesis": "US$5-9",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 2,
+        "recurring": 1,
+        "build": 5,
+        "maint": 5,
+        "distro": 5,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 5,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "status": "feeder",
+      "evidence": [
+        {
+          "url": "https://website-worth.org/tool-based-website-30-day-case-study/",
+          "note": "14-tool site: $318 month one, 71% organic"
+        }
+      ],
+      "competitors": [],
+      "notes": "Great SEO feeder tool for a portfolio, weak standalone revenue.",
+      "total": 73.2,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 73.2,
+          "scores": {
+            "legal": 5,
+            "pain": 3,
+            "breadth": 3,
+            "wtp": 2,
+            "recurring": 1,
+            "build": 5,
+            "maint": 5,
+            "distro": 5,
+            "compete": 2,
+            "defend": 1,
+            "synergy": 5,
+            "platform": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "pdf-local-toolkit",
+      "title": "Local in-browser PDF toolkit (no upload)",
+      "category": "Local-first file/media",
+      "platform": "Web (WASM)",
+      "problem": "People upload sensitive PDFs to unknown sites to merge/compress",
+      "target_users": "Everyone",
+      "monetisation": "Freemium; one-time pro",
+      "price_hypothesis": "US$5-9/mo or US$29",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 5,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "iLovePDF",
+        "Smallpdf",
+        "Stirling PDF",
+        "macOS Preview"
+      ],
+      "notes": "Redaction must truly remove content or liability rises; saturated.",
+      "total": 71.8,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 71.8,
+          "scores": {
+            "legal": 4,
+            "pain": 3,
+            "breadth": 5,
+            "wtp": 3,
+            "recurring": 3,
+            "build": 4,
+            "maint": 4,
+            "distro": 4,
+            "compete": 1,
+            "defend": 1,
+            "synergy": 5,
+            "platform": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "photo-exif-scrubber",
+      "title": "Photo location/EXIF scrubber before posting or selling",
+      "category": "Local-first file/media",
+      "platform": "iOS / web",
+      "problem": "Sellers and posters leak home GPS in photos",
+      "target_users": "Marketplace sellers, parents posting online",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$3-5",
+      "scores": {
+        "legal": 5,
+        "pain": 2,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 1,
+        "build": 5,
+        "maint": 5,
+        "distro": 4,
+        "compete": 3,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "feeder",
+      "evidence": [],
+      "competitors": [],
+      "notes": "Low WTP; good free funnel.",
+      "total": 69.6,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 69.6,
+          "scores": {
+            "legal": 5,
+            "pain": 2,
+            "breadth": 4,
+            "wtp": 2,
+            "recurring": 1,
+            "build": 5,
+            "maint": 5,
+            "distro": 4,
+            "compete": 3,
+            "defend": 1,
+            "synergy": 4,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "listing-photo-batch",
+      "title": "Batch rename/resize/watermark photos for listings",
+      "category": "Local-first file/media",
+      "platform": "Mac / web",
+      "problem": "eBay/Etsy/real-estate listings need consistent sizes and names",
+      "target_users": "Online sellers, real-estate admins",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$15-19",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 1,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 5,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "Photoshop actions",
+        "BatchPhoto"
+      ],
+      "notes": "",
+      "total": 71.8,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 71.8,
+          "scores": {
+            "legal": 5,
+            "pain": 3,
+            "breadth": 3,
+            "wtp": 3,
+            "recurring": 1,
+            "build": 4,
+            "maint": 4,
+            "distro": 4,
+            "compete": 3,
+            "defend": 2,
+            "synergy": 5,
+            "platform": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "appstore-screenshot-maker",
+      "title": "App Store screenshot & preview generator",
+      "category": "Indie developer tools",
+      "platform": "Web / Mac",
+      "problem": "Making localised, framed App Store screenshots per device size is tedious",
+      "target_users": "Indie iOS/Mac devs (the portfolio's own peers)",
+      "monetisation": "Subscription or one-time",
+      "price_hypothesis": "US$9/mo or US$49",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 2,
+        "wtp": 4,
+        "recurring": 3,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 2,
+        "defend": 2,
+        "synergy": 5,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "status": "shortlist",
+      "evidence": [],
+      "competitors": [
+        "AppLaunchpad",
+        "Screenshots.pro",
+        "Previewed"
+      ],
+      "notes": "Dogfood: you need it for your own apps.",
+      "total": 74.2,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 74.2,
+          "scores": {
+            "legal": 5,
+            "pain": 3,
+            "breadth": 2,
+            "wtp": 4,
+            "recurring": 3,
+            "build": 4,
+            "maint": 4,
+            "distro": 4,
+            "compete": 2,
+            "defend": 2,
+            "synergy": 5,
+            "platform": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "indie-licence-updates",
+      "title": "Licence keys + update feed for direct-sale Mac apps",
+      "category": "Indie developer tools",
+      "platform": "SaaS",
+      "problem": "Direct-sale Mac devs glue Paddle/Dodo webhooks, licence checks, Sparkle feeds by hand",
+      "target_users": "Indie Mac devs",
+      "monetisation": "Subscription",
+      "price_hypothesis": "US$9-29/mo",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 2,
+        "wtp": 4,
+        "recurring": 5,
+        "build": 3,
+        "maint": 2,
+        "distro": 3,
+        "compete": 3,
+        "defend": 3,
+        "synergy": 5,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "Keygen",
+        "Lemon Squeezy licences",
+        "Paddle"
+      ],
+      "notes": "Build it for yourself first; productise later. Uptime is a support burden.",
+      "total": 68.2,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 68.2,
+          "scores": {
+            "legal": 4,
+            "pain": 3,
+            "breadth": 2,
+            "wtp": 4,
+            "recurring": 5,
+            "build": 3,
+            "maint": 2,
+            "distro": 3,
+            "compete": 3,
+            "defend": 3,
+            "synergy": 5,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "dev-env-diff",
+      "title": "Local .env diff/validator",
+      "category": "Indie developer tools",
+      "platform": "CLI / Mac",
+      "problem": "Missing env vars break deploys",
+      "target_users": "Developers",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$9",
+      "scores": {
+        "legal": 4,
+        "pain": 2,
+        "breadth": 2,
+        "wtp": 2,
+        "recurring": 1,
+        "build": 5,
+        "maint": 5,
+        "distro": 3,
+        "compete": 3,
+        "defend": 1,
+        "synergy": 4,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "status": "feeder",
+      "evidence": [],
+      "competitors": [],
+      "notes": "Low WTP; open-source more likely.",
+      "total": 62.0,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 62.0,
+          "scores": {
+            "legal": 4,
+            "pain": 2,
+            "breadth": 2,
+            "wtp": 2,
+            "recurring": 1,
+            "build": 5,
+            "maint": 5,
+            "distro": 3,
+            "compete": 3,
+            "defend": 1,
+            "synergy": 4,
+            "platform": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai-show-notes-byok",
+      "title": "Podcast/video show-notes & chapters (bring your own key)",
+      "category": "Creator tools",
+      "platform": "Web / Mac",
+      "problem": "Writing show notes/chapters takes an hour per episode",
+      "target_users": "Podcasters, YouTubers",
+      "monetisation": "One-time app (BYOK) or subscription",
+      "price_hypothesis": "US$29 or US$9/mo",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 4,
+        "maint": 3,
+        "distro": 3,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 3,
+        "platform": 3
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "Descript",
+        "Castmagic",
+        "Riverside"
+      ],
+      "notes": "Saturated by platforms adding it natively.",
+      "total": 62.4,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 62.4,
+          "scores": {
+            "legal": 4,
+            "pain": 3,
+            "breadth": 3,
+            "wtp": 3,
+            "recurring": 4,
+            "build": 4,
+            "maint": 3,
+            "distro": 3,
+            "compete": 1,
+            "defend": 1,
+            "synergy": 3,
+            "platform": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "yt-title-thumbnail-preview",
+      "title": "YouTube title/thumbnail preview mockups",
+      "category": "Creator tools",
+      "platform": "Web / Chrome ext",
+      "problem": "Creators can't see how a thumbnail reads in the real feed before publishing",
+      "target_users": "YouTubers",
+      "monetisation": "Subscription",
+      "price_hypothesis": "US$5-9/mo",
+      "scores": {
+        "legal": 5,
+        "pain": 2,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 4,
+        "maint": 3,
+        "distro": 3,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 3,
+        "platform": 2
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "TubeBuddy",
+        "VidIQ",
+        "YouTube native A/B tests"
+      ],
+      "notes": "",
+      "total": 62.0,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 62.0,
+          "scores": {
+            "legal": 5,
+            "pain": 2,
+            "breadth": 3,
+            "wtp": 3,
+            "recurring": 3,
+            "build": 4,
+            "maint": 3,
+            "distro": 3,
+            "compete": 2,
+            "defend": 1,
+            "synergy": 3,
+            "platform": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "home-maintenance-reminders",
+      "title": "Home maintenance reminders (filters, gutters, smoke alarm tests, pool)",
+      "category": "Home & household",
+      "platform": "iOS / web",
+      "problem": "Recurring home chores get forgotten; no simple, shared, seasonal schedule",
+      "target_users": "Homeowners and renters",
+      "monetisation": "One-time or small yearly",
+      "price_hypothesis": "US$9 one-time or US$9/yr",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 2,
+        "recurring": 3,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "HomeZada",
+        "Centriq",
+        "calendar reminders"
+      ],
+      "notes": "Reminders only; don't give safety/compliance advice.",
+      "total": 67.8,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 67.8,
+          "scores": {
+            "legal": 4,
+            "pain": 3,
+            "breadth": 5,
+            "wtp": 2,
+            "recurring": 3,
+            "build": 4,
+            "maint": 4,
+            "distro": 3,
+            "compete": 3,
+            "defend": 2,
+            "synergy": 3,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "warranty-receipt-vault",
+      "title": "Warranty & receipt vault with expiry reminders (local-first)",
+      "category": "Home & household",
+      "platform": "iOS",
+      "problem": "Receipts fade, warranties lapse unnoticed; ACL rights need proof of purchase",
+      "target_users": "Consumers",
+      "monetisation": "One-time + optional iCloud sync",
+      "price_hypothesis": "US$9-15",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 2,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "Slice (closed)",
+        "Evernote",
+        "Apple Wallet partial"
+      ],
+      "notes": "Store on-device/iCloud only to avoid holding personal data.",
+      "total": 68.2,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 68.2,
+          "scores": {
+            "legal": 4,
+            "pain": 3,
+            "breadth": 5,
+            "wtp": 3,
+            "recurring": 2,
+            "build": 4,
+            "maint": 4,
+            "distro": 3,
+            "compete": 3,
+            "defend": 2,
+            "synergy": 3,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "household-chore-roster",
+      "title": "Shared household/share-house chore roster",
+      "category": "Home & household",
+      "platform": "iOS / web",
+      "problem": "Share-house and family chore fights; whiteboards fail",
+      "target_users": "Share-houses, families",
+      "monetisation": "Freemium",
+      "price_hypothesis": "US$2-4/mo",
+      "scores": {
+        "legal": 5,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 3,
+        "build": 4,
+        "maint": 3,
+        "distro": 3,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 2,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "Tody",
+        "OurHome",
+        "Sweepy"
+      ],
+      "notes": "",
+      "total": 64.8,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 64.8,
+          "scores": {
+            "legal": 5,
+            "pain": 3,
+            "breadth": 4,
+            "wtp": 2,
+            "recurring": 3,
+            "build": 4,
+            "maint": 3,
+            "distro": 3,
+            "compete": 2,
+            "defend": 1,
+            "synergy": 2,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "pet-care-shared-log",
+      "title": "Shared pet care log (fed? walked? meds given?)",
+      "category": "Pets",
+      "platform": "iOS",
+      "problem": "Households double-feed or miss doses",
+      "target_users": "Pet owners",
+      "monetisation": "One-time or small subscription",
+      "price_hypothesis": "US$5-10",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 3,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 2,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "Pet care apps (many)"
+      ],
+      "notes": "Log only; no dosing advice.",
+      "total": 65.2,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 65.2,
+          "scores": {
+            "legal": 4,
+            "pain": 3,
+            "breadth": 4,
+            "wtp": 2,
+            "recurring": 3,
+            "build": 4,
+            "maint": 4,
+            "distro": 3,
+            "compete": 3,
+            "defend": 2,
+            "synergy": 2,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "rental-condition-report",
+      "title": "Tenant entry/exit condition-report photo kit (AU states)",
+      "category": "Home & household",
+      "platform": "iOS / web",
+      "problem": "Tenants lose bond disputes for lack of dated photos tied to each room/item",
+      "target_users": "AU renters (and later NZ/UK)",
+      "monetisation": "One-time per move",
+      "price_hypothesis": "A$9-15",
+      "scores": {
+        "legal": 3,
+        "pain": 4,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 1,
+        "build": 4,
+        "maint": 4,
+        "distro": 4,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "Generic camera apps",
+        "agency apps"
+      ],
+      "notes": "Documentation tool only; never claim legal effect or give tenancy advice.",
+      "total": 67.2,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 67.2,
+          "scores": {
+            "legal": 3,
+            "pain": 4,
+            "breadth": 4,
+            "wtp": 3,
+            "recurring": 1,
+            "build": 4,
+            "maint": 4,
+            "distro": 4,
+            "compete": 3,
+            "defend": 2,
+            "synergy": 4,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "moving-house-checklist-au",
+      "title": "Moving-house checklist with AU address-change list",
+      "category": "Home & household",
+      "platform": "Web",
+      "problem": "People forget to update rego, Medicare, electoral roll, utilities",
+      "target_users": "AU movers",
+      "monetisation": "Free tool + affiliate",
+      "price_hypothesis": "Affiliate/ads",
+      "scores": {
+        "legal": 4,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 1,
+        "recurring": 1,
+        "build": 5,
+        "maint": 4,
+        "distro": 5,
+        "compete": 3,
+        "defend": 1,
+        "synergy": 3,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "status": "feeder",
+      "evidence": [],
+      "competitors": [],
+      "notes": "Energy/utility comparison affiliates carry ACCC/disclosure obligations; monetisation weak.",
+      "total": 67.2,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 67.2,
+          "scores": {
+            "legal": 4,
+            "pain": 3,
+            "breadth": 4,
+            "wtp": 1,
+            "recurring": 1,
+            "build": 5,
+            "maint": 4,
+            "distro": 5,
+            "compete": 3,
+            "defend": 1,
+            "synergy": 3,
+            "platform": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "wfh-hours-log-au",
+      "title": "Work-from-home hours log for the ATO fixed-rate method",
+      "category": "AU-specific",
+      "platform": "iOS / Mac menu bar",
+      "problem": "ATO's revised fixed-rate method needs a record of actual WFH hours; people reconstruct it at tax time",
+      "target_users": "AU employees who WFH (millions)",
+      "monetisation": "One-time per year or small yearly",
+      "price_hypothesis": "A$9-15/yr",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 4,
+        "maint": 4,
+        "distro": 5,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 4,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "shortlist",
+      "evidence": [],
+      "competitors": [
+        "Spreadsheets",
+        "ATO app (myDeductions)",
+        "generic timesheet apps"
+      ],
+      "notes": "Record-keeping only, no tax advice (Tax Agent Services Act). Verify ATO rules yearly. Mac menu-bar auto-detect (home Wi-Fi) is a unique angle.",
+      "total": 72.0,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 72.0,
+          "scores": {
+            "legal": 3,
+            "pain": 3,
+            "breadth": 5,
+            "wtp": 3,
+            "recurring": 3,
+            "build": 4,
+            "maint": 4,
+            "distro": 5,
+            "compete": 3,
+            "defend": 2,
+            "synergy": 4,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "car-logbook-au",
+      "title": "12-week car logbook (ATO logbook method)",
+      "category": "AU-specific",
+      "platform": "iOS",
+      "problem": "Logbooks are kept badly or not at all",
+      "target_users": "AU employees/sole traders who drive for work",
+      "monetisation": "Subscription or one-time",
+      "price_hypothesis": "A$15-30/yr",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 4,
+        "wtp": 3,
+        "recurring": 3,
+        "build": 3,
+        "maint": 3,
+        "distro": 4,
+        "compete": 2,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 3
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "Driversnote",
+        "Logbook Me",
+        "ATO myDeductions"
+      ],
+      "notes": "Background location = privacy + battery + App Review scrutiny.",
+      "total": 61.8,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 61.8,
+          "scores": {
+            "legal": 3,
+            "pain": 3,
+            "breadth": 4,
+            "wtp": 3,
+            "recurring": 3,
+            "build": 3,
+            "maint": 3,
+            "distro": 4,
+            "compete": 2,
+            "defend": 2,
+            "synergy": 3,
+            "platform": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "teacher-comment-bank-local",
+      "title": "Report-comment bank & rubric builder (local-only, no student data)",
+      "category": "Education admin",
+      "platform": "Mac/Windows/web local",
+      "problem": "Report-writing season is brutal; teachers won't use tools that upload student data",
+      "target_users": "Teachers",
+      "monetisation": "One-time",
+      "price_hypothesis": "A$19-29",
+      "scores": {
+        "legal": 3,
+        "pain": 4,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 1,
+        "build": 4,
+        "maint": 4,
+        "distro": 3,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 3,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [
+        {
+          "url": "https://www.reddit.com/r/AustralianTeachers/comments/1tfgpqx/teacher_marking_time_saver/",
+          "note": "AU teachers reject third-party tools touching student data (search summary)"
+        }
+      ],
+      "competitors": [
+        "Schools' SIS tools",
+        "ChatGPT"
+      ],
+      "notes": "Keep 100% local; no names leave device. Schools may ban unknown tools.",
+      "total": 62.4,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 62.4,
+          "scores": {
+            "legal": 3,
+            "pain": 4,
+            "breadth": 3,
+            "wtp": 3,
+            "recurring": 1,
+            "build": 4,
+            "maint": 4,
+            "distro": 3,
+            "compete": 3,
+            "defend": 2,
+            "synergy": 3,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "tutor-lesson-admin",
+      "title": "Private tutor/music teacher scheduling + invoicing",
+      "category": "Education admin",
+      "platform": "Web",
+      "problem": "Tutors juggle bookings, reminders and invoices for parents",
+      "target_users": "Private tutors, music teachers",
+      "monetisation": "Subscription",
+      "price_hypothesis": "A$12-20/mo",
+      "scores": {
+        "legal": 3,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 4,
+        "recurring": 5,
+        "build": 3,
+        "maint": 2,
+        "distro": 3,
+        "compete": 1,
+        "defend": 2,
+        "synergy": 2,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "My Music Staff",
+        "TutorBird",
+        "Teachworks"
+      ],
+      "notes": "Minors' details; payments if you add them.",
+      "total": 60.4,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 60.4,
+          "scores": {
+            "legal": 3,
+            "pain": 3,
+            "breadth": 3,
+            "wtp": 4,
+            "recurring": 5,
+            "build": 3,
+            "maint": 2,
+            "distro": 3,
+            "compete": 1,
+            "defend": 2,
+            "synergy": 2,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "game-companion-site",
+      "title": "Game companion map/guide site",
+      "category": "Hobbies & games",
+      "platform": "Web",
+      "problem": "Players need maps/guides for a hot game",
+      "target_users": "Gamers",
+      "monetisation": "Ads",
+      "price_hypothesis": "Ads/donations",
+      "scores": {
+        "legal": 3,
+        "pain": 2,
+        "breadth": 4,
+        "wtp": 1,
+        "recurring": 1,
+        "build": 4,
+        "maint": 3,
+        "distro": 4,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 2,
+        "platform": 2
+      },
+      "kill_flags": [],
+      "status": "feeder",
+      "evidence": [
+        {
+          "url": "https://trustmrr.com/category/utilities",
+          "note": "TrustMRR utilities: Arc Raiders Map companion ~$1.1k/30d; Plate Lookup; SlapMac; How to Convert"
+        }
+      ],
+      "competitors": [],
+      "notes": "Trademark/IP and game-lifecycle risk; short-lived traffic.",
+      "total": 51.2,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 51.2,
+          "scores": {
+            "legal": 3,
+            "pain": 2,
+            "breadth": 4,
+            "wtp": 1,
+            "recurring": 1,
+            "build": 4,
+            "maint": 3,
+            "distro": 4,
+            "compete": 2,
+            "defend": 1,
+            "synergy": 2,
+            "platform": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "tabletop-campaign-tracker",
+      "title": "Tabletop RPG/board-game campaign tracker",
+      "category": "Hobbies & games",
+      "platform": "Web / iPad",
+      "problem": "Session notes, initiative, inventories scattered",
+      "target_users": "Tabletop players/GMs",
+      "monetisation": "Subscription",
+      "price_hypothesis": "US$4-6/mo",
+      "scores": {
+        "legal": 5,
+        "pain": 2,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 3,
+        "maint": 3,
+        "distro": 3,
+        "compete": 2,
+        "defend": 2,
+        "synergy": 2,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "World Anvil",
+        "D&D Beyond",
+        "Notion"
+      ],
+      "notes": "Avoid copying rulebook content (IP).",
+      "total": 63.8,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 63.8,
+          "scores": {
+            "legal": 5,
+            "pain": 2,
+            "breadth": 3,
+            "wtp": 3,
+            "recurring": 4,
+            "build": 3,
+            "maint": 3,
+            "distro": 3,
+            "compete": 2,
+            "defend": 2,
+            "synergy": 2,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "travel-packing-reuse",
+      "title": "Reusable packing lists by trip type",
+      "category": "Travel",
+      "platform": "iOS",
+      "problem": "Re-making packing lists every trip",
+      "target_users": "Travellers",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$3-5",
+      "scores": {
+        "legal": 5,
+        "pain": 2,
+        "breadth": 4,
+        "wtp": 1,
+        "recurring": 1,
+        "build": 5,
+        "maint": 5,
+        "distro": 3,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 2,
+        "platform": 4
+      },
+      "kill_flags": [],
+      "status": "feeder",
+      "evidence": [],
+      "competitors": [
+        "PackPoint",
+        "Notes"
+      ],
+      "notes": "",
+      "total": 61.0,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 61.0,
+          "scores": {
+            "legal": 5,
+            "pain": 2,
+            "breadth": 4,
+            "wtp": 1,
+            "recurring": 1,
+            "build": 5,
+            "maint": 5,
+            "distro": 3,
+            "compete": 1,
+            "defend": 1,
+            "synergy": 2,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "timezone-planner",
+      "title": "Timezone meeting planner",
+      "category": "Productivity",
+      "platform": "Web",
+      "problem": "Scheduling across zones",
+      "target_users": "Remote teams",
+      "monetisation": "Freemium",
+      "price_hypothesis": "US$3-5/mo",
+      "scores": {
+        "legal": 5,
+        "pain": 2,
+        "breadth": 4,
+        "wtp": 1,
+        "recurring": 2,
+        "build": 5,
+        "maint": 4,
+        "distro": 3,
+        "compete": 0,
+        "defend": 0,
+        "synergy": 3,
+        "platform": 5
+      },
+      "kill_flags": [],
+      "status": "candidate",
+      "evidence": [],
+      "competitors": [
+        "every.time.zone",
+        "WorldTimeBuddy"
+      ],
+      "notes": "",
+      "total": 61.0,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 61.0,
+          "scores": {
+            "legal": 5,
+            "pain": 2,
+            "breadth": 4,
+            "wtp": 1,
+            "recurring": 2,
+            "build": 5,
+            "maint": 4,
+            "distro": 3,
+            "compete": 0,
+            "defend": 0,
+            "synergy": 3,
+            "platform": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "ios-widget-tiny",
+      "title": "Single-purpose iOS widget (countdowns, 'since when', seasonal)",
+      "category": "iOS micro-utility",
+      "platform": "iOS",
+      "problem": "Small delight/tracking needs on the home screen",
+      "target_users": "Broad consumers",
+      "monetisation": "One-time micro-price",
+      "price_hypothesis": "US$0.99-2.99",
+      "scores": {
+        "legal": 5,
+        "pain": 2,
+        "breadth": 5,
+        "wtp": 1,
+        "recurring": 1,
+        "build": 5,
+        "maint": 4,
+        "distro": 4,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 2,
+        "platform": 3
+      },
+      "kill_flags": [],
+      "status": "feeder",
+      "evidence": [
+        {
+          "url": "https://indieniche.substack.com/p/he-built-and-shipped-an-ios-app-in",
+          "note": "Seasonia iOS widget: $0.99, ~1,000 downloads, ~$650-700 in weeks via ASO"
+        },
+        {
+          "url": "https://www.revenuecat.com/state-of-subscription-apps-2026-utilities/",
+          "note": "RevenueCat 2026 Utilities: 6.5% median download-to-trial"
+        }
+      ],
+      "competitors": [],
+      "notes": "Fast to build, App Store search works, but revenue tiny unless volume.",
+      "total": 63.4,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 63.4,
+          "scores": {
+            "legal": 5,
+            "pain": 2,
+            "breadth": 5,
+            "wtp": 1,
+            "recurring": 1,
+            "build": 5,
+            "maint": 4,
+            "distro": 4,
+            "compete": 2,
+            "defend": 1,
+            "synergy": 2,
+            "platform": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "notion-template-pack",
+      "title": "Notion/Sheets template packs",
+      "category": "Templates",
+      "platform": "Gumroad/Notion marketplace",
+      "problem": "Ready-made systems for niches",
+      "target_users": "Notion users",
+      "monetisation": "One-time",
+      "price_hypothesis": "US$9-29",
+      "scores": {
+        "legal": 5,
+        "pain": 2,
+        "breadth": 4,
+        "wtp": 2,
+        "recurring": 1,
+        "build": 5,
+        "maint": 5,
+        "distro": 3,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 2,
+        "platform": 3
+      },
+      "kill_flags": [],
+      "status": "feeder",
+      "evidence": [
+        {
+          "url": "https://insightraider.com/en/answers/how-much-can-you-make-selling-notion-templates-on-gumroad",
+          "note": "Most Notion templates earn <$520 lifetime; 31 of 365 tracked >$10k"
+        }
+      ],
+      "competitors": [],
+      "notes": "Power-law: median earns very little without an audience.",
+      "total": 62.0,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 62.0,
+          "scores": {
+            "legal": 5,
+            "pain": 2,
+            "breadth": 4,
+            "wtp": 2,
+            "recurring": 1,
+            "build": 5,
+            "maint": 5,
+            "distro": 3,
+            "compete": 1,
+            "defend": 1,
+            "synergy": 2,
+            "platform": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai-symptom-checker",
+      "title": "AI symptom checker / health triage",
+      "category": "Health",
+      "platform": "Mobile",
+      "problem": "Health anxiety",
+      "target_users": "Consumers",
+      "monetisation": "Subscription",
+      "price_hypothesis": "-",
+      "scores": {
+        "legal": 0,
+        "pain": 4,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 3,
+        "maint": 1,
+        "distro": 3,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 1,
+        "platform": 3
+      },
+      "kill_flags": [
+        "medical device / health advice (TGA SaMD)",
+        "sensitive health data"
+      ],
+      "status": "killed",
+      "evidence": [],
+      "competitors": [],
+      "notes": "",
+      "total": 48.2,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 48.2,
+          "scores": {
+            "legal": 0,
+            "pain": 4,
+            "breadth": 5,
+            "wtp": 3,
+            "recurring": 4,
+            "build": 3,
+            "maint": 1,
+            "distro": 3,
+            "compete": 1,
+            "defend": 1,
+            "synergy": 1,
+            "platform": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai-meal-diet-plan",
+      "title": "AI meal & diet plans",
+      "category": "Health",
+      "platform": "Mobile",
+      "problem": "Meal planning",
+      "target_users": "Consumers",
+      "monetisation": "Subscription",
+      "price_hypothesis": "-",
+      "scores": {
+        "legal": 1,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 4,
+        "maint": 3,
+        "distro": 3,
+        "compete": 0,
+        "defend": 1,
+        "synergy": 1,
+        "platform": 3
+      },
+      "kill_flags": [
+        "dietary/medical advice liability",
+        "saturated"
+      ],
+      "status": "killed",
+      "evidence": [],
+      "competitors": [],
+      "notes": "",
+      "total": 52.8,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 52.8,
+          "scores": {
+            "legal": 1,
+            "pain": 3,
+            "breadth": 5,
+            "wtp": 3,
+            "recurring": 4,
+            "build": 4,
+            "maint": 3,
+            "distro": 3,
+            "compete": 0,
+            "defend": 1,
+            "synergy": 1,
+            "platform": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "allergen-menu-matrix",
+      "title": "Restaurant allergen matrix generator",
+      "category": "Hospitality",
+      "platform": "Web",
+      "problem": "Allergen labelling",
+      "target_users": "Caf\u00e9s",
+      "monetisation": "Subscription",
+      "price_hypothesis": "-",
+      "scores": {
+        "legal": 1,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 3,
+        "recurring": 4,
+        "build": 4,
+        "maint": 3,
+        "distro": 3,
+        "compete": 3,
+        "defend": 2,
+        "synergy": 1,
+        "platform": 4
+      },
+      "kill_flags": [
+        "food-safety liability (anaphylaxis)",
+        "FSANZ labelling obligations"
+      ],
+      "status": "killed",
+      "evidence": [],
+      "competitors": [],
+      "notes": "",
+      "total": 55.0,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 55.0,
+          "scores": {
+            "legal": 1,
+            "pain": 3,
+            "breadth": 3,
+            "wtp": 3,
+            "recurring": 4,
+            "build": 4,
+            "maint": 3,
+            "distro": 3,
+            "compete": 3,
+            "defend": 2,
+            "synergy": 1,
+            "platform": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "hospo-staff-roster-award",
+      "title": "Hospitality roster with award-rate pay calc",
+      "category": "Hospitality",
+      "platform": "Web",
+      "problem": "Rostering + award compliance",
+      "target_users": "Caf\u00e9s",
+      "monetisation": "Subscription",
+      "price_hypothesis": "-",
+      "scores": {
+        "legal": 1,
+        "pain": 4,
+        "breadth": 3,
+        "wtp": 4,
+        "recurring": 5,
+        "build": 2,
+        "maint": 1,
+        "distro": 3,
+        "compete": 1,
+        "defend": 2,
+        "synergy": 1,
+        "platform": 3
+      },
+      "kill_flags": [
+        "Fair Work award interpretation liability",
+        "payroll"
+      ],
+      "status": "killed",
+      "evidence": [],
+      "competitors": [],
+      "notes": "",
+      "total": 51.0,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 51.0,
+          "scores": {
+            "legal": 1,
+            "pain": 4,
+            "breadth": 3,
+            "wtp": 4,
+            "recurring": 5,
+            "build": 2,
+            "maint": 1,
+            "distro": 3,
+            "compete": 1,
+            "defend": 2,
+            "synergy": 1,
+            "platform": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "au-retail-price-scraper",
+      "title": "Price tracker scraping AU supermarkets/retailers",
+      "category": "Shopping",
+      "platform": "Web/ext",
+      "problem": "Price drops",
+      "target_users": "Consumers",
+      "monetisation": "Ads/affiliate",
+      "price_hypothesis": "-",
+      "scores": {
+        "legal": 1,
+        "pain": 3,
+        "breadth": 5,
+        "wtp": 2,
+        "recurring": 3,
+        "build": 3,
+        "maint": 1,
+        "distro": 4,
+        "compete": 2,
+        "defend": 1,
+        "synergy": 2,
+        "platform": 0
+      },
+      "kill_flags": [
+        "scraping against ToS",
+        "platform takedown risk"
+      ],
+      "status": "killed",
+      "evidence": [],
+      "competitors": [],
+      "notes": "",
+      "total": 47.0,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 47.0,
+          "scores": {
+            "legal": 1,
+            "pain": 3,
+            "breadth": 5,
+            "wtp": 2,
+            "recurring": 3,
+            "build": 3,
+            "maint": 1,
+            "distro": 4,
+            "compete": 2,
+            "defend": 1,
+            "synergy": 2,
+            "platform": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "linkedin-automation",
+      "title": "LinkedIn outreach automation",
+      "category": "Sales",
+      "platform": "Chrome ext",
+      "problem": "Prospecting",
+      "target_users": "Sales",
+      "monetisation": "Subscription",
+      "price_hypothesis": "-",
+      "scores": {
+        "legal": 0,
+        "pain": 3,
+        "breadth": 3,
+        "wtp": 4,
+        "recurring": 5,
+        "build": 3,
+        "maint": 1,
+        "distro": 3,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 1,
+        "platform": 0
+      },
+      "kill_flags": [
+        "violates LinkedIn ToS",
+        "account bans",
+        "Spam Act"
+      ],
+      "status": "killed",
+      "evidence": [],
+      "competitors": [],
+      "notes": "",
+      "total": 43.4,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 43.4,
+          "scores": {
+            "legal": 0,
+            "pain": 3,
+            "breadth": 3,
+            "wtp": 4,
+            "recurring": 5,
+            "build": 3,
+            "maint": 1,
+            "distro": 3,
+            "compete": 1,
+            "defend": 1,
+            "synergy": 1,
+            "platform": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "meeting-recorder-local",
+      "title": "Covert/local meeting recorder + transcription",
+      "category": "Productivity",
+      "platform": "Mac",
+      "problem": "Meeting notes",
+      "target_users": "Workers",
+      "monetisation": "One-time",
+      "price_hypothesis": "-",
+      "scores": {
+        "legal": 1,
+        "pain": 4,
+        "breadth": 4,
+        "wtp": 4,
+        "recurring": 2,
+        "build": 3,
+        "maint": 3,
+        "distro": 3,
+        "compete": 1,
+        "defend": 1,
+        "synergy": 3,
+        "platform": 3
+      },
+      "kill_flags": [
+        "state surveillance-devices / consent-to-record laws",
+        "saturated"
+      ],
+      "status": "killed",
+      "evidence": [],
+      "competitors": [],
+      "notes": "",
+      "total": 53.8,
+      "first_seen_run": 1,
+      "last_scored_run": 1,
+      "score_history": [
+        {
+          "run": 1,
+          "date": "2026-10-27",
+          "total": 53.8,
+          "scores": {
+            "legal": 1,
+            "pain": 4,
+            "breadth": 4,
+            "wtp": 4,
+            "recurring": 2,
+            "build": 3,
+            "maint": 3,
+            "distro": 3,
+            "compete": 1,
+            "defend": 1,
+            "synergy": 3,
+            "platform": 3
+          }
+        }
+      ]
+    }
+  ]
+}

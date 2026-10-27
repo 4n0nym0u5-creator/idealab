@@ -1,0 +1,65 @@
+CREATE TABLE IF NOT EXISTS settings (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  schema_version TEXT NOT NULL,
+  rubric_version TEXT NOT NULL,
+  criteria_order TEXT NOT NULL,
+  weights TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS runs (
+  run_number INTEGER PRIMARY KEY,
+  date TEXT NOT NULL,
+  author TEXT NOT NULL,
+  sources_swept TEXT NOT NULL,
+  ideas_added INTEGER NOT NULL,
+  ideas_rescored INTEGER NOT NULL,
+  notes TEXT NOT NULL DEFAULT '',
+  focus TEXT NOT NULL DEFAULT ''
+);
+
+CREATE TABLE IF NOT EXISTS ideas (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  category TEXT NOT NULL,
+  platform TEXT NOT NULL,
+  problem TEXT NOT NULL,
+  target_users TEXT NOT NULL,
+  monetisation TEXT NOT NULL,
+  price_hypothesis TEXT NOT NULL,
+  scores TEXT NOT NULL,
+  total REAL NOT NULL,
+  research_total REAL NOT NULL,
+  status TEXT NOT NULL,
+  status_locked INTEGER NOT NULL DEFAULT 0,
+  kill_flags TEXT NOT NULL,
+  avoid_flags TEXT NOT NULL DEFAULT '[]',
+  evidence TEXT NOT NULL,
+  competitors TEXT NOT NULL,
+  notes TEXT NOT NULL DEFAULT '',
+  liability_notes TEXT NOT NULL DEFAULT '',
+  user_notes TEXT NOT NULL DEFAULT '',
+  mvp TEXT NOT NULL DEFAULT '',
+  distribution TEXT NOT NULL DEFAULT '',
+  risks TEXT NOT NULL DEFAULT '',
+  score_overrides TEXT NOT NULL DEFAULT '{}',
+  first_seen_run INTEGER NOT NULL,
+  last_scored_run INTEGER NOT NULL,
+  score_history TEXT NOT NULL,
+  pipeline_order INTEGER NOT NULL DEFAULT 0,
+  position INTEGER NOT NULL DEFAULT 0,
+  updated_at TEXT NOT NULL,
+  updated_by TEXT NOT NULL DEFAULT 'local'
+);
+
+CREATE INDEX IF NOT EXISTS ideas_status ON ideas(status);
+CREATE INDEX IF NOT EXISTS ideas_category ON ideas(category);
+CREATE INDEX IF NOT EXISTS ideas_total ON ideas(total);
+
+CREATE TABLE IF NOT EXISTS rubric_changelog (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  at TEXT NOT NULL,
+  from_version TEXT NOT NULL,
+  to_version TEXT NOT NULL,
+  weights TEXT NOT NULL,
+  note TEXT NOT NULL
+);
