@@ -99,6 +99,7 @@ export function PlaybookView() {
         <div className="chips">
           {playbook.related.map((item) => <Link key={item.href} className="chip" href={item.href}>{item.label}</Link>)}
           <Link className="chip" href="/global">Global expansion</Link>
+          <Link className="chip" href="/legal-tax">Legal & tax</Link>
         </div>
       </header>
 

@@ -1,0 +1,173 @@
+{
+  "metrics": [
+    {"value": "Yes, now", "label": "Do I need an ABN?", "detail": "Free via the ABR. Selling apps for profit, repeatedly, is likely a business. Get it before 20 Nov."},
+    {"value": "At A$75k", "label": "When must I register for GST?", "detail": "When current or projected 12-month GST turnover hits A$75,000. The base case is around 2028–29. Apple needs it earlier."},
+    {"value": "Sole trader", "label": "Sole trader or company?", "detail": "Start as a sole trader. Revisit a company once profit you can leave in the business is consistently tens of thousands a year."}
+  ],
+  "week": [
+    "Read your employment contract for IP assignment, outside-work and conflict clauses, and get written permission if anything is unclear.",
+    "Apply for an ABN as a sole trader (free, abr.gov.au). Register a business name (A$47 for 1 year) only if you trade under a name that is not your own.",
+    "Rename GiftLedger and Renewal Radar: both names are already live apps. Then search IP Australia's TM Checker and file in class 9, and class 42 if you want it (A$250 per class).",
+    "Open a separate bank account, choose bookkeeping software, and start a set-aside for tax (about 30–39% of profit on top of a salary; assumption).",
+    "Publish a privacy policy, terms of use and an ACL-compliant refund policy. Make the marketing signup Spam Act compliant: consent, sender identification, and unsubscribe within 5 business days."
+  ],
+  "surprisesIntro": "Apple requires Australia-based developers to hold a GST registration to sell paid apps, even below A$75,000. Google Play makes Australian developers remit GST on Australian sales themselves, so the web merchant of record is the low-admin launch channel. From 1 July 2027, new subscription rules apply, three months before the Pass launches in October 2027. Selling through an offshore reseller is not automatically a GST-free export: sales to Australian end users may be taxable once you are registered. That point is unsettled.",
+  "timeline": [
+    ["Now, before 20 Nov 2026", "Read your employment contract and get written OK if it is unclear. Apply for an ABN as a sole trader. Rename GiftLedger and Renewal Radar. Run a trade mark search and file class 9, and class 42 if you want it. Open a separate bank account. Start records and a tax set-aside. Publish a privacy policy, terms and an ACL-compliant refund policy. Pick a reseller-model merchant of record. Do not register for GST yet unless you want the App Store.", "ABN free. Business name A$47 for 1 year or A$108 for 3 years only if you trade under a name that is not your own. Trade mark A$250 per class on the picklist. A .com.au is about A$10–30 a year at retail (assumption).", "Do now"],
+    ["First sale", "Record each merchant-of-record payout from its transaction report, not the bank deposit. Convert USD at the rate when the amount is derived, or a reasonable average. Keep reports for 5 years. Set aside about 30–39% of profit (marginal rate plus Medicare; assumption).", "Accounting app about A$0–35 a month (assumption).", "Habit"],
+    ["First tax return with business income", "Business schedule on your individual return for 2026–27, due 31 Oct 2027, or later through a tax agent. Claim business-use deductions. Expect PAYG instalments once business income is A$4,000 or more and tax payable is A$1,000 or more.", "A return with a business schedule is about A$330–440 from one provider (indicative).", "Mid-2027"],
+    ["1 July 2027", "Unfair trading practices law starts: subscription disclosures, reminders, easy cancellation, no dark patterns, and a drip-pricing ban. Build these into the Pass before the October 2027 launch.", "Your time, plus a legal review of the checkout. Get quotes.", "Before the Pass"],
+    ["GST turnover about A$50,000", "Track it monthly on a rolling 12 months. Engage an accountant. Model GST and a company. Ask the merchant of record for the Australian-customer share.", "Bookkeeping, BAS and a return often A$3,000 or more a year (indicative).", "Watch"],
+    ["Current or projected GST turnover of A$75,000", "Register within 21 days. Keep the price GST-inclusive. One-eleventh of Australian taxable sales goes to the ATO. Lodge BAS quarterly: 28 Oct, 28 Feb, 28 Apr, 28 Jul.", "Free to register. It adds BAS work.", "Must"],
+    ["Profit you can leave in the business is consistently about A$20,000–50,000", "Talk to an accountant about a company at the 25% base rate. You need a director ID first. Moving the business puts the IP and the contracts into the company.", "A$636 to register, A$342 a year to review, plus extra accounting. Get quotes.", "Consider"],
+    ["Selling overseas", "The merchant of record handles customer VAT and sales tax where it covers those countries. You still handle Australian income tax and your own GST. The GDPR and UK GDPR apply if you target those users. The device-only design keeps that smaller.", "Trade marks abroad, from Run 9: UKIPO £205, USPTO US$350, EUIPO €850 per class.", "Later"]
+  ],
+  "sections": [
+    {
+      "id": "abn",
+      "heading": "ABN, and hobby versus business",
+      "rows": [
+        ["Test", "Hobby or business?", "The ATO looks at the whole picture: intention and prospect of profit, repetition, and business-like records. Building several paid apps, marketing them and planning a subscription points to a business. Treat it as one from day one."],
+        ["ABN", "Entitlement and cost", "You are entitled to an ABN if you carry on, or are starting, an enterprise in Australia. Applying through the ABR is free. Once you are carrying on an enterprise you cannot use a statement by a supplier to avoid withholding."],
+        ["47%", "No-ABN withholding", "Australian businesses paying you must withhold 47% if you do not quote an ABN, unless the payment is A$75 or less excluding GST, or another exception applies."],
+        ["Name", "Business name", "A sole trader using their own name needs no business name. Anything else is A$47 for 1 year or A$108 for 3 years through ASIC. Register the name you actually trade under."],
+        [".au", "Domain eligibility", "A .com.au needs an Australian presence. An ABN qualifies. The name must match your name, business name, trade mark, or the product you provide."]
+      ]
+    },
+    {
+      "id": "structure",
+      "heading": "Business structure",
+      "table": {
+        "columns": ["", "Sole trader", "Company", "Trust"],
+        "rows": [
+          ["Tax", "Your marginal rate on all profit, plus 2% Medicare. In 2026–27 that is 30% from A$45,001, 37% from A$135,001 and 45% from A$190,001.", "25% for a base rate entity. Dividends are taxed later at your rate, with franking credits.", "Profits go to beneficiaries. More admin, and only with family-planning advice."],
+          ["Liability", "Unlimited. Personal assets are exposed.", "Limited, but directors have duties and banks often want guarantees.", "Depends on the trustee. Often a corporate trustee."],
+          ["Set-up", "The ABN is free.", "A$636 to register, A$342 a year, a free director ID, and a separate return.", "A deed and accountant fees. Get quotes."],
+          ["Losses", "They offset salary only if you pass the non-commercial loss rules.", "They stay in the company.", "They stay in the trust."],
+          ["Fit now", "Best now.", "Later.", "Only with advice."]
+        ]
+      },
+      "notes": [
+        ["PSI", "Personal services income rules target income that is mainly for your personal effort. Selling finished apps or licences is generally not PSI. Paid custom work or consulting could be."],
+        ["Non-commercial losses", "Early losses offset salary only if taxable income is under A$250,000 and you pass one test: A$20,000 or more of assessable business income, a profit in 3 of the last 5 years, A$500,000 or more of real property, or A$100,000 or more of other assets. Otherwise the loss is deferred. Expect a year-1 loss to be deferred."],
+        ["When to switch (assumption)", "A company saves about 5 cents per dollar left in it if your top rate is 30%, and about 12 cents if it is 37%, against perhaps A$2,000–3,000 a year of extra cost. The rough break-even is A$20,000–50,000 of retained profit a year. The base case reaches about A$64,000 cumulative by April 2028 and about A$73,000 a year by 2029, so review it in 2027–28. Have an accountant model the move, including CGT and transferring the IP."]
+      ]
+    },
+    {
+      "id": "gst",
+      "heading": "GST",
+      "rows": [
+        ["A$75,000", "Two tests", "Register if current GST turnover (this month plus the previous 11) or projected turnover (this month plus the next 11) is A$75,000 or more. Register within 21 days. GST-free sales, including exports, count toward the threshold."],
+        ["Which dollars", "Turnover through a merchant of record", "Under a reseller model your supply is to the merchant of record. Turnover is what it pays you for the licence, not the customer price and not the bank deposit. That reading is from a CPA firm's October 2026 guide. Confirm it with your agent."],
+        ["Export?", "Is the sale to the merchant GST-free?", "Section 38-190 can make a supply to a non-resident GST-free. Subsection 38-190(3) can deny that where the thing is provided to someone in Australia. A secondary source says an ATO ruling indicates the Australian-consumer share may be taxable to you once you are registered. The ruling was not opened in this run. Below the threshold, and while you are unregistered, this costs nothing. After registration, budget one-eleventh of the Australian share. A private ruling is the way to pin it down."],
+        ["Platform", "Deemed supplier", "A registered electronic distribution platform can agree in writing to be treated as the supplier of your taxable sales. Ask any merchant which clause and which section it relies on."],
+        ["Apple", "Registration required", "Apple requires Australia-based developers to have a GST registration to sell paid apps, and it asks for your ABN and proof. A paid app or in-app purchase on the App Store effectively forces voluntary registration and BAS."],
+        ["Google", "You remit", "Google handles GST only for developers outside Australia. If you are in Australia you charge and remit 10% GST on Australian sales. If you are not registered, Google may charge GST on its service fee."],
+        ["Voluntary", "The trade-off", "You can claim GST credits on Australian costs and become eligible for Apple, and annual GST reporting is available while turnover is under A$75,000. You also send one-eleventh of taxable Australian sales to the ATO, about A$1.73 of an A$19 sale, and you lodge BAS. Overseas VAT and US sales tax on sales the merchant covers are not your GST."],
+        ["Price", "What you show", "Consumer prices must include GST and compulsory fees. Once registered, keep A$19 and A$29 GST-inclusive and absorb the one-eleventh."]
+      ]
+    },
+    {
+      "id": "tax",
+      "heading": "Income tax, records and BAS",
+      "notes": [
+        ["How it is taxed", "Business profit goes on your individual return and is added to your salary. The tax-free A$18,200 is normally already used by a job, so side profit is taxed from your marginal rate, plus 2% Medicare. The 15% bracket drops to 14% from 1 July 2027."],
+        ["PAYG instalments", "The ATO enters you once a return shows A$4,000 or more of instalment income, tax payable of A$1,000 or more, and notional tax of A$500 or more. Instalments are quarterly prepayments."],
+        ["Deductions", "AI subscriptions, the Grok Bot plan, hosting, domains, developer accounts, merchant fees, trade mark fees, accounting, insurance and software are deductible to the extent they are for the business. The A$20,000 instant asset write-off is permanent from 1 July 2026. The home-office fixed rate is 70 cents an hour for 2025–26, with a full-year record of hours, or you claim actual costs."],
+        ["USD payouts", "Convert each amount at the rate when it is derived or received, whichever is earlier. For regular income you may use an average rate for up to 12 months if it is reasonable. Keep the rate source."],
+        ["Records", "Keep them for 5 years from lodging: merchant reports, payouts, invoices, receipts, FX rates, and a diary for home and device use."],
+        ["BAS", "None until you register for GST. Then quarterly is the default, due 28 October, 28 February, 28 April and 28 July. Annual GST reporting is only for voluntary registrants under A$75,000."],
+        ["TPAR", "Needed only if you provide IT services and pay contractors to deliver them, and IT services are 10% or more of income. Selling finished apps is not obviously IT services. Check before you hire contractors. Due 28 August."]
+      ]
+    },
+    {
+      "id": "staff",
+      "heading": "Employing and contractors",
+      "rows": [
+        ["12%", "Super guarantee", "12% of ordinary time earnings. Payday super from 1 July 2026 must reach the fund within 7 business days of payday. Contractors paid mainly for their labour can be owed super even with an ABN."],
+        ["A$7,500", "NSW workers compensation", "A policy is required once you pay more than A$7,500 in wages in a financial year, or if you have apprentices or trainees."],
+        ["Payroll tax", "NSW", "It applies only above an annual wages threshold (A$1.2 million on Revenue NSW figures; not re-checked this run). It is not relevant at this scale."],
+        ["Test", "Contractor or employee", "Use the ATO and Fair Work tests: control, who bears the risk, and whether they are paid for a result. Get a written IP assignment from any freelancer."]
+      ]
+    },
+    {
+      "id": "acl",
+      "heading": "Australian Consumer Law",
+      "rows": [
+        ["Guarantees", "They cover digital products", "Apps must be of acceptable quality, fit for purpose and match their description. You can refuse a change-of-mind refund. A no-refunds term that denies the guarantees is unlawful."],
+        ["Unfair terms", "Standard-form contracts", "Since 9 November 2023, using an unfair term in a standard-form consumer contract is prohibited. Maximum penalties are large. Avoid one-sided price changes, broad liability exclusions and one-sided auto-renewal."],
+        ["1 July 2027", "Subscriptions and dark patterns", "The Unfair Trading Practices Act 2026 requires key information before sign-up, notices before a trial ends, at renewal and on a price rise, and cancellation that is as easy as sign-up. It also bans drip pricing of unavoidable fees, with GST excluded. The Pass renews yearly from October 2027, so design for this now. Notice timings are still in draft regulations."],
+        ["Price", "The total price", "Show Australian prices including GST and compulsory fees. If you say lifetime, define it in plain words."]
+      ]
+    },
+    {
+      "id": "privacy",
+      "heading": "Privacy, spam and data",
+      "rows": [
+        ["A$3 million", "Small business exemption", "Turnover of A$3 million or less is generally outside the Australian Privacy Principles, with exceptions for health providers, businesses that trade in personal information, and others. The 2026 tranche 2 draft keeps the exemption. Comply anyway: stores want a privacy policy."],
+        ["Tort", "From 10 June 2025", "People can sue for a serious, intentional or reckless invasion of privacy. It applies to small businesses. Keeping no server copy of user data reduces the exposure."],
+        ["Children", "Online Privacy Code", "Still a draft. Registration is due by 10 December 2026. The apps target parents. Avoid child-directed features and child accounts."],
+        ["Spam Act", "The marketing list", "You need consent, accurate sender identification, and an unsubscribe that works within 5 business days without a login. Keep consent records. A reply to a support email is not marketing."],
+        ["EU and UK", "GDPR", "It applies if you target people there. The merchant of record is its own controller for payments. Your support inbox and email list are yours. Say so in the policy."],
+        ["Device-only", "What it changes", "No account database means a smaller breach surface and a shorter privacy policy. Analytics, crash tools and ads are what make a we-collect-nothing claim false."]
+      ]
+    },
+    {
+      "id": "ip",
+      "heading": "IP, names and content",
+      "rows": [
+        ["Names", "GiftLedger and Renewal Radar are taken", "GiftLedger is a live app by ReactiveWorks. Renewal Radar is a live subscription tracker by Aplo Apps. Using those names risks passing off, store rejection and confusion. Choose new names, then check the trade mark register, ASIC, the stores and domains."],
+        ["Trade marks", "Fees", "IP Australia charges A$250 per class on the picklist and A$400 without it. TM Headstart starts at A$330. Class 9 covers downloadable apps. Class 42 covers online software. A registration lasts 10 years."],
+        ["AI code", "Copyright", "Australian copyright needs a human author. Purely generated output may not be protected. Human selection and editing helps. The government ruled out a text-and-data-mining exception in October 2025. The Copyright and AI Reference Group is still working on outputs."],
+        ["Open source", "Licences", "Keep a dependency list. MIT, BSD and Apache need attribution in the app. Do not drop GPL or AGPL code into a closed app unless you understand the duty. Check snippets an agent suggests."],
+        ["Dates", "School terms", "Dates are facts. Page text and compilations can still be protected. NSW education content is CC BY 4.0, so commercial reuse needs attribution. Check each state's terms. Tell people to verify dates with their school."]
+      ]
+    },
+    {
+      "id": "liability",
+      "heading": "Liability, advice and insurance",
+      "rows": [
+        ["AFSL", "Renewal Radar", "General insurance and many financial products are financial products. Factual information, with no recommendation, is generally not advice. Ranking or suggesting a policy can be financial product advice and needs an AFSL. Keep the app to dates the user enters and factual checklists. Do not recommend a product or take a commission."],
+        ["Terms", "What to say", "Say the app is a reminder tool, not financial, insurance, legal or tax advice. Users must verify dates. Liability limits have to leave the consumer guarantees in place."],
+        ["Insurance", "Indicative only", "Professional indemnity for an IT sole trader is about A$850–2,941 a year in one broker's data, and bundles start near A$516. Cyber risk is low with no customer data on your servers. It is not legally required. Get quotes once there is revenue."]
+      ]
+    }
+  ],
+  "job": "By default an employer owns copyright in work made in the course of employment. A side project in your own time, outside your duties, is generally yours. Contracts often assign more, ban outside work, or restrict work laptops and AI tools. Do not use employer devices, time or confidential information. If the job is in software, get a written carve-out that names the apps.",
+  "costs": [
+    ["ABN", "Free", "ABR", "Verified"],
+    ["Business name", "A$47 for 1 year or A$108 for 3 years", "business.gov.au, from 1 July 2026", "Verified"],
+    ["Trade mark", "A$250 per class on the picklist; A$400 without; TM Headstart from A$330", "IP Australia", "Verified"],
+    ["Two classes and two product names", "About A$1,000 (4 × A$250)", "Derived from the fee", "Calculation"],
+    [".com.au", "About A$10–30 a year", "Retail registrars", "Assumption"],
+    ["Company registration", "A$636", "business.gov.au", "Verified"],
+    ["Company annual review", "A$342 a year", "business.gov.au", "Verified"],
+    ["Director ID", "Free", "ABRS", "Verified"],
+    ["Tax return with a business schedule", "About A$150–440", "Third-party price lists", "Indicative"],
+    ["Bookkeeping, BAS and a return", "About A$3,000–15,000 or more a year", "Third-party price lists", "Indicative"],
+    ["Professional indemnity", "About A$850–2,941 a year; bundles from about A$516", "Broker pages", "Indicative. Get quotes."],
+    ["Cyber insurance", "Get quotes. The need is low while there is no customer data on servers.", "Not priced", "Not priced"],
+    ["Legal review of terms and the privacy policy", "Get quotes.", "Not priced", "Not priced"]
+  ],
+  "costsNote": "A separate everyday account is the minimum. Business-account fees change, so check them. Many sole traders start with a basic plan in Xero, MYOB or QuickBooks. Those prices are assumptions.",
+  "questions": [
+    "Am I carrying on a business from launch, and can I deduct pre-launch costs such as AI tools, the Grok Bot plan, devices and trade mark fees?",
+    "Under the merchant-of-record agreement, is my supply GST-free, partly taxable for Australian end users under section 38-190(3), or covered by a platform agreement? Should I seek a private ruling?",
+    "What is my GST turnover under that model, payout or customer price, and when does the projected A$75,000 test arrive?",
+    "Is it worth registering for GST now so I can use the App Store, and if so should I report annually?",
+    "At my salary, at what retained profit does a company beat a sole trader, counting set-up, yearly cost and moving the IP?",
+    "Will a first-year loss be deferred under the non-commercial loss rules?",
+    "How should I record USD payouts and merchant fees, gross or net?",
+    "How much should I set aside each quarter, and when will PAYG instalments start?",
+    "Do I need a taxable payments report if I pay overseas freelancers?",
+    "What home-office and device split can I claim, and what records do you need?"
+  ],
+  "unsettledDetail": [
+    ["Merchant-of-record GST", "Whether a sale to Australian consumers is a taxable supply by you depends on the contract and section 38-190(3). A secondary source cited an ATO ruling that was not opened in this run."],
+    ["Subscription regulations", "The Act starts on 1 July 2027. Notice timings are still in draft regulations."],
+    ["Children's Online Privacy Code", "An exposure draft. Registration is due by 10 December 2026. Scope and start date are unconfirmed."],
+    ["Privacy tranche 2", "The 2026 exposure draft keeps the A$3 million exemption for now. The final bill is unknown."],
+    ["AI outputs and copyright", "There is no legislation yet. The reference group is still consulting."],
+    ["Which merchant of record", "Lemon Squeezy has signalled a move toward Stripe Managed Payments. Each merchant's legal model differs."]
+  ]
+}
