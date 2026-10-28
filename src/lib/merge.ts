@@ -256,6 +256,8 @@ function blankIdea(id: string, position: number, now: string): Idea {
     relatedIds: [],
     run4Merge: [],
     ...emptyPortfolioFields(),
+    lineupRole: "",
+    lineupNote: "",
     pipelineOrder: 0,
     position,
     updatedAt: now,

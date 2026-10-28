@@ -1,0 +1,23 @@
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#FBF8F3;--card:#FFFFFF;--ink:#1F2A37;--mute:#6B7280;--line:#ECE6DC;--teal:#0F766E;--tealL:#E6F4F1;--coral:#E76F51;--coralL:#FDEDE8;--amber:#B45309;--amberL:#FEF3C7;--plum:#7C3AED;--plumL:#F1EBFE;--sky:#2563EB;--skyL:#E8F0FE;--green:#15803D;--greenL:#E7F6EC}
+body{font-family:Inter,"Segoe UI",system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+.phone{width:390px;height:844px;overflow:hidden;background:var(--bg);position:relative}
+.status{height:44px;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font-size:14px;font-weight:600}
+.wrap{padding:6px 18px 90px}
+h1{font-size:26px;letter-spacing:-.5px;font-weight:750}
+h2{font-size:17px;font-weight:700;margin:18px 0 10px}
+.sub{color:var(--mute);font-size:13.5px;margin-top:3px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 2px rgba(31,42,55,.04)}
+.row{display:flex;align-items:center;gap:12px}
+.dot{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex:none}
+.t{font-weight:650;font-size:15px}.s{font-size:12.5px;color:var(--mute);margin-top:2px}
+.pill{font-size:11.5px;font-weight:650;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.grow{flex:1;min-width:0}
+.tabs{position:absolute;bottom:0;left:0;right:0;height:78px;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding-top:10px;font-size:10.5px;color:var(--mute)}
+.tabs div{text-align:center}.tabs .on{color:var(--teal);font-weight:700}.tabs i{font-style:normal;font-size:20px;display:block;margin-bottom:2px}
+.btn{background:var(--teal);color:#fff;border-radius:14px;padding:13px;text-align:center;font-weight:700;font-size:15px}
+.btn2{background:#fff;border:1px solid var(--line);color:var(--ink);border-radius:14px;padding:12px;text-align:center;font-weight:650;font-size:14px}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--mute)}
+.privacy{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--teal);background:var(--tealL);border-radius:12px;padding:8px 12px;margin:10px 0}
+.sample{position:absolute;right:10px;bottom:84px;font-size:10px;color:#9CA3AF}
+.bar{height:8px;border-radius:99px;background:#F1ECE4;overflow:hidden}.bar b{display:block;height:100%;border-radius:99px}

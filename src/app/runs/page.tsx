@@ -32,6 +32,7 @@ export default async function RunsPage() {
               {rescored.length ? ` · Re-scored: ${rescored.map((idea) => idea.title).join(", ")}` : ""}
               {run.runNumber === 4 ? <> · <Link href="/pain">Pain clusters</Link></> : null}
               {run.runNumber === 6 ? <> · <Link href="/portfolio">Portfolio strategy</Link> · annotation only, rubric totals unchanged</> : null}
+              {run.runNumber === 7 ? <> · <Link href="/life-admin-pass">Life Admin Pass deep dive</Link> · lineup only, rubric totals unchanged</> : null}
             </p>
           </article>
         );

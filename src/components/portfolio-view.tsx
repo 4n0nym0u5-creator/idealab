@@ -194,9 +194,10 @@ export function PortfolioView({ strategy, ideas }: { strategy: PortfolioStrategy
           {strategy.roadmap.map((slot) => (
             <article key={slot.id} className="timeline-item">
               <p className="kicker">Slot {slot.slot} · {slot.model} · {slot.weeks}</p>
-              <h3><Link href={`/ideas/${slot.id}`}>{slot.name}</Link></h3>
+              <h3>{slot.id === "life-admin-pass" ? <Link href="/life-admin-pass">{slot.name}</Link> : <Link href={`/ideas/${slot.id}`}>{slot.name}</Link>}</h3>
               <p>{slot.price}</p>
               <p className="small muted">Launch {slot.launch}. Start {slot.start}.</p>
+              {slot.id === "life-admin-pass" ? <p className="small">Run 7 lineup: HolidayPlanner AU, Renewal Radar, GiftLedger and Household Handbook, plus Moving Mode in v1.1. Still device-only. No accounts, no reminder emails, reminders via .ics alarms, A$29/yr per household. <Link href="/life-admin-pass">Deep dive</Link>.</p> : null}
             </article>
           ))}
         </div>
@@ -214,7 +215,7 @@ export function PortfolioView({ strategy, ideas }: { strategy: PortfolioStrategy
         <h3>Why this order</h3>
         {strategy.roadmap.map((slot) => (
           <article key={slot.slot} className="stack">
-            <p><strong>{slot.slot}. {slot.name}</strong></p>
+            <p><strong>{slot.slot}. {slot.name}</strong>{slot.id === "life-admin-pass" ? <> · <Link href="/life-admin-pass">Run 7 lineup</Link></> : null}</p>
             <p className="small">{slot.why}</p>
             <p className="small"><strong>Success.</strong> {slot.metrics}</p>
             <p className="small"><strong>Kill.</strong> {slot.kill}</p>

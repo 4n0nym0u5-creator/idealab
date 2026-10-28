@@ -1,0 +1,827 @@
+{
+  "run": {
+    "run_number": 7,
+    "date": "2026-10-28",
+    "author": "Grok Bot",
+    "focus": "Life Admin Pass deep dive: audience, personas, irresistibility, synergies, swaps, mockups",
+    "notes": "Reddit blocks direct fetch; Reddit evidence = thread titles / search summaries + quotes captured in pain_points.json (Run 4). No numbers invented; assumptions labelled."
+  },
+  "sources": {
+    "abs_lfsf_2025": "https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-status-families/latest-release",
+    "abs_tus_2021": "https://www.abs.gov.au/statistics/people/people-and-communities/how-australians-use-their-time/2020-21",
+    "abs_sdac_2022": "https://www.abs.gov.au/statistics/health/disability/disability-ageing-and-carers-australia-summary-findings/latest-release",
+    "abs_ceac_2017": "https://www.abs.gov.au/statistics/people/education/childhood-education-and-care-australia/latest-release",
+    "finder_household_2026": "https://www.finder.com.au/utilities/how-australian-households-manage-money-report-2026",
+    "finder_xmas_2025": "https://www.finder.com.au/news/festive-season-spending-2025",
+    "accc_nem_dec2025": "https://www.accc.gov.au/inquiries-and-consultations/electricity-market-monitoring-inquiry-2018-26/december-2025-report",
+    "accc_fels_2019": "https://www.accc.gov.au/system/files/Professor%20Allan%20Fels%20AO%20%26%20Professor%20David%20Cousins%20-%20September%202019.pdf",
+    "oaic_acaps_2023": "https://www.oaic.gov.au/engage-with-us/research-and-training-resources/research/australian-community-attitudes-to-privacy-survey/australian-community-attitudes-to-privacy-survey-2023",
+    "ama_pets_2025": "https://animalmedicinesaustralia.org.au/news-and-media/australias-most-comprehensive-pet-survey-shows-nearly-three-quarters-of-australian-homes-now-have-a-pet/",
+    "smh_holidays_2026": "https://www.smh.com.au/national/four-weeks-of-leave-12-of-school-holidays-the-parenting-equation-that-doesn-t-add-up-20260206-p5o040.html",
+    "abc_holidays_2026": "https://www.abc.net.au/news/2026-09-19/parenthood-maths-aint-mathing/106552344",
+    "minimode_care": "https://www.minimode.com.au/guides/school-holiday-care-costs",
+    "rdt_ausfin_715": "https://www.reddit.com/r/AusFinance/comments/1qe0sgj/",
+    "rdt_ausfin_30": "https://www.reddit.com/r/AusFinance/comments/1vqbrf2/",
+    "rdt_ausfin_5k": "https://www.reddit.com/r/AusFinance/comments/1wbl64h/",
+    "rdt_mommit_app": "https://www.reddit.com/r/Mommit/comments/1o01ss4/i_wish_there_was_an_app_that_would_take_the/",
+    "rdt_mommit_only": "https://www.reddit.com/r/Mommit/comments/1klhxd5/anyone_else_sick_of_being_the_only_one_who/",
+    "rdt_cars_rego": "https://www.reddit.com/r/CarsAustralia/comments/1opk1ea/too_many_cars_need_help_with_keeping_track_of_all/",
+    "rdt_workingmums": "https://www.reddit.com/r/workingmumsau/comments/1giigb9/",
+    "cozi_appstore": "https://apps.apple.com/au/app/id407108860?see-all=reviews",
+    "cozi_analysis": "https://productivity-apps.com/apps/cozi-family-organizer",
+    "cozi_getsense": "https://getsense.ai/blog/posts/cozi-alternatives-after-paywall",
+    "bobby_appstore": "https://apps.apple.com/au/app/id1059152023?see-all=reviews",
+    "mylifeadmin": "https://mylifeadmin.app/",
+    "sha_app": "https://apps.apple.com/au/app/school-holidays-australia/id6760274089",
+    "leavecalc": "https://aussieleavecalculator.com/",
+    "service_nsw_rego": "https://www.service.nsw.gov.au/transaction/digital-vehicle-registration",
+    "wishpile": "https://wishpile.com/",
+    "giftbook": "https://giftbook.tundra.industries/"
+  },
+  "key_facts": [
+    {
+      "fact": "7.7M families; 2.2M couple families with children 0-14, 73% two employed parents (~1.6M)",
+      "src": "abs_lfsf_2025"
+    },
+    {
+      "fact": "1.23M one-parent families; 752k with dependants; 419k employed single mothers, 129k employed single fathers",
+      "src": "abs_lfsf_2025"
+    },
+    {
+      "fact": "Unpaid work: females 4h31m/day vs males 3h12m (participants); housework 70% of females vs 42% of males; mothers' childcare 3h34m vs fathers 2h19m",
+      "src": "abs_tus_2021"
+    },
+    {
+      "fact": "55% manage & pay household bills entirely alone; 70% carry most of it; only 18% split equally",
+      "src": "finder_household_2026"
+    },
+    {
+      "fact": "34% pay for >=1 subscription they rarely/never use (42% Gen Y, 51% Gen Z); median waste $26-50/mo among them",
+      "src": "finder_household_2026"
+    },
+    {
+      "fact": "50% find at least one bill confusing; 46% moved in last 3 yrs, only 21% shopped around; 42% of movers stressed updating address everywhere",
+      "src": "finder_household_2026"
+    },
+    {
+      "fact": "14% have no plan for large unexpected costs such as an insurance renewal (24% of renters)",
+      "src": "finder_household_2026"
+    },
+    {
+      "fact": "Electricity loyalty penalty: plans >3 yrs old ~A$221/yr more; only 27% on retailer's best offer",
+      "src": "accc_nem_dec2025"
+    },
+    {
+      "fact": "Renewing home-insurance customers paid ~25% more than new customers (2015-18)",
+      "src": "accc_fels_2019"
+    },
+    {
+      "fact": "62% see protecting personal info as a major concern; 74% see data breaches as major risk; 84% want more choice",
+      "src": "oaic_acaps_2023"
+    },
+    {
+      "fact": "3.0M informal carers, 1.2M primary carers (2022)",
+      "src": "abs_sdac_2022"
+    },
+    {
+      "fact": "73% of households (~7.7M) own a pet",
+      "src": "ama_pets_2025"
+    },
+    {
+      "fact": "Grandparents are the most common informal care (18.6% of school-attending children 0-12, 2017)",
+      "src": "abs_ceac_2017"
+    },
+    {
+      "fact": "12 weeks of school holidays vs 4 weeks' leave; vacation care NSW ~$95-140/day",
+      "src": [
+        "smh_holidays_2026",
+        "abc_holidays_2026",
+        "minimode_care"
+      ]
+    },
+    {
+      "fact": "Average planned Christmas gift spend A$438 (2025, up from A$359)",
+      "src": "finder_xmas_2025"
+    },
+    {
+      "fact": "Service NSW digital rego reminders already sent 6 weeks & 2 weeks before + 1 day after expiry",
+      "src": "service_nsw_rego"
+    }
+  ],
+  "competitors": [
+    {
+      "name": "Life Admin (mylifeadmin.app)",
+      "what": "Cloud dashboard for renewals, docs, household profiles",
+      "price": "Free (10 reminders/10 docs); $9/mo; $15/mo for 2 users (currency not stated on page)",
+      "gap": "Account + cloud document storage; ~$108-180/yr; generic, no AU holiday coverage or price-creep logic",
+      "src": "mylifeadmin"
+    },
+    {
+      "name": "Cozi",
+      "price": "Gold US$39/yr, Max US$79/yr; free tier ads + 30-day calendar window",
+      "gap": "Paywall complaints, ads, one-way Google sync, no export",
+      "src": [
+        "cozi_appstore",
+        "cozi_analysis",
+        "cozi_getsense"
+      ]
+    },
+    {
+      "name": "School Holidays Australia (App Store)",
+      "price": "Free with ads",
+      "gap": "Dates only; 'Contains Advertising'; collects device ID/advertising data; no coverage/cost planning",
+      "src": "sha_app"
+    },
+    {
+      "name": "Aussie Leave Calculator",
+      "price": "Free web",
+      "gap": "Optimises one person's leave; no two-parent + grandparent + vacation care coverage; Google Analytics",
+      "src": "leavecalc"
+    },
+    {
+      "name": "Bobby (subscriptions)",
+      "gap": "22% low-star, 47% of those about paywall; manual only",
+      "src": "bobby_appstore"
+    },
+    {
+      "name": "Wishpile / Giftbook / GiftSnitch",
+      "gap": "Gift trackers exist, mostly accounts/cloud; not tied to a household calendar",
+      "src": [
+        "wishpile",
+        "giftbook"
+      ]
+    }
+  ],
+  "lineup": {
+    "hub": {
+      "name": "This Week",
+      "role": "free hub inside every app: one household profile, one weekly view, one .ics export, one backup file"
+    },
+    "products": [
+      {
+        "name": "HolidayPlanner AU",
+        "role": "Anchor",
+        "ideas": [
+          "school-holiday-leave-planner-au"
+        ],
+        "class": "A",
+        "hero": "Who's got the kids? coverage grid: term dates + both parents' leave + grandparents + vacation care, gaps & cost"
+      },
+      {
+        "name": "Renewal Radar",
+        "role": "Money saver",
+        "ideas": [
+          "household-renewals-calendar",
+          "insurance-premium-creep-log",
+          "utility-plan-review-reminders",
+          "subscription-tracker-local",
+          "credentials-expiry-wallet",
+          "travel-docs-checklist-family",
+          "bills-calendar-household (folded)",
+          "warranty-receipt-vault (dates only)"
+        ],
+        "class": "A",
+        "hero": "Year-on-year price creep + 20-minute shop-around + sinking fund"
+      },
+      {
+        "name": "GiftLedger",
+        "role": "Seasonal joy",
+        "ideas": [
+          "gift-list-budget-tracker"
+        ],
+        "class": "A",
+        "hero": "Per-person budgets, kids kept even, year-over-year memory"
+      },
+      {
+        "name": "Household Handbook",
+        "role": "SWAP IN - mental-load relief",
+        "ideas": [
+          "house-sitter-handover-guide",
+          "ice-emergency-info-sheet",
+          "sec-account-recovery-planner (locations only)",
+          "pet-admin-records (light)"
+        ],
+        "class": "A (print) / B (E2E expiring link)",
+        "hero": "Role-based sheets (grandparents, babysitter, pet sitter, partner) auto-filled from the profile"
+      },
+      {
+        "name": "Moving Mode",
+        "role": "v1.1 seasonal module",
+        "ideas": [
+          "moving-house-checklist-au"
+        ],
+        "class": "A",
+        "hero": "Change-of-address list generated from providers already on the Radar"
+      }
+    ],
+    "swaps": [
+      {
+        "change": "Warranty & Receipts vault -> demoted to an item type in Renewal Radar (expiry date + optional single photo)",
+        "why": "Thinnest pain evidence (cluster 1.25); photo storage on-device risks browser eviction/data loss; competitor Life Admin already sells a doc vault"
+      },
+      {
+        "change": "Bills calendar -> folded into Radar's annual-cost view and sinking fund",
+        "why": "Direct debits/banks already handle due dates; the AU pain is price creep and confusion (Finder 50% confusing; ACCC 27% on best offer)"
+      },
+      {
+        "change": "School & Family Calendar (full calendar) -> dropped; HolidayPlanner covers the AU-specific piece; calendar stays the user's own via .ics",
+        "why": "Merged calendar feeds need a server (C-disq); Cozi/TimeTree crowded; Cozi complaints show calendar replacement creates sync pain"
+      },
+      {
+        "change": "ADD Household Handbook",
+        "why": "Mental load evidence: ABS unpaid-work gap, Finder 70% carry most admin, Mommit threads; grandparents most common informal carers; all class A; reuses profile data"
+      },
+      {
+        "change": "ADD Moving Mode (v1.1)",
+        "why": "Highest complaint cluster (2.95); Finder: 46% moved in 3 yrs, 42% stressed by address updates, only 21% shopped around"
+      },
+      {
+        "change": "Considered, not added: couples' chore-fairness ledger",
+        "why": "Needs both partners logging + sync (B), high engagement burden; replaced by a lightweight 'owner' field + 'who carries what' view in This Week"
+      }
+    ]
+  },
+  "personas": [
+    {
+      "rank": 1,
+      "name": "The Default Parent",
+      "who": "Working parent (usually the mother), 32-48, kids 5-14, dual-income or solo",
+      "size": "~1.6M couple families with two employed parents and a child 0-14 + 548k employed one-parent families with dependants (ABS 2025)",
+      "scores": {
+        "size": 5,
+        "pain": 5,
+        "wtp": 4,
+        "reach": 4
+      },
+      "why_dominant": "Uses all 4 products; pain recurs every term; dated triggers for marketing; AU-specific moat; A$29 < one vacation care day",
+      "channels": [
+        "school-term timing SEO (state x term pages)",
+        "Facebook local parent groups",
+        "r/workingmumsau, r/AusParents, r/AusFinance",
+        "Kidspot/Mamamia style content",
+        "Pinterest printables",
+        "word of mouth via shared Handbook sheets"
+      ]
+    },
+    {
+      "rank": 2,
+      "name": "The Household CFO",
+      "who": "28-55, homeowner or renter, manages bills alone, Gen Y heavy",
+      "size": "Finder: 55% of adults manage bills entirely alone; 3.7M couple families without dependants (ABS) as partial proxy",
+      "scores": {
+        "size": 4,
+        "pain": 4,
+        "wtp": 4,
+        "reach": 4
+      },
+      "channels": [
+        "r/AusFinance, Whirlpool",
+        "SEO: 'insurance renewal went up', 'loyalty tax'",
+        "renewal-season content (EOFY, insurance anniversaries)"
+      ]
+    },
+    {
+      "rank": 3,
+      "name": "The Sandwich Carer",
+      "who": "45-64 caring for kids and an ageing parent",
+      "size": "3.0M informal carers, 1.2M primary (ABS SDAC 2022)",
+      "scores": {
+        "size": 3,
+        "pain": 5,
+        "wtp": 3,
+        "reach": 2
+      },
+      "channels": [
+        "carer forums/Facebook groups",
+        "Handbook as entry point"
+      ]
+    },
+    {
+      "rank": 4,
+      "name": "The Grandparent Helper",
+      "who": "60+, provides care, low subscription appetite, receives Handbook sheets",
+      "size": "Grandparents most common informal care (ABS 2017)",
+      "scores": {
+        "size": 3,
+        "pain": 2,
+        "wtp": 2,
+        "reach": 3
+      },
+      "channels": [
+        "receives shared sheets (viral loop), print"
+      ]
+    }
+  ],
+  "must_be_true": [
+    "First win in under 2 minutes, pre-filled with AU data",
+    "Enter the household once; every app reuses it",
+    "Lives in your own calendar (.ics with alarms) - no new daily app habit",
+    "Nothing on our servers, no account, no ads, export everything - said plainly",
+    "One honest price for the whole household; no paywalls inside the Pass"
+  ],
+  "pricing": {
+    "pass": "A$29/yr per household (up to 6), 30-day trial; A$19 first year for existing buyers",
+    "standalone": "HolidayPlanner A$15/yr, GiftLedger A$19 one-time, Radar A$19/yr (assumption), Handbook A$15/yr (assumption)",
+    "anchor": "Less than one vacation care day (A$95-140) and well under the ACCC average electricity loyalty penalty (A$221/yr)",
+    "free": "Holiday dates view + 1 Handbook sheet free forever (acquisition)"
+  },
+  "mockups": [
+    "run7_mockups/d1_thisweek_desktop.png",
+    "run7_mockups/d2_holidays_desktop.png",
+    "run7_mockups/m1_thisweek_mobile.png",
+    "run7_mockups/m2_holidays_mobile.png",
+    "run7_mockups/m3_radar_mobile.png",
+    "run7_mockups/m4_gifts_mobile.png",
+    "run7_mockups/m5_handbook_mobile.png",
+    "run7_mockups/m6_moving_mobile.png"
+  ],
+  "caveats": [
+    "Reddit pages blocked direct fetch; quotes are thread titles or captured in Run 4 pain_points.json",
+    "Persona sizes are household counts not buyers; conversion untested",
+    "Life Admin competitor currency not stated",
+    "Mockup numbers are sample data; dates illustrative; +71% example mirrors a real r/AusFinance post",
+    "Not legal or financial advice"
+  ],
+  "marks": [
+    {
+      "id": "household-renewals-calendar",
+      "role": "merged-into-renewal-radar",
+      "note": "Run 7: merged into Renewal Radar. The rubric total is unchanged."
+    },
+    {
+      "id": "insurance-premium-creep-log",
+      "role": "merged-into-renewal-radar",
+      "note": "Run 7: merged into Renewal Radar (price creep). The rubric total is unchanged."
+    },
+    {
+      "id": "utility-plan-review-reminders",
+      "role": "merged-into-renewal-radar",
+      "note": "Run 7: merged into Renewal Radar (shop-around). The rubric total is unchanged."
+    },
+    {
+      "id": "subscription-tracker-local",
+      "role": "merged-into-renewal-radar",
+      "note": "Run 7: merged into Renewal Radar (subscriptions and trials). The rubric total is unchanged."
+    },
+    {
+      "id": "credentials-expiry-wallet",
+      "role": "merged-into-renewal-radar",
+      "note": "Run 7: merged into Renewal Radar (ID and card expiry). The rubric total is unchanged."
+    },
+    {
+      "id": "travel-docs-checklist-family",
+      "role": "merged-into-renewal-radar",
+      "note": "Run 7: merged into Renewal Radar (passport and travel-document expiry). The rubric total is unchanged."
+    },
+    {
+      "id": "bills-calendar-household",
+      "role": "merged-into-renewal-radar",
+      "note": "Run 7: folded into Renewal Radar's annual-cost view and sinking fund. The rubric total is unchanged."
+    },
+    {
+      "id": "warranty-receipt-vault",
+      "role": "merged-into-renewal-radar",
+      "note": "Run 7: demoted to a Renewal Radar item type (expiry date plus an optional photo). The rubric total is unchanged."
+    },
+    {
+      "id": "family-calendar-feed-merger",
+      "role": "dropped-from-pass",
+      "note": "Run 7: the full family calendar was dropped from the Pass. HolidayPlanner covers the AU-specific piece, and the household keeps its own calendar via .ics."
+    },
+    {
+      "id": "house-sitter-handover-guide",
+      "role": "merged-into-household-handbook",
+      "note": "Run 7: part of Household Handbook. No new scored idea was added, because this idea already matches that product."
+    },
+    {
+      "id": "ice-emergency-info-sheet",
+      "role": "merged-into-household-handbook",
+      "note": "Run 7: part of Household Handbook. No new scored idea was added, because this idea already matches that product."
+    },
+    {
+      "id": "sec-account-recovery-planner",
+      "role": "merged-into-household-handbook",
+      "note": "Run 7: part of Household Handbook (locations only, never passwords). No new scored idea was added."
+    },
+    {
+      "id": "pet-admin-records",
+      "role": "merged-into-household-handbook",
+      "note": "Run 7: light pet admin inside Household Handbook. No new scored idea was added."
+    },
+    {
+      "id": "moving-house-checklist-au",
+      "role": "pass-v1.1",
+      "note": "Run 7: this is Moving Mode, a Pass v1.1 module. No duplicate idea was added."
+    },
+    {
+      "id": "chore-fairness-ledger",
+      "role": "considered-not-added",
+      "note": "Run 7: the couples' chore ledger was considered and not added. This Week uses an owner field instead. The rubric total is unchanged."
+    }
+  ],
+  "mockup_files": [
+    {
+      "file": "d1_thisweek_desktop.png",
+      "title": "This Week, desktop",
+      "caption": "Side nav, a 7-day strip, Needs you, Who carries what, and Money this year. Sample data."
+    },
+    {
+      "file": "d2_holidays_desktop.png",
+      "title": "HolidayPlanner, desktop",
+      "caption": "The summer coverage grid with leave bars and a cost card. Sample data. Dates are illustrative, not official term dates."
+    },
+    {
+      "file": "m1_thisweek_mobile.png",
+      "title": "This Week",
+      "caption": "The free hub: holiday gaps, renewals, birthdays and trials ranked by urgency. Sample data."
+    },
+    {
+      "file": "m2_holidays_mobile.png",
+      "title": "HolidayPlanner AU",
+      "caption": "Who is minding the kids each weekday, plus gaps, leave left and vacation-care cost. Sample data."
+    },
+    {
+      "file": "m3_radar_mobile.png",
+      "title": "Renewal Radar",
+      "caption": "Price trend rather than only the date. The +71% example mirrors a real r/AusFinance post (A$2,192 to A$2,951 to A$3,755). Sample data."
+    },
+    {
+      "file": "m4_gifts_mobile.png",
+      "title": "GiftLedger",
+      "caption": "Per-person budgets, a kids-kept-even check, and year-over-year memory. The names, budgets and dates in this gifts mockup are sample data, not a real household."
+    },
+    {
+      "file": "m5_handbook_mobile.png",
+      "title": "Household Handbook",
+      "caption": "A role-based sheet for Nan, built from the holiday plan. Print, or an end-to-end-encrypted link that expires. Sample data."
+    },
+    {
+      "file": "m6_moving_mobile.png",
+      "title": "Moving Mode (v1.1)",
+      "caption": "The change-of-address list is generated from providers already on the Radar. Sample data."
+    }
+  ],
+  "writeup": {
+    "summary": "The Pass should be sold to the parent who carries the household in her head. Lead with the AU-specific job nobody does well: who's got the kids each week of the school holidays, and what will it cost. Then add the money job, catching insurance and energy price creep at renewal, and the relief job, getting what's in her head onto a sheet that Nan, the sitter or her partner can use. Renewals by date alone are weak: providers already send reminders, and pain evidence is low, at 1.25–1.5. So the old renewals, bills, warranty and insurance modules merge into one Renewal Radar built around price, not dates.",
+    "why_dominant": "The Default Parent is the largest group with recurring, dated pain: every term break forces a plan. She uses all four products, so the bundle beats any single app for her. The A$29 price is less than one vacation-care day, so the value is obvious. She is reachable at predictable moments (the weeks before each term ends) through state × term SEO, parent Facebook groups and r/workingmumsau. Every Handbook sheet she sends to Nan or a sitter advertises the product. The Household CFO is a close second and the main reason Radar exists.",
+    "lineup_sentence": "HolidayPlanner AU, Renewal Radar, GiftLedger and Household Handbook, plus Moving Mode in v1.1.",
+    "metrics": [
+      {
+        "value": "The Default Parent",
+        "label": "Dominant persona",
+        "detail": "About 1.6M couple families with two employed parents and a child 0–14, plus 548k employed one-parent families with dependants (ABS 2025)"
+      },
+      {
+        "value": "4 + 1",
+        "label": "Final lineup",
+        "detail": "HolidayPlanner, Renewal Radar, GiftLedger, Household Handbook, and Moving Mode in v1.1"
+      },
+      {
+        "value": "70%",
+        "label": "Carry most of the household admin alone",
+        "detail": "Finder survey, Aug 2026"
+      },
+      {
+        "value": "A$29/yr",
+        "label": "Whole household",
+        "detail": "Up to 6 people. Life Admin (mylifeadmin.app) is $9–15 a month"
+      }
+    ],
+    "persona_rows": [
+      {
+        "name": "The Default Parent",
+        "size": "5",
+        "pain": "5",
+        "wtp": "4",
+        "reach": "4",
+        "verdict": "18 · dominant"
+      },
+      {
+        "name": "The Household CFO",
+        "size": "4",
+        "pain": "4",
+        "wtp": "4",
+        "reach": "4",
+        "verdict": "16 · strong second"
+      },
+      {
+        "name": "The Sandwich Carer",
+        "size": "3",
+        "pain": "5",
+        "wtp": "3",
+        "reach": "2",
+        "verdict": "13 · later"
+      },
+      {
+        "name": "The Grandparent Helper",
+        "size": "3",
+        "pain": "2",
+        "wtp": "2",
+        "reach": "3",
+        "verdict": "10 · receiver"
+      }
+    ],
+    "persona_detail": [
+      "A working parent, usually the mother, aged 32–48, with kids aged 5–14, in a dual-income or solo-parent household. She is the one everyone asks where things are. About 1.6M couple families have two employed parents and a child aged 0–14 (73% of 2.2M), plus 419k employed single mothers and 129k employed single fathers with dependants (ABS, June 2025). Pain: 12 weeks of school holidays against 4 weeks of leave each; vacation care costs about $95–140 a day; women do 4h31m of unpaid work a day vs 3h12m for men (ABS Time Use 2020–21). Uses all four products.",
+      "Aged 28–55, a homeowner or renter who runs the money admin alone. Gen Y-heavy. 55% of adults manage and pay household bills entirely alone; 70% carry most of it (Finder, Aug 2026). Home insurance renewals are up 30–71% in r/AusFinance threads. ACCC: electricity plans more than 3 years old cost about A$221/yr more, and only 27% of customers are on their retailer's best offer. Uses Renewal Radar first, then Moving Mode.",
+      "Aged 45–64, juggling kids and an ageing parent. 3.0M informal carers, of whom 1.2M are primary carers (ABS SDAC 2022). Pain is very high, and they are harder to reach. Uses the Handbook and Radar for a parent's renewals. Grow into this persona; don't launch for it.",
+      "Aged 60+. Grandparents are the most common informal childcare (18.6% of school-attending children aged 0–12; ABS 2017, the latest release). Finder found only 11% of Boomers have an unused subscription and 35% have none. They receive Handbook sheets and holiday asks. They are a viral loop, not a buyer."
+    ],
+    "channels": [
+      [
+        "The Default Parent",
+        "Google: '[state] school holidays 2027', 'vacation care cost'. Pinterest printables. Local parent Facebook groups, by invitation or helpful posts. r/workingmumsau and r/AusParents. School newsletters and P&C partners. Shared Handbook sheets."
+      ],
+      [
+        "The Household CFO",
+        "r/AusFinance and Whirlpool, answering the 'my renewal went up' threads. SEO for 'insurance renewal increase' and 'loyalty tax'. EOFY content. Finder and Canstar-style explainers."
+      ],
+      [
+        "The Sandwich Carer",
+        "Carer Gateway communities and carer Facebook groups. A parent-care sheet Handbook template as the entry point."
+      ],
+      [
+        "The Grandparent Helper",
+        "Reached through the sheets they receive. Make printed sheets beautiful and branded."
+      ]
+    ],
+    "products": [
+      {
+        "name": "HolidayPlanner AU",
+        "role": "Anchor",
+        "audience": "The Default Parent and solo parents",
+        "privacy": "A · local-only",
+        "ideas": [
+          "school-holiday-leave-planner-au"
+        ],
+        "why_superior": "A week-by-week coverage grid for both parents, grandparents and vacation care, with a gap count, a cost estimate, one-tap .ics, and term dates pre-loaded for each state.",
+        "frustrations": [
+          {
+            "quote": "Contains Advertising. The app collects device ID and advertising data, and it only shows dates.",
+            "href": "https://apps.apple.com/au/app/school-holidays-australia/id6760274089",
+            "source": "School Holidays Australia, App Store"
+          },
+          {
+            "quote": "Four weeks of leave, 12 of school holidays: the parenting equation that doesn't add up",
+            "href": "https://www.smh.com.au/national/four-weeks-of-leave-12-of-school-holidays-the-parenting-equation-that-doesn-t-add-up-20260206-p5o040.html",
+            "source": "SMH, Feb 2026"
+          },
+          {
+            "quote": "77 days of non school time in 2027. How do you manage? Both parents working full time with zero family help.",
+            "href": "https://www.abc.net.au/news/2026-09-19/parenthood-maths-aint-mathing/106552344",
+            "source": "r/Parenting, captured in Run 4 (20 Oct 2026, 134 points, 104 comments); ABC, Sep 2026, on the same gap"
+          },
+          {
+            "quote": "All the good features are behind paywalls, deleted app within 5 minutes.",
+            "href": "https://apps.apple.com/au/app/id407108860?see-all=reviews",
+            "source": "Cozi, App Store AU reviews"
+          }
+        ]
+      },
+      {
+        "name": "Renewal Radar",
+        "role": "Money saver",
+        "audience": "The Household CFO and the Default Parent",
+        "privacy": "A · local-only",
+        "ideas": [
+          "household-renewals-calendar",
+          "insurance-premium-creep-log",
+          "utility-plan-review-reminders",
+          "subscription-tracker-local",
+          "credentials-expiry-wallet",
+          "travel-docs-checklist-family",
+          "bills-calendar-household",
+          "warranty-receipt-vault"
+        ],
+        "why_superior": "Tracks the price trend year on year, a 20-minute shop-around script, a sinking fund, subscriptions and trials, ID and passport expiry, and warranty dates. No bank link and no inbox scanning.",
+        "frustrations": [
+          {
+            "quote": "Budget Direct home and contents went from $2,192.13 (2024) to $2,950.97 (2025) to $3,754.89, increased by 71.3%.",
+            "href": "https://www.reddit.com/r/AusFinance/comments/1qe0sgj/",
+            "source": "r/AusFinance, Jan 2026"
+          },
+          {
+            "quote": "Premium has just gone up 30% (despite no claims ever).",
+            "href": "https://www.reddit.com/r/AusFinance/comments/1vqbrf2/",
+            "source": "r/AusFinance, Aug 2026. A commenter who shopped around cut car insurance from $950 to $630."
+          },
+          {
+            "quote": "Renewal and it's $5k.",
+            "href": "https://www.reddit.com/r/AusFinance/comments/1wbl64h/",
+            "source": "r/AusFinance, Sep 2026"
+          },
+          {
+            "quote": "Service NSW already sends digital rego reminders 6 weeks and 2 weeks before expiry, and 1 day after. A date reminder is not the product.",
+            "href": "https://www.service.nsw.gov.au/transaction/digital-vehicle-registration",
+            "source": "Service NSW"
+          },
+          {
+            "quote": "22% of Bobby reviews are low-star, and 47% of those are about the paywall.",
+            "href": "https://apps.apple.com/au/app/id1059152023?see-all=reviews",
+            "source": "Bobby, App Store AU"
+          },
+          {
+            "quote": "Life Admin is free up to 10 reminders, then $9/mo or $15/mo for 2 users. The page does not state a currency. It is a cloud account with no holiday coverage and no price-creep logic.",
+            "href": "https://mylifeadmin.app/",
+            "source": "mylifeadmin.app"
+          }
+        ]
+      },
+      {
+        "name": "GiftLedger",
+        "role": "Seasonal joy",
+        "audience": "The Default Parent and grandparents",
+        "privacy": "A · local-only",
+        "ideas": [
+          "gift-list-budget-tracker"
+        ],
+        "why_superior": "Per-person budgets, kids kept even, year-over-year memory, and birthdays plus teacher gifts feeding This Week. It stays on the device and ties into the household calendar.",
+        "frustrations": [
+          {
+            "quote": "Average planned Christmas gift spend was A$438 in 2025, up from A$359.",
+            "href": "https://www.finder.com.au/news/festive-season-spending-2025",
+            "source": "Finder, festive season spending 2025"
+          },
+          {
+            "quote": "Gift trackers exist, mostly with accounts and cloud storage, and they are not tied to a household calendar.",
+            "href": "https://wishpile.com/",
+            "source": "Wishpile; Giftbook"
+          }
+        ]
+      },
+      {
+        "name": "Household Handbook",
+        "role": "Mental-load relief",
+        "audience": "The Default Parent, writing for a partner, grandparents and sitters",
+        "privacy": "A for print. B for an end-to-end-encrypted expiring link.",
+        "ideas": [
+          "house-sitter-handover-guide",
+          "ice-emergency-info-sheet",
+          "sec-account-recovery-planner",
+          "pet-admin-records"
+        ],
+        "why_superior": "Role-based sheets auto-filled from the household profile. A Nan's-week sheet comes from the holiday plan. Print it, or share an end-to-end-encrypted link that expires. Locations only, never passwords.",
+        "frustrations": [
+          {
+            "quote": "Anyone else sick of being the only one who remembers everything?",
+            "href": "https://www.reddit.com/r/Mommit/comments/1klhxd5/anyone_else_sick_of_being_the_only_one_who/",
+            "source": "r/Mommit"
+          },
+          {
+            "quote": "I wish there was an app that would take the mental load of having to remember everything.",
+            "href": "https://www.reddit.com/r/Mommit/comments/1o01ss4/i_wish_there_was_an_app_that_would_take_the/",
+            "source": "r/Mommit"
+          },
+          {
+            "quote": "70% carry most of the household admin. The knowledge lives in one head, then on fridge notes and texts.",
+            "href": "https://www.finder.com.au/utilities/how-australian-households-manage-money-report-2026",
+            "source": "Finder, Aug 2026. Fridge notes are an assumption, labelled as such."
+          }
+        ]
+      },
+      {
+        "name": "Moving Mode",
+        "role": "v1.1 seasonal module",
+        "audience": "Renters and the Household CFO",
+        "privacy": "A · local-only",
+        "ideas": [
+          "moving-house-checklist-au"
+        ],
+        "why_superior": "The address list is generated from providers already on the Radar, with a prompt to compare plans at the moment of moving. It is included in the Pass, not sold separately.",
+        "frustrations": [
+          {
+            "quote": "46% moved in the last 3 years; 42% found updating their address stressful; only 21% shopped around.",
+            "href": "https://www.finder.com.au/utilities/how-australian-households-manage-money-report-2026",
+            "source": "Finder, 2026. Pain cluster 2.95, the highest of the set."
+          }
+        ]
+      }
+    ],
+    "swaps": [
+      {
+        "change": "Demote",
+        "what": "Warranty and receipts vault",
+        "becomes": "A Renewal Radar item type: an expiry date plus an optional photo",
+        "why": "Thinnest evidence (pain cluster 1.25). Photos stored in the browser risk eviction and data loss. Document vaults are what Life Admin already sells."
+      },
+      {
+        "change": "Fold in",
+        "what": "Bills calendar",
+        "becomes": "Radar's annual-cost view and sinking fund",
+        "why": "Direct debits already handle due dates. The AU pain is price creep and confusing bills: 50% find a bill confusing (Finder), and only 27% are on their retailer's best offer (ACCC)."
+      },
+      {
+        "change": "Drop",
+        "what": "School and family calendar",
+        "becomes": "HolidayPlanner covers the AU-specific part. The household keeps its own calendar via .ics.",
+        "why": "A merged calendar feed needs a server (privacy class C, disqualified). Cozi and TimeTree are crowded, and Cozi's one-way sync complaints show the risk of replacing someone's calendar."
+      },
+      {
+        "change": "Add",
+        "what": "Household Handbook",
+        "becomes": "A product made from four existing ideas: sitter handover (76.2), ICE sheet (68.2), account-recovery locations (73.0) and pet admin (74.0)",
+        "why": "It targets the mental load, which is the dominant persona's core pain, and a sheet sent to a grandparent or sitter is a viral loop. Those ideas already exist, so Run 7 does not add a new scored row."
+      },
+      {
+        "change": "Add (v1.1)",
+        "what": "Moving Mode",
+        "becomes": "A seasonal module on the existing moving-house checklist",
+        "why": "Highest complaint score (2.95) and it reuses Radar data. It gives renters a reason to buy. The matching idea already exists, so Run 7 does not add a duplicate."
+      },
+      {
+        "change": "Not added",
+        "what": "Couples' chore-fairness ledger",
+        "becomes": "An owner field on every item, plus a Who carries what view on This Week",
+        "why": "It needs both partners to log daily and to sync (class B), so the engagement burden is high. The owner field delivers most of the visibility for a fraction of the build."
+      }
+    ],
+    "irresistibility": [
+      {
+        "title": "First win in under 2 minutes",
+        "detail": "Pick a state and the kids' ages, and you see the uncovered days and a cost. Pick home insurance, type last year's premium, and you see the trend. Term dates, public holidays and a typical AU renewal list come pre-loaded. No blank screens."
+      },
+      {
+        "title": "Enter the household once",
+        "detail": "People, kids' schools, pets, cars, home and providers live in one on-device profile. Every product reads it, so a Handbook sheet arrives mostly filled in and Moving Mode knows the providers."
+      },
+      {
+        "title": "It lives in your calendar, not another app",
+        "detail": "One Update my calendar .ics file with alarms covers every product. Nobody has to open the app daily, and nothing replaces Google or Apple Calendar."
+      },
+      {
+        "title": "Private, plainly",
+        "detail": "No account, no ads, nothing on our servers, export everything as JSON, CSV or PDF. Say it on every screen. 62% of Australians see protecting personal information as a major concern, and 74% see data breaches as a major risk (OAIC 2023)."
+      },
+      {
+        "title": "One honest price for the whole household",
+        "detail": "A$29/yr for up to 6 people, with every product included and no paywalls inside the Pass. A free forever tier (holiday dates plus one Handbook sheet) acquires users. Paying unlocks planning, not basics."
+      }
+    ],
+    "hooks": [
+      [
+        "The Default Parent",
+        "You have 5 uncovered days and it will cost about $1,040. Then Ask Nan sends a ready-made sheet.",
+        "Calm, warm, phone-first. Ready in 2 minutes during school pick-up.",
+        "Setup homework, or anything that looks like another chore list."
+      ],
+      [
+        "The Household CFO",
+        "Your home insurance is up 71% in 2 years. Here is the 20-minute shop-around. Dollars saved, logged.",
+        "Numbers first, charts, an exportable CSV.",
+        "Bank logins, upsells and ads."
+      ],
+      [
+        "The Sandwich Carer",
+        "A parent's care sheet and renewals in the same place as the kids'.",
+        "Large text, printable.",
+        "Health data on a cloud. We never hold it."
+      ],
+      [
+        "The Grandparent Helper",
+        "A clear printed sheet with no app to install.",
+        "Big type, one page.",
+        "Logins, and links that expire too quickly."
+      ]
+    ],
+    "principles": {
+      "whole": "One profile, one This Week view, one .ics, one backup file, one licence key, one look, and an owner on every item.",
+      "per_product": "HolidayPlanner answers who has the kids, not when the holidays are. Radar puts price before dates. GiftLedger is fairness and memory, not a social wish list. The Handbook is written for the reader (Nan), not the author. Moving Mode is generated, not typed.",
+      "design": "Simplicity wins the first 2 minutes. Design earns the renewal. One number per screen that matters (days uncovered, percent increase, dollars left). Plain AU English: rego, vacation care. No streaks or gamification. A warm look that feels like a premium paper planner, and one shell so the products feel like one."
+    },
+    "synergies": [
+      "Holiday plan to Handbook: when Nan covers 14–16 Jan, the Pass writes her sheet (routine, allergies, pick-ups, dog) from the plan.",
+      "Radar to Moving Mode: every provider you track becomes a change-of-address task, flagged compare before you move.",
+      "Profile to everything: kids' birthdays feed GiftLedger. Pets feed the Handbook and Radar (council registration, vaccinations).",
+      "Owners everywhere: a Who carries what count on This Week makes the invisible load visible without a separate chore app.",
+      "One .ics and one backup: a single Update my calendar file and a single backup file cover the whole household.",
+      "Value grows with use: each year adds price history, gift history and holiday patterns, so year 2 is more useful than year 1. Everything stays exportable. Lock-in through a data hostage is what users hate about Cozi."
+    ],
+    "pricing_notes": [
+      [
+        "Pass",
+        "A$29/yr per household (up to 6), with a 30-day trial. A$19 in the first year for existing GiftLedger and HolidayPlanner buyers."
+      ],
+      [
+        "Standalone assumptions",
+        "HolidayPlanner A$15/yr and GiftLedger A$19 one-time come from the Run 6 roadmap. Radar A$19/yr and Handbook A$15/yr are assumptions, labelled as such. Bought separately that is about A$68 before the Pass price."
+      ],
+      [
+        "Anchor",
+        "Less than one vacation-care day (A$95–140) and under the ACCC average electricity loyalty penalty (about A$221/yr on plans more than 3 years old)."
+      ],
+      [
+        "Free",
+        "Holiday dates for your state, plus one Handbook sheet, free forever. Moving Mode is included in the Pass and is not sold separately."
+      ],
+      [
+        "Renewal hook",
+        "Each January the Pass shows Your year: dollars saved by shopping around, holiday days covered, gifts kept on budget."
+      ],
+      [
+        "Device-only",
+        "No accounts, no Supabase, and no reminder emails. Reminders are .ics alarms. Licence keys are checked from the browser against a merchant of record. Data stays on the device."
+      ]
+    ],
+    "not_advice": "This is not legal, insurance or financial advice. Renewal Radar must say compare and never recommend an insurer."
+  }
+}
