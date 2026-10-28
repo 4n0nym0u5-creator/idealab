@@ -53,8 +53,14 @@ export function BundleView({ bundle, ideas }: { bundle: BundleRecord; ideas: Ide
       </section>
 
       <section className="panel stack">
-        <h2>Launch plan</h2>
-        <p className="small muted">These five modules ship together. Each line names the ideas that make the module.</p>
+        <h2>Run 7 lineup</h2>
+        <p className="small">HolidayPlanner AU (anchor), Renewal Radar (renewals, subscriptions, warranties and ID expiry, with the bills calendar folded in), GiftLedger, and Household Handbook. Moving Mode ships in v1.1 on the existing moving checklist. The full family calendar is dropped. The chore ledger was considered and not added. The design stays device-only: local storage, .ics alarms, licence keys via a merchant of record, A$29/yr per household.</p>
+        <p><Link href="/life-admin-pass">Life Admin Pass deep dive</Link></p>
+      </section>
+
+      <section className="panel stack">
+        <h2>Run 5 modules</h2>
+        <p className="small muted">These five modules are the scored Run 5 plan. Run 7 supersedes the lineup. The rubric total is still the Run 5 score.</p>
         <ol>
           {bundle.launchModules.map((module) => <li key={module}>{module}</li>)}
         </ol>

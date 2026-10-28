@@ -10,6 +10,7 @@ import { domainOf, formatDate } from "@/lib/format";
 import { contribution, workingScores } from "@/lib/scoring";
 import { tierLabel } from "@/lib/bundles";
 import { monetisationLabel, privacyClassName, privacyLabel } from "@/lib/portfolio";
+import { lineupLabel } from "@/lib/run7";
 import { STATUS_META, type Idea, type Status } from "@/lib/types";
 import type { Weights } from "@/lib/criteria";
 import { ScoreRadar } from "./charts";
@@ -79,6 +80,7 @@ export function IdeaDetail({ idea, weights, neighbors, criteriaOrder }: { idea: 
             {idea.privacyClass ? <span className={privacyClassName(idea.privacyClass)}>{privacyLabel(idea.privacyClass)}</span> : null}
             {idea.portfolioFit ? <span className="badge">Fit {idea.portfolioFit.score.toFixed(1)}</span> : null}
             {idea.portfolioMonetisation ? <span className="badge">{monetisationLabel(idea.portfolioMonetisation.model)}</span> : null}
+            {idea.lineupRole ? <Link className="badge" href="/life-admin-pass">{lineupLabel(idea.lineupRole)}</Link> : null}
             <span className="badge">{idea.platform}</span>
             <span className="badge">Seen in run {idea.firstSeenRun}</span>
             <span className="badge">Scored in run {idea.lastScoredRun}</span>
@@ -256,6 +258,7 @@ export function IdeaDetail({ idea, weights, neighbors, criteriaOrder }: { idea: 
             <p className="small">Fit {idea.portfolioFit.score.toFixed(1)} · rank {idea.portfolioFit.rank} · viability {idea.portfolioFit.viability.toFixed(1)} · opportunity {idea.portfolioFit.opportunity.toFixed(1)} · before privacy {idea.portfolioFit.prePrivacy.toFixed(1)}{idea.roadmapSlot != null ? <> · <Link href="/portfolio">roadmap slot {String(idea.roadmapSlot)}</Link></> : null}</p>
             {idea.portfolioMonetisation ? <p className="small"><strong>{monetisationLabel(idea.portfolioMonetisation.model)}.</strong> {idea.portfolioMonetisation.reasoning}</p> : null}
             {idea.privacyNotes ? <p className="small">{idea.privacyNotes}</p> : null}
+            {idea.lineupNote ? <p className="small">{idea.lineupNote} <Link href="/life-admin-pass">Life Admin Pass deep dive</Link>.</p> : null}
             {idea.thirdPartyPersonalDataApi ? <p className="small">Third-party personal-data API: {idea.thirdPartyPersonalDataApi}</p> : null}
           </div>
         ) : null}

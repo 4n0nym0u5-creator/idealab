@@ -75,6 +75,8 @@ export const ideas = pgTable("ideas", {
   clientSidePath: text("client_side_path").notNull().default("null"),
   portfolioMonetisation: text("portfolio_monetisation").notNull().default("null"),
   roadmapSlot: text("roadmap_slot").notNull().default("null"),
+  lineupRole: text("lineup_role").notNull().default(""),
+  lineupNote: text("lineup_note").notNull().default(""),
   pipelineOrder: integer("pipeline_order").notNull().default(0),
   position: integer("position").notNull().default(0),
   updatedAt: text("updated_at").notNull(),

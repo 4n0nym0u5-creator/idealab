@@ -291,13 +291,20 @@ test("production upgrade preserves notes, statuses and overrides", async () => {
     assert.equal(upgraded.ideas, 187);
     const portfolio = await loadPortfolio();
     assert.equal(portfolio.ideas.length, 187);
-    assert.equal(portfolio.runs.length, 6);
+    assert.equal(portfolio.runs.length, 7);
     assert.equal(portfolio.settings.rubricVersion, "2.0");
     assert.equal(portfolio.settings.schemaVersion, "5");
     assert.equal(portfolio.settings.portfolio?.roadmap.length, 8);
     assert.equal(portfolio.settings.portfolio?.lens.rubricTotalsUnchanged, true);
     assert.equal(portfolio.ideas.find((idea) => idea.id === "gift-list-budget-tracker")?.tier, "Build now");
     assert.equal(portfolio.ideas.find((idea) => idea.id === "ai-symptom-checker")?.portfolioFit, null);
+    assert.equal(portfolio.ideas.find((idea) => idea.id === "warranty-receipt-vault")?.lineupRole, "merged-into-renewal-radar");
+    assert.equal(portfolio.ideas.find((idea) => idea.id === "moving-house-checklist-au")?.lineupRole, "pass-v1.1");
+    assert.equal(portfolio.ideas.find((idea) => idea.id === "chore-fairness-ledger")?.lineupRole, "considered-not-added");
+    assert.equal(portfolio.ideas.find((idea) => idea.id === "family-calendar-feed-merger")?.lineupRole, "dropped-from-pass");
+    assert.equal(portfolio.ideas.some((idea) => idea.id === "household-handbook" || idea.id === "moving-mode"), false);
+    assert.equal(portfolio.ideas.find((idea) => idea.id === "gift-list-budget-tracker")?.researchTotal, 83.4);
+    assert.equal(portfolio.runs.find((run) => run.runNumber === 7)?.ideasRescored, 0);
     assert.equal(portfolio.bundles.length, 1);
     assert.equal(portfolio.bundles[0]?.id, "life-admin-pass");
     assert.equal(portfolio.bundles[0]?.total, 68.8);
@@ -321,6 +328,9 @@ test("production upgrade preserves notes, statuses and overrides", async () => {
     const after = await loadPortfolio();
     assert.equal(after.ideas.find((idea) => idea.id === "mac-quicklook-data-viewer")?.userNotes, "Edited after the upgrade.");
     assert.equal(after.ideas.length, 187);
+    assert.equal(after.runs.filter((run) => run.runNumber === 7).length, 1);
+    assert.equal(after.ideas.find((idea) => idea.id === "bills-calendar-household")?.lineupRole, "merged-into-renewal-radar");
+    assert.equal(after.ideas.find((idea) => idea.id === "bills-calendar-household")?.researchTotal, portfolio.ideas.find((idea) => idea.id === "bills-calendar-household")?.researchTotal);
     assert.equal(after.bundles[0]?.revenueScenarios.base?.monthly.length, 36);
   } finally {
     await closeDb();

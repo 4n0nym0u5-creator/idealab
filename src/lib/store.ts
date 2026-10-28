@@ -10,6 +10,7 @@ import { applyRubricRescore, rubricHistoryFromRescore, type RescoreFile } from "
 import { applyBundleAnalysis, bundleFromUnknown, canonicalBundle, canonicalOverrides, overridesFromUnknown, readStoredBundle } from "./bundles";
 import { aliasesFromUnknown, canonicalCluster, canonicalMethod, canonicalRun4Merge, clustersFromUnknown, methodFromUnknown, run4MergeFromUnknown } from "./pain";
 import { canonicalPortfolio, portfolioFieldsFromIdea, portfolioFitFromUnknown, monetisationFromUnknown, portfolioFromUnknown, roadmapSlotFromUnknown } from "./portfolio";
+import { applyRun7Marks, run7Record } from "./run7";
 import { backups, bundles, ideas, painClusters, rubricChangelog, runs, settings } from "./schema";
 import { assertWeights, assignPresentation, bumpVersion, recompute, sanitizeOverrides, totalOf } from "./scoring";
 import { themeForCategory } from "./themes";
@@ -112,6 +113,7 @@ const DATA_MIGRATION = "0002_rubric_v2_data";
 const DATA_MIGRATION_V3 = "0003_schema_v3_data";
 const DATA_MIGRATION_V4 = "0004_schema_v4_data";
 const DATA_MIGRATION_V5 = "0005_schema_v5_data";
+const DATA_MIGRATION_V6 = "0006_run7_lifeadmin_data";
 
 function rowToIdea(row: IdeaRow): Idea {
   const theme = themeForCategory(row.category);
@@ -168,6 +170,8 @@ function rowToIdea(row: IdeaRow): Idea {
     clientSidePath: parseJson<boolean | null>(row.clientSidePath, null),
     portfolioMonetisation: monetisationFromUnknown(parseJson(row.portfolioMonetisation, null)),
     roadmapSlot: roadmapSlotFromUnknown(parseJson(row.roadmapSlot, null)),
+    lineupRole: row.lineupRole ?? "",
+    lineupNote: row.lineupNote ?? "",
     pipelineOrder: row.pipelineOrder,
     position: row.position,
     updatedAt: row.updatedAt,
@@ -235,6 +239,8 @@ function ideaToRow(idea: Idea) {
     clientSidePath: JSON.stringify(idea.clientSidePath ?? null),
     portfolioMonetisation: JSON.stringify(idea.portfolioMonetisation ?? null),
     roadmapSlot: JSON.stringify(idea.roadmapSlot ?? null),
+    lineupRole: idea.lineupRole ?? "",
+    lineupNote: idea.lineupNote ?? "",
     pipelineOrder: idea.pipelineOrder,
     position: idea.position,
     updatedAt: idea.updatedAt,
@@ -506,6 +512,8 @@ export function ideaFromDocument(raw: RawIdea, index: number, now: string): Idea
     relatedIds: raw.related_ids ?? [],
     run4Merge: run4MergeFromUnknown(raw.run4_merge),
     ...portfolioFieldsFromIdea(raw as unknown as Record<string, unknown>),
+    lineupRole: "",
+    lineupNote: "",
     pipelineOrder: app.pipeline_order ?? 0,
     position: app.position ?? index,
     updatedAt: app.updated_at ?? now,
@@ -575,6 +583,8 @@ export function canonicalIdea(idea: Idea) {
     ...(idea.clientSidePath != null ? { client_side_path: idea.clientSidePath } : {}),
     ...(idea.portfolioMonetisation ? { portfolio_monetisation: idea.portfolioMonetisation } : {}),
     ...(idea.roadmapSlot != null ? { roadmap_slot: idea.roadmapSlot } : {}),
+    ...(idea.lineupRole ? { lineup_role: idea.lineupRole } : {}),
+    ...(idea.lineupNote ? { lineup_note: idea.lineupNote } : {}),
   };
 }
 
@@ -1021,6 +1031,26 @@ export function ensureDatabase(): Promise<{ ideas: number; runs: number; skipped
   return ready;
 }
 
+export async function applyRun7Lineup(): Promise<{ changed: number; skippedNew: string[] }> {
+  const portfolio = await loadPortfolio();
+  const before = new Map(portfolio.ideas.map((idea) => [idea.id, { total: idea.researchTotal, status: idea.status, history: idea.scoreHistory.length }]));
+  const result = applyRun7Marks(portfolio.ideas);
+  for (const idea of portfolio.ideas) {
+    const prior = before.get(idea.id);
+    if (!prior) continue;
+    if (idea.researchTotal !== prior.total || idea.status !== prior.status || idea.scoreHistory.length !== prior.history) {
+      throw new Error(`Run 7 changed rubric data on ${idea.id}`);
+    }
+  }
+  const db = await getDb();
+  await db.transaction(async (tx) => {
+    const marked = portfolio.ideas.filter((idea) => idea.lineupRole);
+    if (marked.length) await persistIdeas(tx, marked);
+    if (!portfolio.runs.some((run) => run.runNumber === 7)) await persistRun(tx, run7Record());
+  });
+  return { changed: result.changed, skippedNew: result.added };
+}
+
 export async function seedIfEmpty(actor = "seed"): Promise<{ ideas: number; runs: number; skipped: boolean }> {
   await migrate();
   const db = await getDb();
@@ -1029,10 +1059,12 @@ export async function seedIfEmpty(actor = "seed"): Promise<{ ideas: number; runs
   if (!populated) {
     const result = await replacePortfolio(readResearchFile(), actor, { onlyIfEmpty: true });
     if (!result.skipped) {
+      await applyRun7Lineup();
       await recordMigration(DATA_MIGRATION);
       await recordMigration(DATA_MIGRATION_V3);
       await recordMigration(DATA_MIGRATION_V4);
       await recordMigration(DATA_MIGRATION_V5);
+      await recordMigration(DATA_MIGRATION_V6);
       return result;
     }
   }
@@ -1040,13 +1072,22 @@ export async function seedIfEmpty(actor = "seed"): Promise<{ ideas: number; runs
   const needsV3 = !(await migrationApplied(DATA_MIGRATION_V3));
   const needsV4 = !(await migrationApplied(DATA_MIGRATION_V4));
   const needsV5 = !(await migrationApplied(DATA_MIGRATION_V5));
-  if (needsV2 || needsV3 || needsV4 || needsV5) {
-    const upgraded = await upgradeResearchData(readResearchFile(), actor);
+  const needsV6 = !(await migrationApplied(DATA_MIGRATION_V6));
+  if (needsV2 || needsV3 || needsV4 || needsV5 || needsV6) {
+    let ideasAfter = Number(n);
+    let runsAfter = 0;
+    if (needsV2 || needsV3 || needsV4 || needsV5) {
+      const upgraded = await upgradeResearchData(readResearchFile(), actor);
+      ideasAfter = upgraded.ideas;
+      runsAfter = upgraded.runs;
+    }
+    if (needsV6) await applyRun7Lineup();
     if (needsV2) await recordMigration(DATA_MIGRATION);
     if (needsV3) await recordMigration(DATA_MIGRATION_V3);
     if (needsV4) await recordMigration(DATA_MIGRATION_V4);
     if (needsV5) await recordMigration(DATA_MIGRATION_V5);
-    return { ideas: upgraded.ideas, runs: upgraded.runs, skipped: false };
+    if (needsV6) await recordMigration(DATA_MIGRATION_V6);
+    return { ideas: ideasAfter, runs: runsAfter, skipped: false };
   }
   const [{ n: after }] = await db.select({ n: count() }).from(ideas);
   return { ideas: Number(after), runs: 0, skipped: true };

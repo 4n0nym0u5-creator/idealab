@@ -319,6 +319,8 @@ export type Idea = {
   clientSidePath: boolean | null;
   portfolioMonetisation: PortfolioMonetisation | null;
   roadmapSlot: number | string | null;
+  lineupRole: string;
+  lineupNote: string;
   pipelineOrder: number;
   position: number;
   updatedAt: string;
