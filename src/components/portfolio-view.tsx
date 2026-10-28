@@ -197,7 +197,7 @@ export function PortfolioView({ strategy, ideas }: { strategy: PortfolioStrategy
               <h3>{slot.id === "life-admin-pass" ? <Link href="/life-admin-pass">{slot.name}</Link> : <Link href={`/ideas/${slot.id}`}>{slot.name}</Link>}</h3>
               <p>{slot.price}</p>
               <p className="small muted">Launch {slot.launch}. Start {slot.start}.</p>
-              {slot.id === "life-admin-pass" ? <p className="small">Run 7 lineup: HolidayPlanner AU, Renewal Radar, GiftLedger and Household Handbook, plus Moving Mode in v1.1. Still device-only. No accounts, no reminder emails, reminders via .ics alarms, A$29/yr per household. <Link href="/life-admin-pass">Deep dive</Link>. <Link href="/playbook">Operating playbook</Link>. <Link href="/global">Global expansion</Link>.</p> : null}
+              {slot.id === "life-admin-pass" ? <p className="small">Run 7 lineup: HolidayPlanner AU, Renewal Radar, GiftLedger and Household Handbook, plus Moving Mode in v1.1. Still device-only. No accounts, no reminder emails, reminders via .ics alarms, A$29/yr per household. <Link href="/life-admin-pass">Deep dive</Link>. <Link href="/playbook">Operating playbook</Link>. <Link href="/global">Global expansion</Link>. <Link href="/legal-tax">Legal and tax</Link>.</p> : null}
             </article>
           ))}
         </div>

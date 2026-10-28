@@ -53,6 +53,7 @@ export function GlobalView() {
           <Link className="chip" href="/life-admin-pass">Life Admin Pass</Link>
           <Link className="chip" href="/portfolio">Roadmap</Link>
           <Link className="chip" href="/playbook">Playbook</Link>
+          <Link className="chip" href="/legal-tax">Legal & tax</Link>
         </div>
       </header>
 
