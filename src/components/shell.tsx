@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Columns3, Compass, Download, GitCompare, History, House, LayoutDashboard, Library, MessagesSquare, Moon, Package, Scale, Search, Sun } from "lucide-react";
+import { BookOpen, Columns3, Compass, Download, GitCompare, History, House, LayoutDashboard, Library, MessagesSquare, Moon, Package, Scale, Search, Sun } from "lucide-react";
 import { AdminLock } from "./admin-lock";
 import type { WriteMode } from "@/lib/access";
 
@@ -13,6 +13,7 @@ const LINKS = [
   { href: "/ideas", label: "Ideas", icon: Library },
   { href: "/bundles", label: "Bundles", icon: Package },
   { href: "/life-admin-pass", label: "Life Admin", icon: House },
+  { href: "/playbook", label: "Playbook", icon: BookOpen },
   { href: "/pain", label: "Pain", icon: MessagesSquare },
   { href: "/pipeline", label: "Pipeline", icon: Columns3 },
   { href: "/compare", label: "Compare", icon: GitCompare },
