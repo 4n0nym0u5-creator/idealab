@@ -1,0 +1,127 @@
+{
+  "callout": "A conditional yes, in English-speaking waves, and only after Australia proves the funnel. The product travels because it has no servers and no accounts. GiftLedger, the Handbook and This Week need little more than translated strings. Each new market still needs its own holiday-date data. In New Zealand and Ireland that data is national. In the UK it is split across councils and academies, and in the US across 13,303 districts. Founder hours, not cash, grow with each market.",
+  "points": [
+    ["Biggest upside: the UK", "About 6 million working-parent families, a £80 fine per parent per child for term-time absence, and holiday childcare averaging £179 per child per week. It is crowded: Termy (£9.99/yr), Termify (dates for 18.7k schools), Housemait and muddl. Compete as a bundle, not as another term-date app."],
+    ["Cheapest win: New Zealand", "The Ministry sets term dates nationally, Meta CPMs are among the lowest (about US$8.64), and house and contents insurance rose 9–10% a year. No dedicated leave planner was found. The market is small (about 400k households) and pays back its launch cost in about 13 months in the base case."],
+    ["Paid ads do not pay back at the base conversion", "With a 60% renewal rate, lifetime value is about A$51–65. Click-to-paid has to reach 2.5% in Australia and 3.6–5.5% elsewhere to break even, against a 1.5% base assumption. Grow with organic channels and keep ads as small tests. Assumption."],
+    ["The US is last", "Highest willingness to pay and the most net revenue per sale, because sales tax sits on top of the price. Also the highest CPM (US$20.48), 13,303 district calendars, and crowded family-organiser competition. In the low case, adding the US and Canada lowers total contribution."]
+  ],
+  "scoreNote": "Each criterion is scored 1–5 by judgement from the evidence. Weights are an assumption: holiday-data feasibility 20, size 15, pain 15, language 10, competition 10, willingness to pay 10, customer-acquisition cost 10, regulatory load 10. Total out of 100.",
+  "orderNote": "Germany and the Netherlands score well because their holiday data is official and open. Both need a translation and the full EU regime, and neither was modelled for revenue. The UK and Ireland come before them in the plan because the English copy, renewal templates and support carry over from Australia. Sweden scores lowest because each municipality sets its own sportlov and OpenHolidays has no Swedish school-holiday data.",
+  "modelCaption": "Annual net revenue after VAT or GST, merchant-of-record fees and refunds. Cash cost is trademarks, legal templates, representatives and ad tests. Owner time is valued at A$50/h (assumption). Markets are added in waves. Source: data/run9_global_model.py. Every reach and conversion input is an assumption.",
+  "assumptions": [
+    "Funnel (assumption): households × yearly reach (low 1.5%, base 3%, high 5% in year 1; ×1.5 in year 2 and ×2 in year 3) × market reach multiplier (NZ 1.0, IE 0.9, UK 0.6, CA 0.5, US 0.25) × visitor-to-paid (0.8% / 1.5% / 2.5%).",
+    "Retention (assumption): 45% / 60% / 75% yearly renewal. Refunds 5% / 3% / 2% of new buyers.",
+    "Fees (sourced): Lemon Squeezy 5% + US$0.50, +1.5% outside the US, +0.5% on subscriptions. VAT and GST come out of tax-inclusive prices.",
+    "Launch timing (assumption): Australia full year 2027; New Zealand July 2027; UK and Ireland February 2028; US and Canada March 2029.",
+    "Not included: other portfolio apps, the bot subscription, Apple's 15% if sold in-app, FX moves, and US or Canadian sales tax added on top.",
+    "Household counts are sourced. The working-parent share is an assumption for NZ (0.70) and UK/IE (0.75). The Canada figure is from 2015. Sweden's count was not found.",
+    "CPM and CPC figures are third-party aggregator benchmarks.",
+    "Trademark figures are filing fees for one class. The Canadian fee was not verified.",
+    "FX: RBA, 27 Oct 2026 (US$0.7021, £0.5264, €0.6286, NZ$1.2335, C$0.9841 per A$)."
+  ],
+  "localisation": [
+    ["This Week", "Travels", "Week start (Monday vs Sunday in the US and Canada), date format, spelling", "None beyond interface strings", "Builder", "Easy"],
+    ["GiftLedger", "Travels", "Currency and the local gifting calendar (Thanksgiving, Sinterklaas on 5 Dec, Mother's Day in March in the UK and Ireland)", "A small occasion list per market", "Builder and Localisation", "Easy"],
+    ["Household Handbook", "Mostly travels", "Emergency numbers (111 NZ, 999/112 UK and Ireland, 911 US and Canada) and terms such as GP vs doctor", "One short lookup per market", "Localisation", "Easy"],
+    ["HolidayPlanner", "Needs data", "Term dates per region, district or school, plus public holidays and leave norms", "NZ: one national set. Ireland: one circular. UK: 153 English councils plus devolved nations. Canada: provinces and boards. US: 13,303 districts", "Localisation, plus anonymous school-and-dates corrections", "Hard outside NZ, Ireland, the Netherlands and Germany"],
+    ["Renewal Radar", "Needs data", "Renewal categories and shop-around notes: UK car and home (FCA), broadband rises in pounds and pence (Ofcom 2025), US home and auto, NZ house and contents", "About 20–40 category templates per market", "Localisation, reviewed yearly", "Medium"],
+    ["Moving Mode", "Needs data", "Utilities, electoral roll, licence or rego, postal redirect, UK council tax, USPS change of address", "About a 30-item checklist per market", "Localisation", "Medium"],
+    ["Passport and ID reminders", "Needs data", "Child passport validity and renewal rules", "A small rules table per market, linking to official pages", "Localisation", "Easy"]
+  ],
+  "localisationNotes": [
+    ["Holiday-date sources", "NZ: education.govt.nz and the Gazette. Ireland: the Department of Education circular. Netherlands: the Rijksoverheid open-data API. Germany: KMK ICS files. UK: council pages, with a my-school override because academies set their own dates. US and Canada: board and district feeds, top districts only."],
+    ["OpenHolidays licence", "OpenHolidays data is ODbL. Publishing a derived date file needs attribution and share-alike. Prefer official sources and keep a note of where each date came from."],
+    ["Corrections stay non-personal", "A correction is a school name plus dates, sent with no account. It is not household data, so the rule against private data on your servers still holds."],
+    ["Global basics", "Locale-aware dates, Monday or Sunday week start, currency, and en-GB or en-US spelling. Dutch and German need a full translation and a native-speaker review (assumption: about A$1,500 each)."]
+  ],
+  "legal": [
+    ["New Zealand", "Merchant of record remits 15% GST", "Privacy Act 2020 applies to overseas agencies carrying on business in NZ", "Consumer Guarantees Act and Fair Trading Act", "IPONZ NZ$100 per class", "No local entity via a merchant of record (assumption)"],
+    ["United Kingdom", "Merchant of record remits 20% VAT", "UK GDPR applies. Appoint a UK Article 27 representative unless processing is occasional. ICO fee is Tier 1 £52; check whether it applies to a non-UK controller", "Consumer Contracts Regulations: 14-day cancellation unless the buyer consents and acknowledges it at checkout", "UKIPO £205 online per class", "No local entity via a merchant of record (assumption)"],
+    ["Ireland (EU)", "Merchant of record handles EU VAT and OSS (23% in Ireland)", "EU GDPR. An Article 27 representative is likely required for an always-on app", "Consumer Rights Directive Art 16(m): the 14-day withdrawal ends only with express consent, an acknowledgement, and a durable confirmation", "EUIPO €850 per class, which covers the EU", "Same"],
+    ["Canada", "Merchant of record remits GST, HST and QST", "PIPEDA for commercial activity. Quebec Law 25 was not researched", "Provincial consumer law. Quebec French-language rules were not researched", "CIPO fee not verified", "Same"],
+    ["United States", "Merchant of record remits state sales tax", "CCPA does not apply below US$26.6 million revenue or 100,000 consumers. Other state laws and COPPA (no child accounts) still need a check", "State auto-renewal laws, including California, need clear renewal disclosures. Not researched in depth", "USPTO US$350 per class", "Same"],
+    ["Netherlands and Germany", "Merchant of record handles EU VAT and OSS", "EU GDPR plus an Article 27 representative", "The same withdrawal rules. Germany also expects an Impressum. Verify that", "EUIPO covers both", "Same"]
+  ],
+  "legalNotes": [
+    ["Device-only shrinks the work, and does not remove it", "No accounts, no database and cookieless analytics mean almost no personal data in the app. Buyer names and emails still arrive from the merchant of record and from support email, so you remain a controller. Under the GDPR and UK GDPR that is regular processing."],
+    ["Merchant of record", "Paddle and Lemon Squeezy collect and remit US state sales tax, EU VAT, UK VAT, Canadian GST/HST and NZ GST. Lemon Squeezy is moving merchants toward Stripe Managed Payments, so plan for a possible switch."],
+    ["Before you file", "Write a privacy policy for each regime. Add checkout wording for the digital-content withdrawal waiver in the EU and UK. Add US auto-renewal disclosures. Search the name Life Admin Pass before filing. GiftLedger and Renewal Radar are already used by other apps."]
+  ],
+  "distribution": [
+    ["New Zealand", "Kiwi parent Facebook groups, r/newzealand, school newsletters", "Holiday programme providers (OSCAR)", "school holidays 2027 NZ: one national page"],
+    ["United Kingdom", "Mumsnet, local parent Facebook groups, school PTAs", "Holiday clubs and employers' working-parent networks", "[council] term dates 2027/28: about 200 long-tail pages"],
+    ["Ireland", "Rollercoaster.ie and Mums & Tots groups", "Summer camp providers", "mid-term break 2027 Ireland"],
+    ["Canada", "Provincial parent groups and Reddit", "Camp directories", "[board] PA days 2027"],
+    ["United States", "District Facebook groups and r/workingmoms", "Camps and employers' benefit platforms", "[district] calendar 2027–28"]
+  ],
+  "searchNote": "No reliable public source was found for UK or other monthly search volumes. The only figures were scraped local estimates. Measure demand in Search Console or a keyword tool before building those pages.",
+  "scale": [
+    ["Scales", "Hosting", "Static hosting has no per-user servers. Marginal hosting cost per market is close to zero on the current Vercel Pro plan (US$20 a month)."],
+    ["Scales", "Payments and tax", "The merchant of record files multi-country tax for about 1.5–2% more in fees."],
+    ["Does not scale", "Holiday-date curation", "New Zealand and Ireland take a few hours a year. The UK takes about 60 hours and the US about 120 or more, and that is only council-level and top-district dates. This is the bottleneck."],
+    ["Does not scale", "Support across time zones", "UK hours are 9–11 hours behind AEDT and US hours are 16–19 behind. Plan on async email and a 24-hour response target."]
+  ],
+  "bots": [
+    ["New", "Localisation & Data", "A weekly routine that checks official sources, proposes diffs for your approval, triages anonymous correction reports, and drafts per-market copy."],
+    ["Change", "Growth", "A calendar per market: UK half-terms, the NZ term 4 window, US back-to-school. Drafts stay drafts. You still post them."],
+    ["Change", "Support & QA", "Locale checks for dates, currency and spelling, and a fixture per region on every release."],
+    ["Change", "Finance & Admin", "Payouts in each currency, yearly GDPR-representative and trademark renewals, and the gating-metrics dashboard."]
+  ],
+  "steps": [
+    ["1. Australia proof, first half of 2027", "Launch the Pass in Australia, instrument the funnel with cookieless analytics, publish date sources and a corrections form, and confirm the merchant of record."],
+    ["2. New Zealand, July 2027", "Load the national terms, swap renewal categories to house and contents, localise emergency numbers and the moving checklist, file at IPONZ (NZ$100), and write an NZ privacy notice. Spend at most A$1,500 testing ads around the term 3 and term 4 holidays."],
+    ["3. Ireland and the UK, February 2028", "en-GB copy and pound and euro prices. Ireland uses the national circular. The UK uses council defaults for England, Scotland, Wales and Northern Ireland, plus a school override. Appoint UK and EU representatives, check the ICO fee, add withdrawal-waiver wording, and file at UKIPO and EUIPO. Launch before the February half-term."],
+    ["4. Review, last quarter of 2028", "Compare hours with contribution. If UK curation costs more than 1 hour per A$500 of net revenue, narrow coverage to the top 50 councils."],
+    ["5. Next wave, 2029", "Canada (English first, Quebec deferred) or the Netherlands and Germany (open data plus translation). The US only with a district-calendar partner, or limited to the top 200 districts."]
+  ],
+  "risks": [
+    ["Wrong holiday dates", "High. It destroys trust.", "Show the source and the last-checked date. One-tap correction. Publish dates early."],
+    ["UK competition", "High. Termy, Termify and Housemait already cover term dates.", "Sell the whole bundle and do not race them on dates alone."],
+    ["Curation hours", "Medium. The calendar work swamps a solo founder.", "A Localisation bot, council-level defaults, crowd corrections, and a hours cap per market."],
+    ["Merchant-of-record change", "Medium. Lemon Squeezy is moving toward Stripe.", "Keep licence checks independent of the merchant. Export the buyer list you are allowed to hold."],
+    ["Name conflicts", "Medium.", "Search before filing. Rename sub-brands that are already taken."],
+    ["EU and UK compliance drift", "Low to medium.", "A yearly checklist in Finance & Admin, and a professional review per regime."]
+  ],
+  "sources": [
+    ["ONS Families and households 2024", "https://www.ons.gov.uk/peoplepopulationandcommunity/birthsdeathsandmarriages/families/bulletins/familiesandhouseholds/2024"],
+    ["BLS Employment characteristics of families", "https://www.bls.gov/news.release/famee.t04.htm"],
+    ["StatCan: the dual-earner family", "https://www150.statcan.gc.ca/n1/pub/11-630-x/11-630-x2016005-eng.htm"],
+    ["Stats NZ 2023 Census families", "https://www.stats.govt.nz/information-releases/families-households-and-housing-2023-census/"],
+    ["CSO Census 2022 families", "https://www.cso.ie/en/releasesandpublications/ep/p-cpp3/censusofpopulation2022profile3-householdsfamiliesandchildcare/families/"],
+    ["Destatis 2024 via the Bundestag", "https://www.bundestag.de/presse/hib/kurzmeldungen-1109902"],
+    ["Netherlands dual-earner families", "https://www.vandaagenmorgen.nl/nieuws/10598/87-van-gezinnen-met-kinderen-zijn-nu-tweeverdieners"],
+    ["NZ school terms", "https://www.education.govt.nz/school-terms-and-holidays-dates"],
+    ["Ireland school-year circular", "https://www.gov.ie/en/department-of-education/circulars/standardisation-of-the-school-year-in-respect-of-primary-post-primary-schools-for-the-years-202627-202728-and-202829/"],
+    ["UK term dates", "https://www.gov.uk/school-term-holiday-dates"],
+    ["England schools and pupils 2025/26", "https://explore-education-statistics.service.gov.uk/find-statistics/school-pupils-and-their-characteristics/2025-26"],
+    ["NCES districts 2023–24", "https://nces.ed.gov/ccd/tables/202324_summary_1.asp"],
+    ["Ontario school-year calendars", "http://www.ontario.ca/page/school-year-calendars"],
+    ["KMK school holidays", "https://www.kmk.org/service/ferienregelung.html"],
+    ["Netherlands open data", "https://www.rijksoverheid.nl/opendata/schoolvakanties"],
+    ["OpenHolidays ODbL", "https://www.openholidaysapi.org/en/faq/"],
+    ["Sweden municipal holidays", "https://skollovet.se/"],
+    ["England penalty notices 2024", "https://www.legislation.gov.uk/uksi/2024/210"],
+    ["Coram holiday childcare 2025", "https://www.coram.org.uk/news/holiday-childcare-survey-2025/"],
+    ["FCA loyalty penalty", "https://www.fca.org.uk/news/press-releases/fca-confirms-measures-protect-customers-loyalty-penalty-home-motor-insurance-markets"],
+    ["Ofcom mid-contract price rises", "https://www.ofcom.org.uk/phones-and-broadband/bills-and-charges/ofcom-bans-mid-contract-price-rises-linked-to-inflation"],
+    ["LendingTree home insurance 2026", "https://www.lendingtree.com/insurance/state-of-home-insurance/"],
+    ["NZ insurance price rises", "https://www.newstalkzb.co.nz/news/national/insurance-price-hikes-why-premiums-keep-rising-so-fast/"],
+    ["Facebook CPM by country", "https://www.ranktracker.com/blog/best-countries-for-high-facebook-cpm-rates-in-2025/"],
+    ["Facebook CPC by country", "https://insights.vaizle.com/facebook-ads-cost/"],
+    ["RevenueCat subscription apps 2025", "https://www.revenuecat.com/state-of-subscription-apps-2025/"],
+    ["Termy", "https://termy.net/"],
+    ["Termify", "https://termify.co.uk/"],
+    ["Lemon Squeezy fees", "https://docs.lemonsqueezy.com/help/getting-started/fees"],
+    ["Lemon Squeezy 2026 update", "https://www.lemonsqueezy.com/blog/2026-update"],
+    ["Paddle tax countries", "https://www.paddle.com/help/sell/tax/which-countries-does-paddle-charge-sales-tax-or-vat-for"],
+    ["EU Consumer Rights Directive", "https://eur-lex.europa.eu/eli/dir/2011/83/oj/eng"],
+    ["CCPA thresholds", "https://privacy.ca.gov/laws-and-regulations/monetary-thresholds-in-the-ccpa/"],
+    ["NZ Privacy Commissioner, overseas agencies", "https://www.privacy.org.nz/resources-and-learning/knowledge-base/view/154/"],
+    ["UKIPO fees", "https://www.gov.uk/government/publications/application-to-register-a-trade-mark"],
+    ["USPTO fees", "https://www.uspto.gov/trademarks/trademark-fee-information"],
+    ["EUIPO fees", "https://www.euipo.europa.eu/en/trade-marks/before-applying/fees-payments"],
+    ["IPONZ fees", "https://www.iponz.govt.nz/get-ip/trade-marks/fees/"],
+    ["RBA exchange rates", "https://www.rba.gov.au/statistics/frequency/exchange-rates.html"]
+  ]
+}
