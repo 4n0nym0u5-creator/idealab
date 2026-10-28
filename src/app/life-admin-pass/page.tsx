@@ -33,7 +33,7 @@ export default async function LifeAdminPassPage() {
           <p className="kicker">Run 7 · 28 Oct 2026 · device-only · A$29/yr per household</p>
           <h1>Life Admin Pass</h1>
           <p className="lede">{writeup.summary}</p>
-          <p className="small"><Link href="/playbook">Grok Bot operating playbook</Link> · who runs the Pass, what they may draft, and what still needs your approval.</p>
+          <p className="small"><Link href="/playbook">Grok Bot operating playbook</Link> · <Link href="/global">Global expansion</Link> · who runs the Pass, and whether it leaves Australia.</p>
         </header>
 
         <section className="grid-4" id="summary">

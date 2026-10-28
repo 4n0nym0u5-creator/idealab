@@ -1,0 +1,550 @@
+{
+ "markets": {
+  "AU": {
+   "low": {
+    "rev_2029": 16911,
+    "cum_cash_2029": 34112,
+    "cum_incl_time_2029": 27357,
+    "breakeven_cash": 2027,
+    "breakeven_incl_time": 2027,
+    "launch_cash_payback_months": 0,
+    "active_2029": 742,
+    "hours_2029": 57
+   },
+   "base": {
+    "rev_2029": 73064,
+    "cum_cash_2029": 142132,
+    "cum_incl_time_2029": 123764,
+    "breakeven_cash": 2027,
+    "breakeven_incl_time": 2027,
+    "launch_cash_payback_months": 0,
+    "active_2029": 3151,
+    "hours_2029": 178
+   },
+   "high": {
+    "rev_2029": 231338,
+    "cum_cash_2029": 434294,
+    "cum_incl_time_2029": 384726,
+    "breakeven_cash": 2027,
+    "breakeven_incl_time": 2027,
+    "launch_cash_payback_months": 0,
+    "active_2029": 9901,
+    "hours_2029": 515
+   }
+  },
+  "NZ": {
+   "low": {
+    "rev_2029": 2812,
+    "cum_cash_2029": 2964,
+    "cum_incl_time_2029": 716,
+    "breakeven_cash": 2028,
+    "breakeven_incl_time": 2029,
+    "launch_cash_payback_months": 50.0,
+    "active_2029": 133,
+    "hours_2029": 13
+   },
+   "base": {
+    "rev_2029": 11900,
+    "cum_cash_2029": 18646,
+    "cum_incl_time_2029": 14584,
+    "breakeven_cash": 2028,
+    "breakeven_incl_time": 2028,
+    "launch_cash_payback_months": 13.1,
+    "active_2029": 552,
+    "hours_2029": 34
+   },
+   "high": {
+    "rev_2029": 36846,
+    "cum_cash_2029": 60323,
+    "cum_incl_time_2029": 51474,
+    "breakeven_cash": 2027,
+    "breakeven_incl_time": 2027,
+    "launch_cash_payback_months": 4.7,
+    "active_2029": 1697,
+    "hours_2029": 91
+   }
+  },
+  "UK": {
+   "low": {
+    "rev_2029": 17313,
+    "cum_cash_2029": 21875,
+    "cum_incl_time_2029": 10720,
+    "breakeven_cash": 2028,
+    "breakeven_incl_time": 2029,
+    "launch_cash_payback_months": 3.5,
+    "active_2029": 857,
+    "hours_2029": 103
+   },
+   "base": {
+    "rev_2029": 70780,
+    "cum_cash_2029": 98225,
+    "cum_incl_time_2029": 77822,
+    "breakeven_cash": 2028,
+    "breakeven_incl_time": 2028,
+    "launch_cash_payback_months": 0.9,
+    "active_2029": 3442,
+    "hours_2029": 232
+   },
+   "high": {
+    "rev_2029": 211393,
+    "cum_cash_2029": 294788,
+    "cum_incl_time_2029": 250754,
+    "breakeven_cash": 2028,
+    "breakeven_incl_time": 2028,
+    "launch_cash_payback_months": 0.3,
+    "active_2029": 10195,
+    "hours_2029": 570
+   }
+  },
+  "IE": {
+   "low": {
+    "rev_2029": 1646,
+    "cum_cash_2029": -1887,
+    "cum_incl_time_2029": -3344,
+    "breakeven_cash": null,
+    "breakeven_incl_time": null,
+    "launch_cash_payback_months": 52.3,
+    "active_2029": 83,
+    "hours_2029": 8
+   },
+   "base": {
+    "rev_2029": 6729,
+    "cum_cash_2029": 5372,
+    "cum_incl_time_2029": 3015,
+    "breakeven_cash": 2029,
+    "breakeven_incl_time": 2029,
+    "launch_cash_payback_months": 13.7,
+    "active_2029": 335,
+    "hours_2029": 21
+   },
+   "high": {
+    "rev_2029": 20098,
+    "cum_cash_2029": 24060,
+    "cum_incl_time_2029": 19405,
+    "breakeven_cash": 2028,
+    "breakeven_incl_time": 2028,
+    "launch_cash_payback_months": 4.9,
+    "active_2029": 992,
+    "hours_2029": 54
+   }
+  },
+  "US": {
+   "low": {
+    "rev_2029": 13765,
+    "cum_cash_2029": 11266,
+    "cum_incl_time_2029": -117,
+    "breakeven_cash": 2029,
+    "breakeven_incl_time": null,
+    "launch_cash_payback_months": 2.2,
+    "active_2029": 553,
+    "hours_2029": 228
+   },
+   "base": {
+    "rev_2029": 52704,
+    "cum_cash_2029": 50205,
+    "cum_incl_time_2029": 35020,
+    "breakeven_cash": 2029,
+    "breakeven_incl_time": 2029,
+    "launch_cash_payback_months": 0.6,
+    "active_2029": 2074,
+    "hours_2029": 304
+   },
+   "high": {
+    "rev_2029": 147909,
+    "cum_cash_2029": 145411,
+    "cum_incl_time_2029": 121006,
+    "breakeven_cash": 2029,
+    "breakeven_incl_time": 2029,
+    "launch_cash_payback_months": 0.2,
+    "active_2029": 5762,
+    "hours_2029": 488
+   }
+  },
+  "CA": {
+   "low": {
+    "rev_2029": 2261,
+    "cum_cash_2029": -209,
+    "cum_incl_time_2029": -5441,
+    "breakeven_cash": null,
+    "breakeven_incl_time": null,
+    "launch_cash_payback_months": 13.1,
+    "active_2029": 92,
+    "hours_2029": 105
+   },
+   "base": {
+    "rev_2029": 8656,
+    "cum_cash_2029": 6186,
+    "cum_incl_time_2029": 319,
+    "breakeven_cash": 2029,
+    "breakeven_incl_time": 2029,
+    "launch_cash_payback_months": 3.4,
+    "active_2029": 347,
+    "hours_2029": 117
+   },
+   "high": {
+    "rev_2029": 24291,
+    "cum_cash_2029": 21821,
+    "cum_incl_time_2029": 14414,
+    "breakeven_cash": 2029,
+    "breakeven_incl_time": 2029,
+    "launch_cash_payback_months": 1.2,
+    "active_2029": 963,
+    "hours_2029": 148
+   }
+  }
+ },
+ "groups": {
+  "AU only": {
+   "low": {
+    "2027": {
+     "net_rev": 5784,
+     "cash_cost": 0,
+     "hours": 33,
+     "contrib_cash": 5784,
+     "contrib_incl_time": 4140,
+     "active": 258
+    },
+    "2028": {
+     "net_rev": 11416,
+     "cash_cost": 0,
+     "hours": 45,
+     "contrib_cash": 11416,
+     "contrib_incl_time": 9160,
+     "active": 503
+    },
+    "2029": {
+     "net_rev": 16911,
+     "cash_cost": 0,
+     "hours": 57,
+     "contrib_cash": 16911,
+     "contrib_incl_time": 14057,
+     "active": 742
+    }
+   },
+   "base": {
+    "2027": {
+     "net_rev": 22148,
+     "cash_cost": 0,
+     "hours": 68,
+     "contrib_cash": 22148,
+     "contrib_incl_time": 18731,
+     "active": 967
+    },
+    "2028": {
+     "net_rev": 46921,
+     "cash_cost": 0,
+     "hours": 121,
+     "contrib_cash": 46921,
+     "contrib_incl_time": 40846,
+     "active": 2030
+    },
+    "2029": {
+     "net_rev": 73064,
+     "cash_cost": 0,
+     "hours": 178,
+     "contrib_cash": 73064,
+     "contrib_incl_time": 64186,
+     "active": 3151
+    }
+   },
+   "high": {
+    "2027": {
+     "net_rev": 62155,
+     "cash_cost": 0,
+     "hours": 154,
+     "contrib_cash": 62155,
+     "contrib_incl_time": 54443,
+     "active": 2685
+    },
+    "2028": {
+     "net_rev": 140801,
+     "cash_cost": 0,
+     "hours": 322,
+     "contrib_cash": 140801,
+     "contrib_incl_time": 124697,
+     "active": 6041
+    },
+    "2029": {
+     "net_rev": 231338,
+     "cash_cost": 0,
+     "hours": 515,
+     "contrib_cash": 231338,
+     "contrib_incl_time": 205586,
+     "active": 9901
+    }
+   }
+  },
+  "AU+NZ": {
+   "low": {
+    "2027": {
+     "net_rev": 6283,
+     "cash_cost": 2081,
+     "hours": 55,
+     "contrib_cash": 4202,
+     "contrib_incl_time": 1448,
+     "active": 282
+    },
+    "2028": {
+     "net_rev": 13150,
+     "cash_cost": 0,
+     "hours": 55,
+     "contrib_cash": 13150,
+     "contrib_incl_time": 10388,
+     "active": 585
+    },
+    "2029": {
+     "net_rev": 19723,
+     "cash_cost": 0,
+     "hours": 70,
+     "contrib_cash": 19723,
+     "contrib_incl_time": 16237,
+     "active": 875
+    }
+   },
+   "base": {
+    "2027": {
+     "net_rev": 24059,
+     "cash_cost": 2081,
+     "hours": 93,
+     "contrib_cash": 21978,
+     "contrib_incl_time": 17287,
+     "active": 1057
+    },
+    "2028": {
+     "net_rev": 53837,
+     "cash_cost": 0,
+     "hours": 143,
+     "contrib_cash": 53837,
+     "contrib_incl_time": 46655,
+     "active": 2353
+    },
+    "2029": {
+     "net_rev": 84964,
+     "cash_cost": 0,
+     "hours": 212,
+     "contrib_cash": 84964,
+     "contrib_incl_time": 74405,
+     "active": 3703
+    }
+   },
+   "high": {
+    "2027": {
+     "net_rev": 67518,
+     "cash_cost": 2081,
+     "hours": 187,
+     "contrib_cash": 65437,
+     "contrib_incl_time": 56053,
+     "active": 2934
+    },
+    "2028": {
+     "net_rev": 160996,
+     "cash_cost": 0,
+     "hours": 375,
+     "contrib_cash": 160996,
+     "contrib_incl_time": 142257,
+     "active": 6975
+    },
+    "2029": {
+     "net_rev": 268184,
+     "cash_cost": 0,
+     "hours": 606,
+     "contrib_cash": 268184,
+     "contrib_incl_time": 237890,
+     "active": 11598
+    }
+   }
+  },
+  "AU+NZ+UK/IE": {
+   "low": {
+    "2027": {
+     "net_rev": 6283,
+     "cash_cost": 2081,
+     "hours": 55,
+     "contrib_cash": 4202,
+     "contrib_incl_time": 1448,
+     "active": 282
+    },
+    "2028": {
+     "net_rev": 22008,
+     "cash_cost": 6730,
+     "hours": 196,
+     "contrib_cash": 15278,
+     "contrib_incl_time": 5454,
+     "active": 1029
+    },
+    "2029": {
+     "net_rev": 38682,
+     "cash_cost": 1099,
+     "hours": 181,
+     "contrib_cash": 37584,
+     "contrib_incl_time": 28547,
+     "active": 1815
+    }
+   },
+   "base": {
+    "2027": {
+     "net_rev": 24059,
+     "cash_cost": 2081,
+     "hours": 93,
+     "contrib_cash": 21978,
+     "contrib_incl_time": 17287,
+     "active": 1057
+    },
+    "2028": {
+     "net_rev": 87755,
+     "cash_cost": 6730,
+     "hours": 345,
+     "contrib_cash": 81023,
+     "contrib_incl_time": 63726,
+     "active": 4020
+    },
+    "2029": {
+     "net_rev": 162473,
+     "cash_cost": 1099,
+     "hours": 465,
+     "contrib_cash": 161374,
+     "contrib_incl_time": 138172,
+     "active": 7480
+    }
+   },
+   "high": {
+    "2027": {
+     "net_rev": 67518,
+     "cash_cost": 2081,
+     "hours": 187,
+     "contrib_cash": 65437,
+     "contrib_incl_time": 56053,
+     "active": 2934
+    },
+    "2028": {
+     "net_rev": 256182,
+     "cash_cost": 6730,
+     "hours": 726,
+     "contrib_cash": 249452,
+     "contrib_incl_time": 213190,
+     "active": 11604
+    },
+    "2029": {
+     "net_rev": 499675,
+     "cash_cost": 1099,
+     "hours": 1230,
+     "contrib_cash": 498576,
+     "contrib_incl_time": 437115,
+     "active": 22785
+    }
+   }
+  },
+  "All (+US/CA)": {
+   "low": {
+    "2027": {
+     "net_rev": 6283,
+     "cash_cost": 2081,
+     "hours": 55,
+     "contrib_cash": 4202,
+     "contrib_incl_time": 1448,
+     "active": 282
+    },
+    "2028": {
+     "net_rev": 22008,
+     "cash_cost": 6730,
+     "hours": 196,
+     "contrib_cash": 15278,
+     "contrib_incl_time": 5454,
+     "active": 1029
+    },
+    "2029": {
+     "net_rev": 54708,
+     "cash_cost": 6068,
+     "hours": 514,
+     "contrib_cash": 48641,
+     "contrib_incl_time": 22989,
+     "active": 2460
+    }
+   },
+   "base": {
+    "2027": {
+     "net_rev": 24059,
+     "cash_cost": 2081,
+     "hours": 93,
+     "contrib_cash": 21978,
+     "contrib_incl_time": 17287,
+     "active": 1057
+    },
+    "2028": {
+     "net_rev": 87755,
+     "cash_cost": 6730,
+     "hours": 345,
+     "contrib_cash": 81023,
+     "contrib_incl_time": 63726,
+     "active": 4020
+    },
+    "2029": {
+     "net_rev": 223833,
+     "cash_cost": 6068,
+     "hours": 886,
+     "contrib_cash": 217765,
+     "contrib_incl_time": 173511,
+     "active": 9901
+    }
+   },
+   "high": {
+    "2027": {
+     "net_rev": 67518,
+     "cash_cost": 2081,
+     "hours": 187,
+     "contrib_cash": 65437,
+     "contrib_incl_time": 56053,
+     "active": 2934
+    },
+    "2028": {
+     "net_rev": 256182,
+     "cash_cost": 6730,
+     "hours": 726,
+     "contrib_cash": 249452,
+     "contrib_incl_time": 213190,
+     "active": 11604
+    },
+    "2029": {
+     "net_rev": 671875,
+     "cash_cost": 6068,
+     "hours": 1866,
+     "contrib_cash": 665808,
+     "contrib_incl_time": 572535,
+     "active": 29510
+    }
+   }
+  }
+ },
+ "net_per_sale": {
+  "AU": {
+   "price_local": "29.0 AUD",
+   "price_aud": 29.0,
+   "net_aud": 23.62
+  },
+  "NZ": {
+   "price_local": "35.0 NZD",
+   "price_aud": 28.37,
+   "net_aud": 21.98
+  },
+  "UK": {
+   "price_local": "14.99 GBP",
+   "price_aud": 28.48,
+   "net_aud": 21.02
+  },
+  "IE": {
+   "price_local": "17.99 EUR",
+   "price_aud": 28.62,
+   "net_aud": 20.55
+  },
+  "US": {
+   "price_local": "19.99 USD",
+   "price_aud": 28.47,
+   "net_aud": 26.19
+  },
+  "CA": {
+   "price_local": "27.99 CAD",
+   "price_aud": 28.44,
+   "net_aud": 25.74
+  }
+ }
+}
