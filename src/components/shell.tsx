@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { BookOpen, Columns3, Compass, Download, GitCompare, Globe, History, House, LayoutDashboard, Library, MessagesSquare, Moon, Package, Puzzle, Scale, ScrollText, Search, Sun } from "lucide-react";
+import { BookOpen, Columns3, Compass, Download, GitCompare, Globe, History, House, LayoutDashboard, Library, ListChecks, MessagesSquare, Moon, Package, Puzzle, Scale, ScrollText, Search, Sun } from "lucide-react";
 import { AdminLock } from "./admin-lock";
 import type { WriteMode } from "@/lib/access";
 
@@ -16,7 +16,8 @@ const LINKS = [
   { href: "/playbook", label: "Playbook", icon: BookOpen },
   { href: "/global", label: "Global", icon: Globe },
   { href: "/legal-tax", label: "Legal & tax", icon: ScrollText },
-  { href: "/memory-game", label: "Memory Game", icon: Puzzle },
+  { href: "/memory-game", label: "Memory Game", icon: Puzzle, exact: true },
+  { href: "/memory-game/how-it-works", label: "How it works", icon: ListChecks, sub: true },
   { href: "/pain", label: "Pain", icon: MessagesSquare },
   { href: "/pipeline", label: "Pipeline", icon: Columns3 },
   { href: "/compare", label: "Compare", icon: GitCompare },
@@ -24,8 +25,8 @@ const LINKS = [
   { href: "/runs", label: "Runs", icon: History },
 ];
 
-function current(pathname: string, href: string) {
-  if (href === "/") return pathname === "/";
+function current(pathname: string, href: string, exact?: boolean) {
+  if (exact || href === "/") return pathname === href;
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -59,7 +60,7 @@ export function Shell({ children, mode }: { children: React.ReactNode; mode: Wri
           {LINKS.map((link) => {
             const Icon = link.icon;
             return (
-              <Link key={link.href} href={link.href} aria-current={current(pathname, link.href) ? "page" : undefined}>
+              <Link key={link.href} href={link.href} className={"sub" in link && link.sub ? "sub" : undefined} aria-current={current(pathname, link.href, "exact" in link && link.exact) ? "page" : undefined}>
                 <Icon size={16} />
                 {link.label}
               </Link>
@@ -84,7 +85,7 @@ export function Shell({ children, mode }: { children: React.ReactNode; mode: Wri
         </header>
         <nav className="mobile-nav" aria-label="Mobile">
           {LINKS.map((link) => (
-            <Link key={link.href} href={link.href} aria-current={current(pathname, link.href) ? "page" : undefined}>
+            <Link key={link.href} href={link.href} aria-current={current(pathname, link.href, "exact" in link && link.exact) ? "page" : undefined}>
               {link.label}
             </Link>
           ))}
