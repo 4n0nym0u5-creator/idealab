@@ -66,7 +66,7 @@ export function IdeaDetail({ idea, weights, neighbors, criteriaOrder }: { idea: 
 
   return (
     <div className="page">
-      <p className="small"><Link href="/ideas">Ideas</Link> · <Link href={`/compare?ids=${idea.id}`}>Compare</Link></p>
+      <p className="small"><Link href="/ideas">Ideas</Link> · <Link href={`/compare?ids=${idea.id}`}>Compare</Link>{idea.id === "hint-and-tell-family-memory-game" ? <> · <Link href="/memory-game">Hint &amp; Tell research</Link></> : null}</p>
       <header className="feature">
         <div className="stack">
           <div className="chips">

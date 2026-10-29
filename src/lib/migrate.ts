@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { execSql, getDb } from "./db";
 import { migrations } from "./schema";
 
-const FILES = ["0001_init.sql", "0002_rubric_v2.sql", "0003_schema_v3.sql", "0004_schema_v4.sql", "0005_schema_v5.sql", "0006_run7_lifeadmin.sql"];
+export const FILES = ["0001_init.sql", "0002_rubric_v2.sql", "0003_schema_v3.sql", "0004_schema_v4.sql", "0005_schema_v5.sql", "0006_run7_lifeadmin.sql", "0007_run11_memorygame.sql"];
 
 export function splitSql(input: string): string[] {
   return input
