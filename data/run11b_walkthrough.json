@@ -1,0 +1,1097 @@
+{
+ "run": "11b",
+ "title": "Hint & Tell: How It Works",
+ "created": "2026-10-29T15:12 AEDT",
+ "family": [
+  {
+   "name": "Mum",
+   "age": 50
+  },
+  {
+   "name": "Dad",
+   "age": 49
+  },
+  {
+   "name": "Ella",
+   "age": 18
+  },
+  {
+   "name": "Josh",
+   "age": 16
+  },
+  {
+   "name": "Mia",
+   "age": 13
+  }
+ ],
+ "storyboard": [
+  {
+   "n": 1,
+   "id": "w01",
+   "phase": "Before the night",
+   "title": "Unbox or download",
+   "png": "w01_welcome.png",
+   "new": true,
+   "sees": "A welcome screen with three fanned category cards, one line about the game, and a green privacy promise.",
+   "does": "Scans the QR on the box lid, or taps 'Play digital-only'.",
+   "behind": "The QR unlocks the box's card set offline. The app makes no account and no server call. Licensing happens later through the App Store, only if they buy the Pass.",
+   "time": "~15 s",
+   "why": "One decision only. The privacy promise sits right there, so a parent doesn't have to go looking for it."
+  },
+  {
+   "n": 2,
+   "id": "w02",
+   "phase": "Before the night",
+   "title": "Add the family",
+   "png": "w02_family.png",
+   "new": true,
+   "sees": "Avatar tiles with first name and age. An 'Add' tile. A note when someone is under 18.",
+   "does": "Types first names and ages (5 people take about 60 s).",
+   "behind": "Saves the profiles in the on-device store, ready to sync to the family's own iCloud. Age decides which categories show and whether a parent has to confirm.",
+   "time": "~60 s (once)",
+   "why": "No email and no passwords. Next time it's one tap: 'same family as last time?'"
+  },
+  {
+   "n": 3,
+   "id": "w03",
+   "phase": "Before the night",
+   "title": "Consent, person by person",
+   "png": "w03_consent.png",
+   "new": false,
+   "reused": "m1_setup_consent.png",
+   "sees": "Each person has a switch: 'Record my stories' or 'Play only'.",
+   "does": "Everyone chooses for themselves. A parent confirms for the under-18s.",
+   "behind": "Writes a consent record per person and per night. 'Play only' players are muted from capture: no audio is kept while it's their turn, and they can't be tagged.",
+   "time": "~30 s",
+   "why": "Consent becomes part of the game instead of fine print, and saying no costs nothing."
+  },
+  {
+   "n": 4,
+   "id": "w04",
+   "phase": "Before the night",
+   "title": "Choose a mode",
+   "png": "w04_mode.png",
+   "new": true,
+   "sees": "Three big cards: Classic (8 rounds), Quick (4) and Trip (3, hints only). Three switches below.",
+   "does": "Taps one card. Can flip a switch.",
+   "behind": "Sets the number of rounds, the Keeper order (fair rotation) and whether the mic pipeline loads at all. In Trip mode it never does.",
+   "time": "~10 s",
+   "why": "Every mode has the same rules; only the length changes, so nobody re-learns anything."
+  },
+  {
+   "n": 5,
+   "id": "w05",
+   "phase": "Each round",
+   "title": "Deal a category",
+   "png": "w05_deal.png",
+   "new": true,
+   "sees": "The Keeper's name on top and three face-down category cards fanned out. One re-deal.",
+   "does": "The Keeper picks one card (everyone can watch).",
+   "behind": "Draws categories that fit everyone's ages and haven't come up recently. It logs nothing except the round number.",
+   "time": "~10 s",
+   "why": "Choosing from three gives a sense of control without blank-page panic. The example memories help a stuck 8-year-old."
+  },
+  {
+   "n": 6,
+   "id": "w06",
+   "phase": "Each round",
+   "title": "The Keeper's secret",
+   "png": "w06_keeper_secret.png",
+   "new": false,
+   "reused": "m2_keeper_secret.png",
+   "sees": "A shielded screen: 'Only Josh look'. A field for the memory and 4 short hint fields: Where, When, Who, Object.",
+   "does": "Types the memory and 4 hints (or picks suggested hint words).",
+   "behind": "Saved locally. The on-device model can suggest hint words from the memory text using Foundation Models. Nothing goes anywhere.",
+   "time": "~60–90 s",
+   "why": "Hint slots have fixed labels, so kids know exactly what to write."
+  },
+  {
+   "n": 7,
+   "id": "w07",
+   "phase": "Each round",
+   "title": "Hints and yes/no questions",
+   "png": "w07_hints.png",
+   "new": false,
+   "reused": "m3_hints_scoring.png",
+   "sees": "The first hint revealed, the points on offer (3→2→1) and a tracker showing '6 of 10' yes/no questions left.",
+   "does": "Players ask yes/no questions out loud. The Keeper taps YES or NO. Anyone can shout a guess.",
+   "behind": "Counts questions and reveals the next hint on a timer or a tap. No speech processing yet: this is just talking.",
+   "time": "~2–4 min",
+   "why": "It's 20 Questions, which everyone knows. The phone only keeps score."
+  },
+  {
+   "n": 8,
+   "id": "w08",
+   "phase": "Each round",
+   "title": "Guess and score",
+   "png": "w08_scored.png",
+   "new": true,
+   "sees": "Confetti, the guesser's face, a per-player points breakdown and the scoreboard bars.",
+   "does": "The Keeper taps who guessed it (or 'nobody').",
+   "behind": "Applies the scoring rules (3/2/1, +1 Keeper) and updates the totals locally.",
+   "time": "~10 s",
+   "why": "Wrong guesses cost nothing, so shy players still have a go."
+  },
+  {
+   "n": 9,
+   "id": "w09",
+   "phase": "Each round",
+   "title": "Tell it",
+   "png": "w09_tell_it.png",
+   "new": false,
+   "reused": "m4_tell_it.png",
+   "sees": "A dark 'story time' screen with a live waveform, a 2-minute ring and an 'on-device' pill.",
+   "does": "The Keeper tells the full story. Others listen (and laugh).",
+   "behind": "Mic → speech detector (SoundAnalysis) → SpeechAnalyzer transcribes on the device. The current Keeper is the speaker label. Audio and text go to the local archive.",
+   "time": "~2 min",
+   "why": "This is the heart of the night. The app does the remembering so nobody has to take notes."
+  },
+  {
+   "n": 10,
+   "id": "w10",
+   "phase": "Each round",
+   "title": "Everyone adds their version",
+   "png": "w10_add_version.png",
+   "new": true,
+   "sees": "A queue of faces. Tap yours to record 30 s. Reaction buttons, including 🤥 for 'contradiction'.",
+   "does": "Tap your face, speak, or skip. Tap 🤥 when versions clash.",
+   "behind": "Each tap starts a labelled clip, so the speaker is whoever tapped in. No voiceprint is needed. 'Play only' faces are greyed out.",
+   "time": "~1–2 min",
+   "why": "Tap-your-face labelling is honest and visible. Everyone sees what's being recorded and whose it is."
+  },
+  {
+   "n": 11,
+   "id": "w11",
+   "phase": "Each round",
+   "title": "Pass the phone",
+   "png": "w11_pass_phone.png",
+   "new": true,
+   "sees": "A big 'Pass the phone to Mum', her avatar and a hold-to-unlock bar.",
+   "does": "Hands the phone over. Mum holds the bar to open her secret screen.",
+   "behind": "Locks the next Keeper's screen behind a press-and-hold so nobody peeks. Rotation is fair: whoever has been Keeper fewest times goes next.",
+   "time": "~5 s",
+   "why": "A physical handover is the ritual. The press-and-hold stops accidental spoilers."
+  },
+  {
+   "n": 12,
+   "id": "w12",
+   "phase": "End of night",
+   "title": "End-of-night recap",
+   "png": "w12_recap.png",
+   "new": true,
+   "sees": "Champion banner, stats (memories, minutes, contradictions), fun awards and a review-tomorrow toggle.",
+   "does": "Taps 'Finish game night'.",
+   "behind": "Foundation Models writes a title, a one-line summary and the 'best quote' for each memory, one memory at a time so it fits the 4,096-token context. Sync to iCloud is queued.",
+   "time": "~30 s",
+   "why": "Ends on a high, with awards for being funny or disputed as well as for winning."
+  },
+  {
+   "n": 13,
+   "id": "w13",
+   "phase": "Next morning",
+   "title": "Morning memory review",
+   "png": "w13_morning_review.png",
+   "new": false,
+   "reused": "m5_memory_review.png",
+   "sees": "Last night's memories as cards: title, quote, date, matched photos. Buttons to fix, hide or delete.",
+   "does": "A parent skims, fixes a name, hides one, approves the rest.",
+   "behind": "Photo matching suggests pictures by date or place. With the picker, the user chooses; with full or limited library access, it suggests. Edits sync to the family's iCloud zone.",
+   "time": "~4 min",
+   "why": "A 'human in the loop' review stops anything embarrassing from being kept by accident."
+  },
+  {
+   "n": 14,
+   "id": "w14",
+   "phase": "A week later",
+   "title": "On This Day nudge",
+   "png": "w14_on_this_day.png",
+   "new": true,
+   "sees": "A lock-screen notification: 'One week ago: The Wrong Terminal ✈️… a Who Said It round is ready.'",
+   "does": "Taps it, or ignores it.",
+   "behind": "This is a local notification scheduled by the app itself on the phone, so no push server and no remote trigger are involved. It's per-person and easy to switch off.",
+   "time": "~5 s",
+   "why": "Brings people back with a story they care about, not a streak to protect."
+  },
+  {
+   "n": 15,
+   "id": "w15",
+   "phase": "Next game",
+   "title": "Who Said It round",
+   "png": "w15_who_said_it.png",
+   "new": false,
+   "reused": "m6_who_said_it.png",
+   "sees": "A quote from last week ('It was the international terminal') and five faces to vote for.",
+   "does": "Everyone votes on who said it. The reveal plays the clip.",
+   "behind": "Picks quotes from consenting speakers only, using the turn labels from the earlier nights. Plays the audio from the local or iCloud archive.",
+   "time": "~3 min",
+   "why": "Past nights feed the next one, which gives a reason to keep playing."
+  }
+ ],
+ "rules_card": {
+  "title": "Hint & Tell: the whole game on one card",
+  "status": "design target",
+  "steps": [
+   "Pick a card: the Keeper picks 1 of 3 categories.",
+   "Think of a memory: type it secretly, plus 4 short hints (Where, When, Who, Object).",
+   "Guess it: hints revealed one at a time; up to 10 yes/no questions between them.",
+   "Tell it: the Keeper tells the story (about 2 min); others can add their version (30 s each).",
+   "Pass the phone: the next person is Keeper. Highest score at the end wins."
+  ],
+  "scoring": [
+   "3 pts: guessed after hint 1",
+   "2 pts: after hint 2",
+   "1 pt: after hint 3 or 4",
+   "+1 Keeper if anyone guesses it",
+   "+1 best contradiction (🤥, voted)",
+   "Wrong guesses: no penalty"
+  ],
+  "safety": [
+   "Veto: anyone can skip a memory, no reason needed",
+   "'Play only' players are never recorded",
+   "A parent confirms for under-18s"
+  ],
+  "png": "g_rules_card.png"
+ },
+ "scoring_example": {
+  "note": "Worked example, Classic mode, rounds 1–4 (illustrative)",
+  "columns": [
+   "Round",
+   "Keeper",
+   "Memory",
+   "Guessed by",
+   "After hint",
+   "Points"
+  ],
+  "rows": [
+   [
+    "1",
+    "Mum",
+    "The Great Pancake Flip",
+    "Josh",
+    "1",
+    "Josh +3, Mum +1"
+   ],
+   [
+    "2",
+    "Dad",
+    "How Mum and Dad met",
+    "Mia",
+    "3",
+    "Mia +1, Dad +1"
+   ],
+   [
+    "3",
+    "Ella",
+    "The tent that flooded",
+    "Mum",
+    "2",
+    "Mum +2, Ella +1"
+   ],
+   [
+    "4",
+    "Josh",
+    "The Wrong Terminal",
+    "Ella",
+    "2",
+    "Ella +2, Josh +1, Mum +1 contradiction 🤥"
+   ]
+  ]
+ },
+ "time_to_learn": {
+  "status": "design targets, to be validated in the 5-family test",
+  "rows": [
+   [
+    "Understand the goal",
+    "15 s",
+    "Welcome line + rules card"
+   ],
+   [
+    "Set up a family (first time)",
+    "≤ 2 min",
+    "Names + ages + consent"
+   ],
+   [
+    "Play first round without help",
+    "≤ 5 min",
+    "Includes the 2-min story"
+   ],
+   [
+    "Teach a newcomer at round 3",
+    "≤ 30 s",
+    "'You think of a memory, we guess it'"
+   ],
+   [
+    "Set up the second night",
+    "≤ 15 s",
+    "'Same family?' one tap"
+   ]
+  ]
+ },
+ "intuitiveness": {
+  "principles": [
+   {
+    "t": "One action per screen",
+    "d": "Every screen has one big button. Setup screens never show more than 3 choices."
+   },
+   {
+    "t": "Pass the phone",
+    "d": "The handover is part of the game. Secret screens use a hold-to-unlock so nobody spoils them."
+   },
+   {
+    "t": "Big tap targets",
+    "d": "Primary buttons are full width and about 56 pt tall, well above Apple's 44 pt minimum. Faces are 54 pt or more."
+   },
+   {
+    "t": "Kid-readable text",
+    "d": "Short words, Year-3 reading level target, emoji for each category, labelled hint slots."
+   },
+   {
+    "t": "Talking, not tapping",
+    "d": "Questions, guesses and stories are spoken. The phone only keeps score and memory."
+   },
+   {
+    "t": "Visible recording",
+    "d": "A waveform and 'on-device' pill while recording, and greyed-out faces for 'Play only'."
+   }
+  ],
+  "personas": [
+   {
+    "who": "Mia, 13",
+    "exp": [
+     "Sets her own 'Record my stories' switch; Mum confirms. She feels trusted, not policed.",
+     "As Keeper she picks 'Epic Fails' and uses the labelled hint slots. She doesn't need to invent a format.",
+     "Loves the 🤥 contradiction button and the Who Said It vote. That's the social payoff.",
+     "Risk: she may not want a cringe story kept. The veto and the morning review let her hide it, no questions asked."
+    ]
+   },
+   {
+    "who": "Nana, 74 (visiting)",
+    "exp": [
+     "Never touches setup. Someone adds her as a face in 10 seconds.",
+     "When it's her turn she gets a full-screen 'Pass the phone to Nana' and one big button. Typing hints is optional: a grandchild can be her scribe.",
+     "Her story is the one the kids didn't know. The recap marks it 'New to the kids'.",
+     "Later she can join the family's shared iCloud zone via an invite link and listen, if she has an Apple Account. If not, the family can export to PDF or audio."
+    ]
+   }
+  ],
+  "friction": [
+   {
+    "f": "'What do I write?' blank-page panic",
+    "fix": "Pick from 3 categories, see example memories, fill 4 labelled hint slots"
+   },
+   {
+    "f": "Someone peeks at the secret",
+    "fix": "Hold-to-unlock handover; the secret screen blurs if the phone is tilted flat (design idea)"
+   },
+   {
+    "f": "Awkward to say no to recording",
+    "fix": "Per-person 'Play only' switch at setup; a default that never shames"
+   },
+   {
+    "f": "Kids can't type fast",
+    "fix": "Hint word chips suggested on-device; the Keeper can dictate hints"
+   },
+   {
+    "f": "Noisy table garbles the transcript",
+    "fix": "Audio is always kept, the transcript is editable in the morning review, and the Keeper label doesn't depend on recognition"
+   },
+   {
+    "f": "Long night, phone battery",
+    "fix": "Processing is light during play; titles and summaries are batched at the end"
+   },
+   {
+    "f": "Grandparents without the app",
+    "fix": "CKShare invite link for Apple users; PDF/audio export for everyone else"
+   }
+  ],
+  "cognitive_walkthrough": {
+   "method": "For each of the 15 steps, ask the four standard questions: will the user try to do the right thing? Will they notice the control? Will they connect the control with their goal? Will they see progress after acting?",
+   "flags": [
+    "Step 3 consent: the meaning of 'Play only' must be explicit. Copy test: 'You can still play. We just won't record you.'",
+    "Step 7: the YES/NO tap belongs to the Keeper, but others may grab the phone. Mitigation: the tracker shows 'Keeper taps'.",
+    "Step 10: if two people tap at once, take the first tap and queue the second.",
+    "Step 13: 'Hide' versus 'Delete' must be explained (hide = keep but don't show; delete = gone)."
+   ]
+  },
+  "test_plan": {
+   "families": 5,
+   "mix": "At least one family with a child aged 8–10, one with a teen, one three-generation family, one family with someone who is not confident with English, and one Android-heavy family (they play the web wedge)",
+   "format": "In the family's home, a moderated first game night of about 60 minutes. Silent observation for the first 2 rounds, then think-aloud. A 10-minute debrief. Next-morning review at home, with the morning review screen recorded only if everyone consents.",
+   "measures": [
+    "Time to the first round started (target ≤ 3 min from opening the app)",
+    "Rounds completed without a facilitator stepping in",
+    "Steps where someone asks 'what now?'",
+    "Consent choices and any second thoughts",
+    "Transcript error notes in the morning review",
+    "Would-play-again (0–10) and who asked to play again"
+   ],
+   "success": "4 of 5 families finish 4 rounds unaided and at least 3 ask to play again within a week",
+   "ethics": "Paid families, written consent covering the kids, recordings deleted after analysis, no recordings leave the family's own device"
+  }
+ },
+ "dataflow": {
+  "png": "g_dataflow.png",
+  "device": [
+   "Mic",
+   "Speech detector",
+   "Speech-to-text",
+   "Turn labels",
+   "On-device AI",
+   "Photo match",
+   "Local archive",
+   "Export"
+  ],
+  "user_cloud": [
+   "CloudKit private DB",
+   "CKShare shared zone",
+   "StoreKit purchase (Apple)"
+  ],
+  "our_servers": [
+   "Nothing about the family. Anonymous sales totals only, via App Store Connect"
+  ]
+ },
+ "components": [
+  {
+   "id": "capture",
+   "name": "Audio capture and voice activity detection (VAD)",
+   "what": "Turns the table's sound into speech segments, and ignores clatter.",
+   "options": [
+    {
+     "o": "AVAudioEngine + Apple SoundAnalysis built-in classifier",
+     "pro": "Built in (iOS 15+). On-device. Recognises 'speech' and 'laughter' among 300+ sounds.",
+     "con": "Tuned for classification, not precise segmentation.",
+     "src": "https://developer.apple.com/videos/play/wwdc2021/10036/"
+    },
+    {
+     "o": "Silero VAD (open-source model via Core ML/ONNX)",
+     "pro": "Precise speech segments. Small and cross-platform.",
+     "con": "You bundle and maintain a model.",
+     "src": null
+    },
+    {
+     "o": "Tap-to-talk only (no VAD)",
+     "pro": "Simplest and most explicit",
+     "con": "Clunkier storytelling, and easy to forget to stop."
+    }
+   ],
+   "pick": "SoundAnalysis + tap-in turns",
+   "device": "Any iPhone on iOS 26 (needed for SpeechAnalyzer anyway)",
+   "caveat": "Laughter detection is a bonus signal, not something to rely on for scoring."
+  },
+  {
+   "id": "stt",
+   "name": "On-device speech-to-text",
+   "what": "Transcribes each story so it can be searched, quoted and turned into a title.",
+   "options": [
+    {
+     "o": "Apple SpeechAnalyzer / SpeechTranscriber (iOS 26)",
+     "pro": "On-device. Model lives in system storage, not the app. Designed for long-form, distant-mic speech. en-AU in supported locales.",
+     "con": "iOS 26+ only, and only on hardware that passes SpeechTranscriber.isAvailable. Fallback is DictationTranscriber.",
+     "src": "https://developer.apple.com/videos/play/wwdc2025/277/"
+    },
+    {
+     "o": "WhisperKit (Whisper on Core ML)",
+     "pro": "Open-source and strong accuracy. Runs on older iOS.",
+     "con": "Large model downloads (Whisper Small is about 460 MB), heat and battery, and you manage the models.",
+     "src": "https://github.com/argmaxinc/argmax-oss-swift"
+    },
+    {
+     "o": "Legacy SFSpeechRecognizer",
+     "pro": "Wide device support",
+     "con": "Sends audio to Apple's servers unless on-device is forced. Lower accuracy in published tests.",
+     "src": "https://lyonesse.app/blog/apple-speech-api-benchmark.html"
+    },
+    {
+     "o": "Cloud speech APIs",
+     "pro": "Top accuracy and diarisation",
+     "con": "DISQUALIFIED: family and children's voices would sit on a third-party server.",
+     "src": null
+    }
+   ],
+   "benchmarks": [
+    [
+     "Apple SpeechAnalyzer",
+     "2.12% / 4.56% WER",
+     "LibriSpeech clean / other, M2 Pro (Lyonesse/Inscribe)"
+    ],
+    [
+     "Whisper Small (WhisperKit)",
+     "3.74% / 7.95%",
+     "same test"
+    ],
+    [
+     "Legacy SFSpeechRecognizer",
+     "9.02% / 16.25%",
+     "same test"
+    ],
+    [
+     "Apple SpeechTranscriber",
+     "8.80% WER",
+     "FLEURS English (Whisper Notes)"
+    ],
+    [
+     "Whisper Large",
+     "5.49%",
+     "FLEURS English (Whisper Notes)"
+    ],
+    [
+     "Apple SpeechTranscriber",
+     "6.73%",
+     "FLEURS English (Yap)"
+    ],
+    [
+     "Whisper large-v3-turbo",
+     "3.92%",
+     "FLEURS English (Yap)"
+    ]
+   ],
+   "pick": "SpeechAnalyzer, with DictationTranscriber as the fallback",
+   "device": "iOS 26+. Checked at runtime via isAvailable and supportedLocales (en-AU listed).",
+   "caveat": "All benchmarks are vendor-run tests on read speech. Kids, cross-talk, accents and a noisy dinner table will be worse. The E3 test must measure real error rates."
+  },
+  {
+   "id": "speaker",
+   "name": "Speaker labelling",
+   "what": "Knows who said what, so Who Said It works.",
+   "options": [
+    {
+     "o": "Turn-based labels (Keeper + tap-your-face)",
+     "pro": "No biometrics, transparent and nearly free to build. The game structure does the work.",
+     "con": "Interjections during someone else's turn get the wrong label (fixable in review).",
+     "src": null
+    },
+    {
+     "o": "On-device diarisation (FluidAudio / SpeakerKit)",
+     "pro": "Labels cross-talk automatically",
+     "con": "Error rates are still meaningful (FluidAudio reports 15.1% DER on VoxConverse). Still needs a person to name each cluster.",
+     "src": "https://docs.fluidinference.com/reference/benchmarks"
+    },
+    {
+     "o": "Voice enrolment (voiceprints)",
+     "pro": "Automatic names",
+     "con": "Voiceprints used for identification are biometric, sensitive information under the Privacy Act, so consent is needed for each person, including children.",
+     "src": "https://www.oaic.gov.au/privacy/your-privacy-rights/surveillance-and-monitoring/biometric-scanning"
+    }
+   ],
+   "pick": "Turn-based labels",
+   "device": "Any",
+   "caveat": "Optional diarisation could later help clean up interjections, but only without enrolment and only on the device."
+  },
+  {
+   "id": "llm",
+   "name": "On-device summarising",
+   "what": "Writes each memory's title, one-line summary, best quote, place and people tags.",
+   "options": [
+    {
+     "o": "Apple Foundation Models (about 3B parameters, on-device)",
+     "pro": "Free, offline and private. Guided generation returns structured fields.",
+     "con": "4,096-token context covers instructions, prompt and output combined. Apple Intelligence devices only.",
+     "src": "https://developer.apple.com/documentation/technotes/tn3193-managing-the-on-device-foundation-model-s-context-window"
+    },
+    {
+     "o": "Rule-based templates (no LLM)",
+     "pro": "Works on every device",
+     "con": "Bland titles; uses the Keeper's typed secret as the title."
+    },
+    {
+     "o": "Cloud LLM",
+     "pro": "Better writing",
+     "con": "DISQUALIFIED for the same reason as cloud speech"
+    }
+   ],
+   "pick": "Foundation Models, one memory per call, with a template fallback",
+   "device": "Apple Intelligence iPhones (iPhone 15 Pro and later). Language and region must be supported, and up to about 8 GB (some models about 14 GB) free storage for Apple Intelligence.",
+   "caveat": "A 2-minute story (about 300 words) fits comfortably. A whole night does not, so the app processes one memory at a time. Not for facts or world knowledge."
+  },
+  {
+   "id": "photos",
+   "name": "Photo matching",
+   "what": "Suggests photos from the same day or place as the memory.",
+   "options": [
+    {
+     "o": "PHPicker (user picks)",
+     "pro": "No Photos permission needed",
+     "con": "No automatic suggestions",
+     "src": "https://developer.apple.com/videos/play/wwdc2020/10652/"
+    },
+    {
+     "o": "PhotoKit with limited library access",
+     "pro": "Suggestions from the photos the user chose to share",
+     "con": "Only sees the selected set",
+     "src": "https://developer.apple.com/videos/play/wwdc2021/10046/"
+    },
+    {
+     "o": "PhotoKit full access, matching on creationDate and location",
+     "pro": "Best 'that's the day!' moments",
+     "con": "A big permission ask. Must be opt-in later, not at setup."
+    }
+   ],
+   "pick": "Picker first; offer limited access from the morning review",
+   "device": "Any",
+   "caveat": "Dates in memories are fuzzy ('the summer Josh was 6'), so treat matches as suggestions only."
+  },
+  {
+   "id": "sync",
+   "name": "Family sharing and sync",
+   "what": "Shares the archive across the family's devices and with grandparents.",
+   "options": [
+    {
+     "o": "CloudKit private database + CKShare zone-wide share",
+     "pro": "Data lives in the family's iCloud, never ours. Apple handles invites. Shared data counts against the owner's quota.",
+     "con": "Participants need an Apple Account",
+     "src": "https://developer.apple.com/videos/play/tech-talks/10874/"
+    },
+    {
+     "o": "Add Google Drive (appDataFolder) for Android",
+     "pro": "Reaches Android families, and the data is still in the user's own storage",
+     "con": "A second sync engine and conflicts. There's no Android equivalent of SpeechAnalyzer plus Foundation Models: ML Kit GenAI speech is alpha, en-US, on a limited device list.",
+     "src": "https://developers.google.com/ml-kit/genai/speech-recognition/android"
+    },
+    {
+     "o": "Our own backend",
+     "pro": "Easy cross-platform",
+     "con": "BREAKS the rule that private user data never touches our servers"
+    }
+   ],
+   "pick": "CloudKit only for v1",
+   "device": "iCloud account",
+   "caveat": "Mark story fields as encrypted (CKRecord encryptedValues). Free 5 GB iCloud tiers fill up with audio, so offer compressed AAC and a 'transcript only' setting."
+  },
+  {
+   "id": "license",
+   "name": "Licensing and payments",
+   "what": "Sells the Family Pass. This is the only server-side touchpoint, and it's Apple's.",
+   "options": [
+    {
+     "o": "StoreKit 2 auto-renewing subscription with Family Sharing",
+     "pro": "One purchase covers up to 6 family members. Apple handles receipts. We see sales totals only.",
+     "con": "Apple's commission",
+     "src": "https://developer.apple.com/documentation/storekit/supporting-family-sharing-in-your-app"
+    },
+    {
+     "o": "One-off unlock (box QR code)",
+     "pro": "Good gift and retail story",
+     "con": "Code fraud and redemption logic"
+    },
+    {
+     "o": "Web checkout (Stripe) for the web wedge",
+     "pro": "No app store needed",
+     "con": "Must keep the payment record separate from any game data"
+    }
+   ],
+   "pick": "StoreKit Family Sharing; box QR unlocks the card set offline",
+   "device": "Any",
+   "caveat": "Check the current App Store commission and AU GST handling before pricing."
+  },
+  {
+   "id": "export",
+   "name": "Export and the box yearbook",
+   "what": "Lets families keep their memories forever, without us.",
+   "options": [
+    {
+     "o": "ZIP (audio + JSON + PDF) to Files",
+     "pro": "Portable and no lock-in",
+     "con": "Large files"
+    },
+    {
+     "o": "Printed yearbook via a print partner",
+     "pro": "A physical keepsake and extra revenue",
+     "con": "Data leaves the device. Needs explicit per-order consent and a partner with no retention.",
+     "src": null
+    }
+   ],
+   "pick": "ZIP + PDF in v1; yearbook later as an explicit, one-off upload",
+   "device": "Any",
+   "caveat": "The yearbook is the one feature that sends content out, so treat it as a separate, opt-in order."
+  },
+  {
+   "id": "remote",
+   "name": "Remote play (later)",
+   "what": "Grandparents interstate join over FaceTime.",
+   "options": [
+    {
+     "o": "SharePlay / GroupActivities",
+     "pro": "End-to-end encrypted, Apple-run session and messaging",
+     "con": "Apple devices only, and an extra UX mode",
+     "src": "https://developer.apple.com/documentation/groupactivities/"
+    },
+    {
+     "o": "Not in v1",
+     "pro": "Keeps the 'one phone at the table' magic",
+     "con": "Misses distributed families"
+    }
+   ],
+   "pick": "Later (v1.x)",
+   "device": "iOS + FaceTime",
+   "caveat": "The game state syncs, but recording others over a call raises extra consent questions."
+  }
+ ],
+ "rubric_weights": {
+  "legal": 16,
+  "pain": 10,
+  "distro": 10,
+  "aibuild": 10,
+  "wtp": 9,
+  "breadth": 7,
+  "recurring": 7,
+  "maint": 7,
+  "build": 6,
+  "compete": 5,
+  "synergy": 5,
+  "platform": 5,
+  "defend": 3
+ },
+ "base_scores": {
+  "web": {
+   "legal": 4,
+   "pain": 2,
+   "distro": 2,
+   "aibuild": 4,
+   "wtp": 3,
+   "breadth": 4,
+   "recurring": 2,
+   "maint": 5,
+   "build": 4,
+   "compete": 2,
+   "synergy": 4,
+   "platform": 5,
+   "defend": 3
+  },
+  "native": {
+   "legal": 3,
+   "pain": 3,
+   "distro": 2,
+   "aibuild": 1,
+   "wtp": 4,
+   "breadth": 4,
+   "recurring": 3,
+   "maint": 3,
+   "build": 2,
+   "compete": 3,
+   "synergy": 3,
+   "platform": 4,
+   "defend": 4
+  }
+ },
+ "decisions": [
+  {
+   "id": "platform",
+   "q": "What do we build first?",
+   "options": [
+    {
+     "v": "web",
+     "label": "Web wedge (browser game)"
+    },
+    {
+     "v": "native",
+     "label": "Native iOS app"
+    },
+    {
+     "v": "xplat",
+     "label": "Cross-platform (React Native/Expo)"
+    }
+   ],
+   "why": {
+    "web": "Cheapest and fastest. Runs on any phone, but browser speech recognition defaults to server processing, so the web version stays no-record.",
+    "native": "Unlocks on-device speech and summarising, CloudKit and StoreKit Family Sharing. The real product.",
+    "xplat": "One codebase, but the iOS speech and AI APIs still need native modules, and Android on-device parity is weak (ML Kit GenAI is alpha and en-US)."
+   }
+  },
+  {
+   "id": "record",
+   "q": "Record stories?",
+   "options": [
+    {
+     "v": "yes",
+     "label": "Record (opt-in per person)"
+    },
+    {
+     "v": "no",
+     "label": "No recording, game only"
+    }
+   ]
+  },
+  {
+   "id": "speech",
+   "q": "Where does speech get transcribed?",
+   "options": [
+    {
+     "v": "device",
+     "label": "On-device"
+    },
+    {
+     "v": "cloud",
+     "label": "Cloud API"
+    }
+   ]
+  },
+  {
+   "id": "sync",
+   "q": "Where does the archive live?",
+   "options": [
+    {
+     "v": "icloud",
+     "label": "Family's iCloud only"
+    },
+    {
+     "v": "plusdrive",
+     "label": "Also Google Drive for Android"
+    }
+   ]
+  },
+  {
+   "id": "box",
+   "q": "Physical box?",
+   "options": [
+    {
+     "v": "digital",
+     "label": "Digital-only"
+    },
+    {
+     "v": "box",
+     "label": "Physical card box too"
+    }
+   ]
+  },
+  {
+   "id": "remote",
+   "q": "Remote play?",
+   "options": [
+    {
+     "v": "later",
+     "label": "Later"
+    },
+    {
+     "v": "now",
+     "label": "In v1 (SharePlay)"
+    }
+   ]
+  },
+  {
+   "id": "labels",
+   "q": "How do we know who spoke?",
+   "options": [
+    {
+     "v": "turns",
+     "label": "Turn-based (tap your face)"
+    },
+    {
+     "v": "voice",
+     "label": "Voice enrolment (voiceprints)"
+    }
+   ]
+  }
+ ],
+ "explorer": {
+  "note": "Modelling assumption, not research: each choice shifts a rubric criterion by ±1 (bounded 1–5) from the Run 11 base scores. The totals are rubric v2.0, and the fit is the portfolio lens with monetisation fit = 3.",
+  "base": {
+   "web": "Run 11 web wedge (no-record) scores",
+   "native": "Run 11 native on-device scores",
+   "xplat": "native, then distro +1, maint −1, platform −1"
+  },
+  "deltas": [
+   [
+    "record=no (native/xplat)",
+    "legal +1, pain −1, recurring −1, defend −1; privacy A"
+   ],
+   [
+    "record=yes (web)",
+    "legal −1, aibuild −1; needs Chrome processLocally (experimental, en-US); privacy B"
+   ],
+   [
+    "speech=cloud",
+    "privacy C-disq → fit 0 (children's voices on a third-party server)"
+   ],
+   [
+    "sync=plusdrive",
+    "distro +1, maint −1, build −1"
+   ],
+   [
+    "box=box",
+    "wtp +1, distro +1, maint −1"
+   ],
+   [
+    "remote=now",
+    "recurring +1, build −1"
+   ],
+   [
+    "labels=voice",
+    "legal −1, aibuild −1; privacy C-redesign (biometric sensitive info)"
+   ]
+  ],
+  "recommended": {
+   "platform": "native",
+   "record": "yes",
+   "speech": "device",
+   "sync": "icloud",
+   "box": "digital",
+   "remote": "later",
+   "labels": "turns"
+  },
+  "path": [
+   "Now: the paper deck (E1), under A$50",
+   "Next: the web wedge, no-record, to test the game loop (solo, under about A$1k for phases 0–2)",
+   "Then: native iOS v1. On-device speech, turn-based labels, iCloud only, digital first (A$15–40k estimate)",
+   "After E2 sales signal: the physical box",
+   "v1.x: SharePlay remote play; Android only if ML Kit GenAI leaves alpha and supports en-AU"
+  ],
+  "recommended_result": {
+   "total": 57.6,
+   "fit": 48.5,
+   "privacy": "B"
+  },
+  "web_result": {
+   "total": 67.2,
+   "fit": 66.1,
+   "privacy": "A"
+  }
+ },
+ "caveats": [
+  "The speech benchmarks are vendor or blog tests on read speech (LibriSpeech/FLEURS), not noisy family tables. Real accuracy must be measured in E3.",
+  "Apple Intelligence and Foundation Models need recent iPhones (15 Pro and later), with language and region limits and several GB of storage. Older phones get template titles.",
+  "Explorer scores are modelled ±1 shifts on the Run 11 rubric, not new research.",
+  "Time-to-learn figures and all UI timings are design targets.",
+  "Cost figures are Run 11 estimates (native v1 A$15–40k), not quotes.",
+  "Not legal advice: consent, the Children's Online Privacy Code, the NSW Surveillance Devices Act and biometric rules need review."
+ ],
+ "sources": [
+  "https://antongubarenko.substack.com/p/ios-26-speechanalyzer-guide",
+  "https://developer.apple.com/documentation/CloudKit/CKShare",
+  "https://developer.apple.com/documentation/groupactivities/",
+  "https://developer.apple.com/documentation/speech/speechtranscriber",
+  "https://developer.apple.com/documentation/storekit/supporting-family-sharing-in-your-app",
+  "https://developer.apple.com/documentation/technotes/tn3193-managing-the-on-device-foundation-model-s-context-window",
+  "https://developer.apple.com/foundation-models-framework/",
+  "https://developer.apple.com/help/app-store-connect/configure-in-app-purchase-settings/turn-on-family-sharing-for-in-app-purchases/",
+  "https://developer.apple.com/videos/play/tech-talks/10874/",
+  "https://developer.apple.com/videos/play/wwdc2020/10652/",
+  "https://developer.apple.com/videos/play/wwdc2021/10036/",
+  "https://developer.apple.com/videos/play/wwdc2021/10046/",
+  "https://developer.apple.com/videos/play/wwdc2023/10239/",
+  "https://developer.apple.com/videos/play/wwdc2025/277/",
+  "https://developer.apple.com/videos/play/wwdc2025/286/",
+  "https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition",
+  "https://developers.google.com/ml-kit/genai",
+  "https://developers.google.com/ml-kit/genai/speech-recognition/android",
+  "https://docs.fluidinference.com/reference/benchmarks",
+  "https://github.com/WebAudio/web-speech-api/blob/main/explainers/on-device-speech-recognition.md",
+  "https://github.com/argmaxinc/argmax-oss-swift",
+  "https://github.com/jamsch/expo-speech-recognition",
+  "https://legislation.nsw.gov.au/view/whole/html/inforce/current/act-2007-064",
+  "https://lyonesse.app/blog/apple-speech-api-benchmark.html",
+  "https://support.apple.com/en-us/121115",
+  "https://whispernotes.app/blog/apple-speech-vs-whisper",
+  "https://www.argmaxinc.com/blog/speakerkit",
+  "https://www.oaic.gov.au/privacy/australian-privacy-principles/australian-privacy-principles-guidelines/chapter-3-app-3-collection-of-solicited-personal-information",
+  "https://www.oaic.gov.au/privacy/your-privacy-rights/surveillance-and-monitoring/biometric-scanning",
+  "https://yapapp.cc/data/asr-accuracy"
+ ],
+ "page": {
+  "title": "Hint & Tell: How It Works",
+  "url": "https://cursor.com/canvas/store-4d61992f-8a12-47ae-9e32-57cfaf4b60d1/a8dc49e2-ed7e-4f8e-9fd3-ad3fdfece1b3",
+  "parent_page": "https://cursor.com/canvas/store-4d61992f-8a12-47ae-9e32-57cfaf4b60d1/80e1bc40-9485-489f-99af-2b0dd5efa15a"
+ },
+ "route": "/memory-game/how-it-works",
+ "mockups": [
+  {
+   "file": "w01_welcome.png",
+   "path": "/mockups/memory-game/walkthrough/w01_welcome.png",
+   "step": 1,
+   "caption": "Step 1: Unbox or download"
+  },
+  {
+   "file": "w02_family.png",
+   "path": "/mockups/memory-game/walkthrough/w02_family.png",
+   "step": 2,
+   "caption": "Step 2: Add the family"
+  },
+  {
+   "file": "w03_consent.png",
+   "path": "/mockups/memory-game/walkthrough/w03_consent.png",
+   "step": 3,
+   "caption": "Step 3: Consent, person by person"
+  },
+  {
+   "file": "w04_mode.png",
+   "path": "/mockups/memory-game/walkthrough/w04_mode.png",
+   "step": 4,
+   "caption": "Step 4: Choose a mode"
+  },
+  {
+   "file": "w05_deal.png",
+   "path": "/mockups/memory-game/walkthrough/w05_deal.png",
+   "step": 5,
+   "caption": "Step 5: Deal a category"
+  },
+  {
+   "file": "w06_keeper_secret.png",
+   "path": "/mockups/memory-game/walkthrough/w06_keeper_secret.png",
+   "step": 6,
+   "caption": "Step 6: The Keeper's secret"
+  },
+  {
+   "file": "w07_hints.png",
+   "path": "/mockups/memory-game/walkthrough/w07_hints.png",
+   "step": 7,
+   "caption": "Step 7: Hints and yes/no questions"
+  },
+  {
+   "file": "w08_scored.png",
+   "path": "/mockups/memory-game/walkthrough/w08_scored.png",
+   "step": 8,
+   "caption": "Step 8: Guess and score"
+  },
+  {
+   "file": "w09_tell_it.png",
+   "path": "/mockups/memory-game/walkthrough/w09_tell_it.png",
+   "step": 9,
+   "caption": "Step 9: Tell it"
+  },
+  {
+   "file": "w10_add_version.png",
+   "path": "/mockups/memory-game/walkthrough/w10_add_version.png",
+   "step": 10,
+   "caption": "Step 10: Everyone adds their version"
+  },
+  {
+   "file": "w11_pass_phone.png",
+   "path": "/mockups/memory-game/walkthrough/w11_pass_phone.png",
+   "step": 11,
+   "caption": "Step 11: Pass the phone"
+  },
+  {
+   "file": "w12_recap.png",
+   "path": "/mockups/memory-game/walkthrough/w12_recap.png",
+   "step": 12,
+   "caption": "Step 12: End-of-night recap"
+  },
+  {
+   "file": "w13_morning_review.png",
+   "path": "/mockups/memory-game/walkthrough/w13_morning_review.png",
+   "step": 13,
+   "caption": "Step 13: Morning memory review"
+  },
+  {
+   "file": "w14_on_this_day.png",
+   "path": "/mockups/memory-game/walkthrough/w14_on_this_day.png",
+   "step": 14,
+   "caption": "Step 14: On This Day nudge"
+  },
+  {
+   "file": "w15_who_said_it.png",
+   "path": "/mockups/memory-game/walkthrough/w15_who_said_it.png",
+   "step": 15,
+   "caption": "Step 15: Who Said It round"
+  },
+  {
+   "file": "g_rules_card.png",
+   "path": "/mockups/memory-game/walkthrough/g_rules_card.png",
+   "caption": "Rules on one card (design target)"
+  },
+  {
+   "file": "g_dataflow.png",
+   "path": "/mockups/memory-game/walkthrough/g_dataflow.png",
+   "caption": "Data flow: device / family's Apple account / our servers"
+  }
+ ]
+}

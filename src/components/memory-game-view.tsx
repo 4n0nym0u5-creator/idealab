@@ -29,6 +29,11 @@ export function MemoryGameView() {
         <h1>Hint &amp; Tell</h1>
         <p className="lede">{verdict.headline}</p>
         <p>{verdict.one_liner}</p>
+        <Link className="panel walk-link" href="/memory-game/how-it-works">
+          <span className="kicker">Walkthrough</span>
+          <strong>How it works: full walkthrough →</strong>
+          <p>Fifteen screens, the rules on one card, where the data goes, and an interactive decision explorer.</p>
+        </Link>
         <div className="chips">
           <Link className="chip" href="/ideas/hint-and-tell-family-memory-game">Idea card</Link>
           <span className="badge">Park</span>
@@ -66,6 +71,7 @@ export function MemoryGameView() {
       <section className="panel stack" id="mockups">
         <h2>Mockups</h2>
         <p className="small muted">Eight screens. Phone frames are 390×844 at 2×, the tablet is 1194×834 at 2×, and the product shot is 1440×900 at 2×. Click a screen to enlarge it. No Disney or Universal names.</p>
+        <p><Link href="/memory-game/how-it-works"><strong>How it works: full walkthrough →</strong></Link></p>
         <MockupGallery
           base="/mockups/memory-game"
           shots={SHOTS.map(([file, title, caption]) => ({ file, title, caption }))}
