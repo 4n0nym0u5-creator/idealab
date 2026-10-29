@@ -288,9 +288,15 @@ test("production upgrade preserves notes, statuses and overrides", async () => {
     }, "test");
     const upgraded = await seedIfEmpty("migrate-v2");
     assert.equal(upgraded.skipped, false);
-    assert.equal(upgraded.ideas, 187);
+    assert.equal(upgraded.ideas, 188);
     const portfolio = await loadPortfolio();
-    assert.equal(portfolio.ideas.length, 187);
+    assert.equal(portfolio.ideas.length, 188);
+    const memoryGame = portfolio.ideas.find((idea) => idea.id === "hint-and-tell-family-memory-game");
+    assert.equal(memoryGame?.status, "candidate");
+    assert.equal(memoryGame?.tier, "Park");
+    assert.equal(memoryGame?.privacyClass, "B");
+    assert.equal(memoryGame?.family, "Standalone: Hint & Tell");
+    assert.equal(memoryGame?.total, 57.6);
     assert.equal(portfolio.runs.length, 7);
     assert.equal(portfolio.settings.rubricVersion, "2.0");
     assert.equal(portfolio.settings.schemaVersion, "5");
@@ -327,7 +333,8 @@ test("production upgrade preserves notes, statuses and overrides", async () => {
     await seedIfEmpty("migrate-v2");
     const after = await loadPortfolio();
     assert.equal(after.ideas.find((idea) => idea.id === "mac-quicklook-data-viewer")?.userNotes, "Edited after the upgrade.");
-    assert.equal(after.ideas.length, 187);
+    assert.equal(after.ideas.length, 188);
+    assert.equal(after.ideas.find((idea) => idea.id === "hint-and-tell-family-memory-game")?.family, "Standalone: Hint & Tell");
     assert.equal(after.runs.filter((run) => run.runNumber === 7).length, 1);
     assert.equal(after.ideas.find((idea) => idea.id === "bills-calendar-household")?.lineupRole, "merged-into-renewal-radar");
     assert.equal(after.ideas.find((idea) => idea.id === "bills-calendar-household")?.researchTotal, portfolio.ideas.find((idea) => idea.id === "bills-calendar-household")?.researchTotal);
