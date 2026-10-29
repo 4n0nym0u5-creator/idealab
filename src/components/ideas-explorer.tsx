@@ -202,7 +202,7 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
                 <span className="score-figure" style={{ fontSize: 36 }}>{idea.total.toFixed(1)}</span>
                 <label className="small faint"><input type="checkbox" checked={picked.includes(idea.id)} onChange={() => togglePick(idea.id)} /> Compare</label>
               </div>
-              <Link href={`/ideas/${idea.id}`}><strong>{idea.title}</strong></Link>
+              <Link href={idea.id === "hint-and-tell-family-memory-game" ? "/memory-game" : `/ideas/${idea.id}`}><strong>{idea.title}</strong></Link>
               <p>{idea.problem}</p>
               <ScoreMeter scores={workingScores(idea)} criteria={criteria} />
               <div className="chips">
@@ -253,7 +253,7 @@ export function IdeasExplorer({ ideas, initialQuery, initialStatus, initialTheme
                   <tr key={idea.id} className={cn("clickable", idea.status === "killed" && "faint")}>
                     <td><input type="checkbox" aria-label={`Compare ${idea.title}`} checked={picked.includes(idea.id)} onChange={() => togglePick(idea.id)} /></td>
                     <td className="num">{idea.rank ?? "—"}</td>
-                    <td><Link href={`/ideas/${idea.id}`}><strong>{idea.title}</strong></Link><div className="small faint">{idea.platform}</div></td>
+                    <td><Link href={idea.id === "hint-and-tell-family-memory-game" ? "/memory-game" : `/ideas/${idea.id}`}><strong>{idea.title}</strong></Link><div className="small faint">{idea.platform}</div></td>
                     <td>{idea.category}{idea.secondaryCategories.length ? <div className="small faint">{idea.secondaryCategories.join(", ")}</div> : null}</td>
                     <td>{idea.bundleFit ? <span className={`badge badge-${idea.bundleFit.tier}`}>{tierLabel(idea.bundleFit.tier)}</span> : "—"}</td>
                     <td>{idea.tier || "—"}{idea.family ? <div className="small faint">{idea.family}</div> : null}</td>

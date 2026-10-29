@@ -3,9 +3,9 @@ import path from "path";
 import { asc, count, desc, eq, inArray, sql } from "drizzle-orm";
 import bundledIdeas from "../../data/ideas.json";
 import { CRITERIA_KEYS, DEFAULT_WEIGHTS, isCriterionKey, isOptionalCriterion, type CriterionKey, type Scores, type Weights } from "./criteria";
-import { backupDir, getDb, type AppDatabase } from "./db";
+import { backupDir, execSql, getDb, type AppDatabase } from "./db";
 import { applyRun, detectImport, parseJsonText, weightsFromUnknown, type ImportReport } from "./merge";
-import { migrationApplied, migrate, recordMigration } from "./migrate";
+import { migrationApplied, migrate, recordMigration, splitSql } from "./migrate";
 import { applyRubricRescore, rubricHistoryFromRescore, type RescoreFile } from "./rescore";
 import { applyBundleAnalysis, bundleFromUnknown, canonicalBundle, canonicalOverrides, overridesFromUnknown, readStoredBundle } from "./bundles";
 import { aliasesFromUnknown, canonicalCluster, canonicalMethod, canonicalRun4Merge, clustersFromUnknown, methodFromUnknown, run4MergeFromUnknown } from "./pain";
@@ -1051,6 +1051,17 @@ export async function applyRun7Lineup(): Promise<{ changed: number; skippedNew: 
   return { changed: result.changed, skippedNew: result.added };
 }
 
+async function ensureHintAndTell(): Promise<number> {
+  const db = await getDb();
+  const existing = await db.select({ id: ideas.id }).from(ideas).where(eq(ideas.id, "hint-and-tell-family-memory-game"));
+  if (existing.length > 0) return 0;
+  const [{ n }] = await db.select({ n: count() }).from(ideas);
+  if (Number(n) === 0) return 0;
+  const sqlText = fs.readFileSync(path.join(process.cwd(), "drizzle", "0007_run11_memorygame.sql"), "utf8");
+  for (const statement of splitSql(sqlText)) await execSql(statement);
+  return 1;
+}
+
 export async function seedIfEmpty(actor = "seed"): Promise<{ ideas: number; runs: number; skipped: boolean }> {
   await migrate();
   const db = await getDb();
@@ -1065,7 +1076,8 @@ export async function seedIfEmpty(actor = "seed"): Promise<{ ideas: number; runs
       await recordMigration(DATA_MIGRATION_V4);
       await recordMigration(DATA_MIGRATION_V5);
       await recordMigration(DATA_MIGRATION_V6);
-      return result;
+      const added = await ensureHintAndTell();
+      return { ...result, ideas: result.ideas + added };
     }
   }
   const needsV2 = !(await migrationApplied(DATA_MIGRATION));
@@ -1087,8 +1099,10 @@ export async function seedIfEmpty(actor = "seed"): Promise<{ ideas: number; runs
     if (needsV4) await recordMigration(DATA_MIGRATION_V4);
     if (needsV5) await recordMigration(DATA_MIGRATION_V5);
     if (needsV6) await recordMigration(DATA_MIGRATION_V6);
-    return { ideas: ideasAfter, runs: runsAfter, skipped: false };
+    const added = await ensureHintAndTell();
+    return { ideas: ideasAfter + added, runs: runsAfter, skipped: false };
   }
+  await ensureHintAndTell();
   const [{ n: after }] = await db.select({ n: count() }).from(ideas);
   return { ideas: Number(after), runs: 0, skipped: true };
 }

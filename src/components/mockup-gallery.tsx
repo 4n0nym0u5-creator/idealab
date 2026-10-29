@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 export type MockupShot = { file: string; title: string; caption: string };
 
-export function MockupGallery({ shots }: { shots: MockupShot[] }) {
+export function MockupGallery({ shots, base = "/mockups/life-admin-pass" }: { shots: MockupShot[]; base?: string }) {
   const [open, setOpen] = useState<MockupShot | null>(null);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export function MockupGallery({ shots }: { shots: MockupShot[] }) {
         {shots.map((shot) => (
           <figure key={shot.file} className="mockup-card">
             <button type="button" className="mockup-button" onClick={() => setOpen(shot)} aria-label={`Enlarge ${shot.title}`}>
-              <img src={`/mockups/life-admin-pass/${shot.file}`} alt={`${shot.title}. Sample data.`} />
+              <img src={`${base}/${shot.file}`} alt={shot.title} />
             </button>
             <figcaption>
               <strong>{shot.title}</strong>
@@ -34,7 +34,7 @@ export function MockupGallery({ shots }: { shots: MockupShot[] }) {
       {open ? (
         <div className="lightbox" role="dialog" aria-modal="true" aria-label={open.title} onClick={() => setOpen(null)}>
           <figure onClick={(event) => event.stopPropagation()}>
-            <img src={`/mockups/life-admin-pass/${open.file}`} alt={`${open.title}. Sample data.`} />
+            <img src={`${base}/${open.file}`} alt={open.title} />
             <figcaption>
               <strong>{open.title}.</strong> {open.caption}
             </figcaption>

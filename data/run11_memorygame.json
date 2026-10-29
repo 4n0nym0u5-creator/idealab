@@ -1,0 +1,711 @@
+{
+ "run": {
+  "run_number": 11,
+  "date": "2026-10-29",
+  "author": "Grok Bot (Run 11)",
+  "title": "Memory Game → 'Hint & Tell': standalone opportunity",
+  "source_doc": "User PDF 'Memory Game' (26 Oct 2026, AUD/USD 0.70)",
+  "rubric_version": "2.0",
+  "lens": "PL 1.0"
+ },
+ "verdict": {
+  "headline": "Worth a cheap test, not a full build yet. Test it at your own table over Christmas 2026. Only build the native app if families keep playing.",
+  "recommended_name": "Hint & Tell (working name)",
+  "one_liner": "A dinner-table guessing game. The stories you tell along the way become a family archive that stays on your devices.",
+  "tier": "Park (build) · Validate now (experiments ≤ A$600)",
+  "why": [
+   "The game loop is genuinely new. Storyworth and Remento are prompt-and-book services, not games. Fun Bits' 'Quote Guess' is the only close analogue.",
+   "Demand for family-story products is proven: Storyworth sells at US$69–199, Remento at US$99/yr, Meminto at US$99–397.",
+   "The hard part is retention: will families still play in week 6? Novelty fades and prompts start to feel like homework.",
+   "A privacy-compliant build means native iOS with on-device speech and AI. That is the hardest stack for a non-engineer (aibuild 1).",
+   "Scores: rubric total 57.6 (shortlist about 76+), portfolio fit 48.5. A web wedge without recording scores 67.2 (fit 66.1) and is a cheaper first product."
+  ]
+ },
+ "scores": {
+  "on_device_native_v1": {
+   "scores": {
+    "legal": 3,
+    "pain": 3,
+    "breadth": 4,
+    "wtp": 4,
+    "recurring": 3,
+    "build": 2,
+    "maint": 3,
+    "distro": 2,
+    "compete": 3,
+    "defend": 4,
+    "synergy": 3,
+    "platform": 4,
+    "aibuild": 1
+   },
+   "total": 57.6,
+   "portfolio_fit": {
+    "score": 48.5,
+    "viability": 42.0,
+    "opportunity": 62.0,
+    "pre_privacy": 51.0,
+    "privacy_factor": 0.95
+   }
+  },
+  "wedge_v0_web_game": {
+   "scores": {
+    "legal": 4,
+    "pain": 2,
+    "breadth": 4,
+    "wtp": 3,
+    "recurring": 2,
+    "build": 4,
+    "maint": 5,
+    "distro": 2,
+    "compete": 2,
+    "defend": 3,
+    "synergy": 4,
+    "platform": 5,
+    "aibuild": 4
+   },
+   "total": 67.2,
+   "portfolio_fit": {
+    "score": 66.1,
+    "viability": 84.0,
+    "opportunity": 52.0,
+    "pre_privacy": 66.1,
+    "privacy_factor": 1.0
+   }
+  },
+  "pdf_cloud_design": {
+   "scores": {
+    "legal": 2,
+    "pain": 3,
+    "breadth": 4,
+    "wtp": 4,
+    "recurring": 4,
+    "build": 1,
+    "maint": 2,
+    "distro": 2,
+    "compete": 3,
+    "defend": 4,
+    "synergy": 2,
+    "platform": 3,
+    "aibuild": 3
+   },
+   "total": 55.2,
+   "portfolio_fit": {
+    "score": 0.0,
+    "viability": 43.0,
+    "opportunity": 62.0,
+    "pre_privacy": 51.6,
+    "privacy_factor": 0.0
+   }
+  },
+  "strict_legal_2_reading": {
+   "total": 54.4,
+   "note": "If the rubric's 'recording calls' anchor is read strictly (legal 2), the native total drops 3.2 points."
+  }
+ },
+ "privacy_redesign": {
+  "class": "B (local + user-owned sync). The PDF's cloud design (AssemblyAI/Deepgram + S3 + Supabase) is C-disq under the no-private-data rule.",
+  "architecture": [
+   {
+    "layer": "Capture",
+    "pdf": "Phone records, uploads audio to S3",
+    "redesign": "Phone records to the app sandbox and stays offline. Nothing is uploaded."
+   },
+   {
+    "layer": "Speech-to-text",
+    "pdf": "AssemblyAI US$0.21/hr + US$0.02 diarisation, or Deepgram",
+    "redesign": "Apple SpeechAnalyzer/SpeechTranscriber (iOS 26, on-device, built for long-form and distant audio). Android fallback: ML Kit GenAI speech recognition (basic mode API 31+)."
+   },
+   {
+    "layer": "Who said what",
+    "pdf": "Cloud diarisation / voice IDs",
+    "redesign": "Game turns label the speaker. The Keeper is the teller, and others tap their face when they jump in. No voiceprints are stored. Optional on-device SpeakerKit clustering stays ephemeral."
+   },
+   {
+    "layer": "Extraction (title, place, date, quotes)",
+    "pdf": "Cloud LLM",
+    "redesign": "Apple Foundation Models (on-device, guided generation). On older phones there is no AI summary; the family types a title and the template fills the rest."
+   },
+   {
+    "layer": "Archive + sharing",
+    "pdf": "Supabase + S3",
+    "redesign": "CloudKit private database in the family's own iCloud. Grandparents are invited with a CKShare, and storage counts against the owner's iCloud quota."
+   },
+   {
+    "layer": "Licensing/payments",
+    "pdf": "Stripe",
+    "redesign": "StoreKit in-app purchase. Apple holds the payment data; our server holds nothing."
+   },
+   {
+    "layer": "Legacy",
+    "pdf": "Legacy contact feature on our servers",
+    "redesign": "A free yearly open-format export (m4a + JSON + PDF) to a place the family chooses, plus the printed yearbook and Apple Legacy Contact."
+   }
+  ],
+  "trade_offs": {
+   "cost": "Marginal AI cost falls to about A$0. The PDF estimated US$1.07–3.76 per family per month for cloud STT/LLM/storage. Fixed costs are about A$149/yr Apple Developer plus a domain.",
+   "quality": "On-device transcription at a noisy table will be worse than cloud. This is unmeasured and must be tested (Experiment 3). Without an LLM on older phones there are no auto-summaries.",
+   "device_floor": "Full features need iOS 26. AI summaries need an Apple Intelligence iPhone (15 Pro / 16 / 17 family), Apple Intelligence switched on and up to 8 GB free. A game-only mode works on any recent iPhone.",
+   "remote_play": "No game server is allowed, so remote play would use FaceTime SharePlay (Apple-run, peer to peer) or a speaker-phone fallback. Cut from the MVP.",
+   "grandparent_sharing": "Easy if Nana has an Apple ID (CKShare). Android or non-Apple relatives get exported PDFs/audio files or the printed yearbook instead.",
+   "legacy": "Better than the PDF's version. A shutdown can't strand the stories because we never hold them. HereAfter AI closed in August 2026 with support-email-only export.",
+   "android": "Later, or never. Android's advanced on-device modes only run on a few flagships."
+  },
+  "legal_risk_shrinks": [
+   "NSW Surveillance Devices Act 2007: recording a private conversation needs the consent of every principal party (express or implied). The consent roll-call, per-player 'Play only' option and visible recording indicator are designed for that. It is the family recording itself on its own device; we are never a party and never hold the recording.",
+   "Biometrics: speaker labels come from game turns, so no voiceprint templates are kept. The Privacy Act treats biometric templates for automated identification as sensitive information, so avoiding them removes the highest-risk category.",
+   "Minors: teens 13–17 give their own say-so plus a parent OK, and under-13s are 'Play only' by default. The developer collects no children's data. The Children's Online Privacy Code (registration due 10 Dec 2026) mostly bites on entities that collect data; check the final text.",
+   "Breach exposure: no server, so nothing to breach. The statutory privacy tort (in force since 10 Jun 2025) and NDB scheme exposure become near-zero.",
+   "Still needed: a privacy policy, App Store label 'Data Not Collected', ACL refund terms, GST registration (Apple requires it for paid apps, per Run 10), and a one-off legal review of the consent wording (estimate A$1.5–4k)."
+  ]
+ },
+ "personas": [
+  {
+   "rank": 1,
+   "name": "The Gift-Giving Adult Child",
+   "who": "35–55, buys for parents and grandparents at Christmas, Mother's/Father's Day and milestone birthdays",
+   "job": "Capture Mum's and Dad's stories before it's too late, as a present",
+   "evidence": "Storyworth/Remento built on this buyer; the PDF rates legacy gift-buyers 8/10",
+   "price_tolerance": "US$69–199 per gift",
+   "channel": "Gift guides, Facebook/Instagram ads in Nov–Dec and May, podcasts"
+  },
+  {
+   "rank": 2,
+   "name": "Last-Years-at-Home Parents",
+   "who": "Parents of teens 13–18 (your family is the archetype)",
+   "job": "Get teens off phones at dinner and keep the stories before the kids leave",
+   "evidence": "Your own household; Run 7 'Default Parent' audience overlap",
+   "price_tolerance": "A$30–60/yr (assumption)",
+   "channel": "Parent communities, school newsletters, Instagram Reels of game nights"
+  },
+  {
+   "rank": 3,
+   "name": "The Trip Family",
+   "who": "Families who take a big trip every year or two (theme parks, road trips, overseas)",
+   "job": "Kill queue time and turn the trip into stories",
+   "evidence": "Trip mode is the dogfood hook; the PDF rates travel families 7/10",
+   "price_tolerance": "Pack purchases A$5–10 (assumption)",
+   "channel": "Travel forums, trip-planning creators"
+  },
+  {
+   "rank": 4,
+   "name": "The Spread-Out / Migrant Family",
+   "who": "Families with grandparents overseas (48.2% of Australians have a parent born overseas, per the PDF citing ABS)",
+   "job": "Share stories across distance and languages",
+   "evidence": "PDF 6.5/10; needs remote play, which is weakest in the on-device design",
+   "price_tolerance": "Medium",
+   "channel": "Community groups; later"
+  },
+  {
+   "rank": 5,
+   "name": "Young Families",
+   "who": "Parents of under-10s",
+   "job": "Capture funny things kids say",
+   "evidence": "Fun Bits, quote-journal apps",
+   "price_tolerance": "Low–medium",
+   "channel": "Parent Instagram",
+   "note": "Under-13 data heightens the child-privacy risk, so don't target these families first."
+  },
+  {
+   "rank": 6,
+   "name": "Aged Care / Reminiscence",
+   "who": "Lifestyle coordinators, families of residents",
+   "job": "Reminiscence sessions",
+   "evidence": "PDF 5.5/10; Cochrane review of reminiscence therapy (cited in the PDF)",
+   "price_tolerance": "A$200–500/mo per site (PDF)",
+   "channel": "B2B sales; later only, because of consent capacity issues and the clinical-claims risk"
+  }
+ ],
+ "competitors": [
+  {
+   "name": "Storyworth",
+   "model": "Weekly email prompts → printed book",
+   "price": "US$69 Basic / US$99 Color / US$199 Unlimited (renews US$99); extra books US$39–99",
+   "url": "https://help.storyworth.com/en_US/getting-started/book-pricing",
+   "gap": "Not a game; solo homework; stories live on their servers"
+  },
+  {
+   "name": "Remento",
+   "model": "Voice-first prompts, AI-edited stories, book",
+   "price": "US$99 first year incl. book; renew US$99/yr or US$12/mo; conversation cards US$19.99",
+   "url": "https://www.remento.co/faq",
+   "gap": "Cloud voice; one storyteller at a time"
+  },
+  {
+   "name": "Meminto",
+   "model": "Biography book, GDPR, EU servers",
+   "price": "US$99 / $149 / $397 one-time",
+   "url": "https://meminto.com/pricing/",
+   "gap": "Book project, not a recurring ritual"
+  },
+  {
+   "name": "HereAfter AI (dead)",
+   "model": "Voice 'life story avatar'",
+   "price": "Was US$3.99–7.99/mo",
+   "url": "https://killedbyai.net/dead/hereafter-ai/",
+   "gap": "Shut down Aug 2026; export only by emailing support. This is our trust story."
+  },
+  {
+   "name": "TableTopics Family",
+   "model": "135 conversation cards",
+   "price": "US$25",
+   "url": "https://tabletopics.com/products/family",
+   "gap": "No scoring, no memory capture"
+  },
+  {
+   "name": "WNRS Family Edition",
+   "model": "Conversation card game",
+   "price": "US$20",
+   "url": "https://www.werenotreallystrangers.com/products/family-edition",
+   "gap": "Emotional rather than playful; nothing is kept"
+  },
+  {
+   "name": "StoryCorps app",
+   "model": "Free recorded interviews",
+   "price": "Free",
+   "url": "https://storycorps.org/participate/storyCorps-app/",
+   "gap": "Uploads to a public archive / Library of Congress"
+  },
+  {
+   "name": "Fun Bits",
+   "model": "Kids' quotes journal + 'Quote Guess' game",
+   "price": "Freemium (not verified)",
+   "url": "https://fun-bits.com/",
+   "gap": "Closest Who-Said-It analogue; not a full game night"
+  },
+  {
+   "name": "StoryKeeper / Keepsake / Memoirs For You (AU)",
+   "model": "Memoir and book services",
+   "price": "Varies (not verified)",
+   "url": "https://storykeeper.com/au/",
+   "gap": "Service or book projects; no game"
+  }
+ ],
+ "churn_and_fun_first": {
+  "evidence": [
+   "Storyworth users report storytellers losing momentum; prompts feel like homework (Reddit r/Gifts, r/AgingParents)",
+   "RevenueCat 2026: median first-year annual-plan retention is 20–40%",
+   "Tabletop research summary: a new game's play peaks within about 3 months, then declines (researchscape)"
+  ],
+  "tactics": [
+   "Fun first, archive second. Recording is optional per round, and the game works with it off.",
+   "The archive feeds the game. Who Said It and 'On this day' rounds reuse your own stories, so it gets better the more you play (the flywheel).",
+   "Short formats: Quick (15 min) and Trip (10 min) as well as Classic (40 min).",
+   "Teen-safe mechanics: veto card, Epic Fails, roast-light rules, and teens can be the Keeper.",
+   "Seasonal packs (Christmas, Easter, school holidays, trip) as the reason to come back, plus streaks without guilt.",
+   "The physical deck works without the app, so the app is never a barrier at the table."
+  ]
+ },
+ "must_be_true": [
+  {
+   "assumption": "Families will play at least 3 times in 6 weeks without nagging",
+   "experiment": "E1 own-table pilot, then E2 concierge with 10–15 families",
+   "pass": "≥50% of families play 3+ times; week-5 sessions ≥40% of week-1"
+  },
+  {
+   "assumption": "Teens will play and agree to be recorded",
+   "experiment": "E1 + E2 (count rounds recorded vs 'Play only')",
+   "pass": "≥60% of teen rounds recorded; teens rate it ≥7/10"
+  },
+  {
+   "assumption": "On-device transcription is usable at a real dinner table",
+   "experiment": "E3: record 4 dinners on an iOS 26 iPhone and compare transcripts",
+   "pass": "≥70% of stories usable after ≤1 min of edits (owner judgement)"
+  },
+  {
+   "assumption": "Gift buyers will pay A$49+ for a game plus archive",
+   "experiment": "E4 fake-door landing page, two angles (gift vs family night), A$300 ads",
+   "pass": "≥3% email sign-up; ≥30% pick a paid tier"
+  },
+  {
+   "assumption": "Families will review memories after the game",
+   "experiment": "E2: measure % reviewed within 48h (paper 'memory cards')",
+   "pass": "≥50%"
+  }
+ ],
+ "experiments": [
+  {
+   "id": "E1",
+   "name": "Your own table (printed deck)",
+   "cost_aud": "≤ 50",
+   "time": "3 Sundays in Nov–Dec 2026, plus one trip round",
+   "how": "Print 60 cards (8 categories) at home. Use phone Notes for hints and a scoreboard on paper. Record with iPhone Voice Memos only if everyone says yes. Note what got laughs and what dragged."
+  },
+  {
+   "id": "E2",
+   "name": "Concierge test",
+   "cost_aud": "≈ 300–500",
+   "time": "6 weeks, Jan–Feb 2027",
+   "how": "Mail printed decks and paper memory cards to 10–15 families (friends of friends). Families keep any recordings themselves. Collect only a weekly 3-question survey, never the stories."
+  },
+  {
+   "id": "E3",
+   "name": "On-device quality check",
+   "cost_aud": "0",
+   "time": "1 week",
+   "how": "Run iOS 26 on-device transcription (Notes/Voice Memos, or a 1-screen test app) on 4 family dinners. Judge usability yourself."
+  },
+  {
+   "id": "E4",
+   "name": "Fake-door landing page",
+   "cost_aud": "≈ 300",
+   "time": "2 weeks, pre-Mother's Day 2027",
+   "how": "A one-page Next.js site on Vercel with two headlines. Collect emails through a form provider with minimal data, or a waitlist via a MoR."
+  },
+  {
+   "id": "E5",
+   "name": "Price check",
+   "cost_aud": "0–100",
+   "time": "inside E2",
+   "how": "Van Westendorp 4 questions on the concierge survey."
+  }
+ ],
+ "pricing": {
+  "recommendation": "Digital first. Free tier: Quick mode + 3 categories + 10 saved memories. 'Family Pass' A$49/yr (one purchase covers the household via Family Sharing) with a 7-day trial. Export is always free, so memories are never held hostage. Seasonal packs A$7.99 for non-subscribers. Physical Starter Box (A$39 concept, or A$59 with 12 months) only after E2 passes. Yearbook: free print-ready PDF export, printed by a printer the family chooses.",
+  "why": "Prices sit under Storyworth/Remento (US$99 ≈ A$141) and above card decks (US$20–25). With near-zero marginal cost, subscription value has to come from fresh packs and yearbook layouts, not compute.",
+  "pdf_plan_comparison": "The PDF's A$9.99/mo, A$14.99 family, A$119/yr, A$59 box, A$99–149 yearbook and A$29/yr legacy vault assume cloud costs and a team. Most of the legacy-vault tier disappears in the on-device design, because legacy is a free export."
+ },
+ "revenue_scenarios_y1": {
+  "assumptions": "Illustrative only. iOS, AU-first. A$49 incl. GST → ex-GST → Apple Small Business Program 15% fee. Downloads, conversion and renewal are assumptions, not data.",
+  "rows": [
+   {
+    "scenario": "low",
+    "downloads_y1": 5000,
+    "paid_conversion": 0.04,
+    "paying_families_y1": 200,
+    "net_per_sub_aud": 37.86,
+    "net_revenue_y1_aud": 7573,
+    "first_renewal_rate": 0.3,
+    "renewing_families_y2": 60,
+    "marginal_ai_cost_aud": 0
+   },
+   {
+    "scenario": "base",
+    "downloads_y1": 20000,
+    "paid_conversion": 0.06,
+    "paying_families_y1": 1200,
+    "net_per_sub_aud": 37.86,
+    "net_revenue_y1_aud": 45436,
+    "first_renewal_rate": 0.35,
+    "renewing_families_y2": 420,
+    "marginal_ai_cost_aud": 0
+   },
+   {
+    "scenario": "high",
+    "downloads_y1": 60000,
+    "paid_conversion": 0.08,
+    "paying_families_y1": 4800,
+    "net_per_sub_aud": 37.86,
+    "net_revenue_y1_aud": 181745,
+    "first_renewal_rate": 0.4,
+    "renewing_families_y2": 1920,
+    "marginal_ai_cost_aud": 0
+   }
+  ]
+ },
+ "build_path": {
+  "solo_vibecoded": [
+   {
+    "phase": "0 · Paper",
+    "when": "Nov–Dec 2026",
+    "cost_aud": "≤ 50",
+    "what": "E1 + E3"
+   },
+   {
+    "phase": "1 · Concierge",
+    "when": "Jan–Feb 2027",
+    "cost_aud": "300–500",
+    "what": "E2 + E5"
+   },
+   {
+    "phase": "2 · Web wedge 'Hint & Tell Table'",
+    "when": "Mar–Apr 2027",
+    "cost_aud": "0–500",
+    "what": "Local-first Next.js PWA: categories, Keeper secret, hints, timer, scoring, typed memory cards, PDF export. No recording. aibuild 4, about 60–100 h. Sell packs/unlock via a MoR."
+   },
+   {
+    "phase": "3 · Native iOS v1",
+    "when": "Only if E2 passes; mid-2027",
+    "cost_aud": "15,000–40,000 (estimate)",
+    "what": "SwiftUI + SpeechAnalyzer + Foundation Models + CloudKit + StoreKit. Plan on a part-time contract iOS developer (about 150–250 h) for audio, CloudKit sharing and StoreKit edge cases. Includes A$1.5–4k legal review and A$149/yr Apple Developer."
+   }
+  ],
+  "solo_total_to_v1_aud": "≈ 16,000–41,000 (estimate)",
+  "pdf_team_plan_aud": "MVP A$80–150k (A$15–30k founder-built); v1 A$0.7–1.0M (~5 FTE)",
+  "non_engineer_note": "Phases 0–2 are well within reach. Phase 3 is where AI-built apps fail silently (audio sessions, background interruptions, CloudKit share permissions, StoreKit receipts), so budget for a human reviewer."
+ },
+ "names": [
+  {
+   "name": "Hint & Tell",
+   "status": "Recommended",
+   "checks": "App Store AU search: no exact match (29 Oct 2026). hintandtell.com and hintandtell.app unregistered per RDAP. No exact 'Hint & Tell' game trademark in a web search; 'Show & Tell' and 'Spill and Tell' marks exist (Canada). IP Australia ATMOSS search is still to be done by hand."
+  },
+  {
+   "name": "Tell Me Again",
+   "status": "Backup",
+   "checks": "No App Store AU results; tellmeagain.app registered Jul 2026"
+  },
+  {
+   "name": "Story Supper",
+   "status": "Backup",
+   "checks": "No exact App Store match; storysupper.com registered Dec 2024"
+  },
+  {
+   "name": "Memory Game",
+   "status": "Avoid",
+   "checks": "Generic; flooded by brain-training apps"
+  },
+  {
+   "name": "Remember When / Retold / Table Tales / Yarn",
+   "status": "Avoid",
+   "checks": "Existing apps with the same or similar names on the AU App Store"
+  }
+ ],
+ "trademark_note": "Don't use Disney/Universal names or characters in cards, screenshots or marketing. Use generic categories ('Park Day', 'the log ride').",
+ "mockups": [
+  "run11_mockups/m1_setup_consent.png",
+  "run11_mockups/m2_keeper_secret.png",
+  "run11_mockups/m3_hints_scoring.png",
+  "run11_mockups/m4_tell_it.png",
+  "run11_mockups/m5_memory_review.png",
+  "run11_mockups/m6_who_said_it.png",
+  "run11_mockups/t7_tablet_archive.png",
+  "run11_mockups/p8_box_yearbook.png"
+ ],
+ "idea_record": {
+  "id": "hint-and-tell-family-memory-game",
+  "title": "Hint & Tell: dinner-table memory guessing game + on-device family archive",
+  "category": "Life moments",
+  "secondary_categories": [
+   "Hobbies & games",
+   "Events & occasions"
+  ],
+  "platform": "Native iOS (on-device speech + AI), web wedge first",
+  "customer_type": "consumer",
+  "problem": "Family stories get lost, and story apps feel like homework; families want a fun ritual that keeps the stories.",
+  "target_users": "Gift-giving adult children; parents of teens; trip families",
+  "monetisation": "Family Pass annual IAP + seasonal packs; physical deck later; yearbook via user-exported PDF",
+  "price_hypothesis": "A$49/yr family; packs A$7.99; Starter Box A$39–59 (later)",
+  "scores": {
+   "legal": 3,
+   "pain": 3,
+   "breadth": 4,
+   "wtp": 4,
+   "recurring": 3,
+   "build": 2,
+   "maint": 3,
+   "distro": 2,
+   "compete": 3,
+   "defend": 4,
+   "synergy": 3,
+   "platform": 4,
+   "aibuild": 1
+  },
+  "total": 57.6,
+  "kill_flags": [],
+  "status": "candidate",
+  "first_seen_run": 11,
+  "last_scored_run": 11,
+  "score_history": [
+   {
+    "run": 11,
+    "date": "2026-10-29",
+    "rubric_version": "2.0",
+    "total": 57.6,
+    "scores": {
+     "legal": 3,
+     "pain": 3,
+     "breadth": 4,
+     "wtp": 4,
+     "recurring": 3,
+     "build": 2,
+     "maint": 3,
+     "distro": 2,
+     "compete": 3,
+     "defend": 4,
+     "synergy": 3,
+     "platform": 4,
+     "aibuild": 1
+    },
+    "note": "Run 11: standalone opportunity from the user's PDF; scored as the privacy-redesigned native app"
+   }
+  ],
+  "evidence": [
+   {
+    "url": "https://help.storyworth.com/en_US/getting-started/book-pricing",
+    "note": "Storyworth US$69/$99/$199 (updated 10 Sep 2026)"
+   },
+   {
+    "url": "https://www.remento.co/faq",
+    "note": "Remento US$99 first year incl. book, renew US$99/yr or US$12/mo"
+   },
+   {
+    "url": "https://meminto.com/pricing/",
+    "note": "Meminto US$99–397 one-time"
+   },
+   {
+    "url": "https://killedbyai.net/dead/hereafter-ai/",
+    "note": "HereAfter AI shut down Aug 2026; export only via support email"
+   },
+   {
+    "url": "https://www.reddit.com/r/Gifts/comments/1ozilol/experience_with_storyworth/",
+    "note": "Storyworth churn: storytellers lose momentum"
+   },
+   {
+    "url": "https://developer.apple.com/videos/play/wwdc2025/277/",
+    "note": "Apple SpeechAnalyzer: on-device long-form/distant audio"
+   }
+  ],
+  "competitors": [
+   "Storyworth",
+   "Remento",
+   "Meminto",
+   "HereAfter AI (closed)",
+   "TableTopics",
+   "WNRS Family",
+   "StoryCorps",
+   "Fun Bits",
+   "StoryKeeper AU",
+   "Keepsake (AU)"
+  ],
+  "notes": "Run 11 standalone opportunity (separate from the Life Admin Pass). Soft risks, not kill flags: #7 recording is handled by a per-player consent roll-call and 'Play only'; #4 minors' stories stay on the family's device and the developer stores nothing; product positioned for families with teens, under-13s Play-only by default. Related killed idea: meeting-recorder-local (covert recording); this differs because recording is explicit, consented and on-device. Web wedge variant (no recording) scores 67.2. PDF cloud design would be C-disq.",
+  "privacy_class": "B",
+  "privacy_notes": "On-device STT (Apple SpeechAnalyzer) + on-device LLM (Foundation Models) + CloudKit private DB/CKShare in the family's iCloud; StoreKit for payments; no developer server.",
+  "third_party_personal_data_api": "None (Apple frameworks on-device; CloudKit in user's account)",
+  "client_side_path": true,
+  "portfolio_fit": {
+   "score": 48.5,
+   "viability": 42.0,
+   "opportunity": 62.0,
+   "pre_privacy": 51.0,
+   "privacy_factor": 0.95,
+   "subscores": {
+    "legal": 3,
+    "pain": 3,
+    "breadth": 4,
+    "wtp": 4,
+    "recurring": 3,
+    "build": 2,
+    "maint": 3,
+    "distro": 2,
+    "compete": 3,
+    "defend": 4,
+    "synergy": 3,
+    "platform": 4,
+    "aibuild": 1,
+    "pain_adj": 3,
+    "monetisation_fit": 3
+   }
+  },
+  "tier": "Park",
+  "family": "Standalone: Hint & Tell",
+  "portfolio_monetisation": {
+   "model": "annual subscription + packs",
+   "reasoning": "A$49/yr Family Pass, free export forever; packs A$7.99; physical box after validation."
+  },
+  "variant_scores": {
+   "wedge_v0_web_game": {
+    "scores": {
+     "legal": 4,
+     "pain": 2,
+     "breadth": 4,
+     "wtp": 3,
+     "recurring": 2,
+     "build": 4,
+     "maint": 5,
+     "distro": 2,
+     "compete": 2,
+     "defend": 3,
+     "synergy": 4,
+     "platform": 5,
+     "aibuild": 4
+    },
+    "total": 67.2,
+    "portfolio_fit": {
+     "score": 66.1,
+     "viability": 84.0,
+     "opportunity": 52.0,
+     "pre_privacy": 66.1,
+     "privacy_factor": 1.0
+    }
+   },
+   "pdf_cloud_design": {
+    "scores": {
+     "legal": 2,
+     "pain": 3,
+     "breadth": 4,
+     "wtp": 4,
+     "recurring": 4,
+     "build": 1,
+     "maint": 2,
+     "distro": 2,
+     "compete": 3,
+     "defend": 4,
+     "synergy": 2,
+     "platform": 3,
+     "aibuild": 3
+    },
+    "total": 55.2,
+    "portfolio_fit": {
+     "score": 0.0,
+     "viability": 43.0,
+     "opportunity": 62.0,
+     "pre_privacy": 51.6,
+     "privacy_factor": 0.0
+    }
+   }
+  },
+  "mockups": [
+   "/mockups/memory-game/m1_setup_consent.png",
+   "/mockups/memory-game/m2_keeper_secret.png",
+   "/mockups/memory-game/m3_hints_scoring.png",
+   "/mockups/memory-game/m4_tell_it.png",
+   "/mockups/memory-game/m5_memory_review.png",
+   "/mockups/memory-game/m6_who_said_it.png",
+   "/mockups/memory-game/t7_tablet_archive.png",
+   "/mockups/memory-game/p8_box_yearbook.png"
+  ],
+  "detail_page": "/memory-game"
+ },
+ "sources": [
+  "https://help.storyworth.com/en_US/getting-started/book-pricing",
+  "https://www.remento.co/faq",
+  "https://help.remento.co/en/articles/8365892",
+  "https://meminto.com/pricing/",
+  "https://killedbyai.net/dead/hereafter-ai/",
+  "https://www.afterlife.ai/hereafter-ai-shutting-down",
+  "https://tabletopics.com/products/family",
+  "https://www.werenotreallystrangers.com/products/family-edition",
+  "https://storycorps.org/participate/storyCorps-app/",
+  "https://fun-bits.com/",
+  "https://storykeeper.com/au/",
+  "https://www.keepsakeproject.co/faq",
+  "https://memoirsforyou.com.au/the-book/",
+  "https://welcome.storyworth.com/au",
+  "https://developer.apple.com/videos/play/wwdc2025/277/",
+  "https://developer.apple.com/documentation/speech/speechtranscriber/supportedlocales",
+  "https://developer.apple.com/foundation-models-framework/",
+  "https://support.apple.com/en-us/121115",
+  "https://github.com/argmaxinc/argmax-oss-swift",
+  "https://developers.google.com/ml-kit/genai/speech-recognition/android",
+  "https://developer.apple.com/videos/play/tech-talks/10874/",
+  "https://legislation.nsw.gov.au/view/whole/html/inforce/current/act-2007-064",
+  "https://www.oaic.gov.au/privacy/privacy-registers/privacy-codes/childrens-online-privacy-code",
+  "https://www.oaic.gov.au/privacy/privacy-guidance-for-organisations-and-government-agencies/organisations/small-business",
+  "https://www.reddit.com/r/Gifts/comments/1ozilol/experience_with_storyworth/",
+  "https://www.reddit.com/r/AgingParents/comments/1bhb0fa/my_dad_and_storyworth/",
+  "https://www.revenuecat.com/state-of-subscription-apps-2026-business/",
+  "https://researchscape.com/blog/dynamics-of-the-tabletop-game-industry",
+  "https://doi.org/10.1111/fare.13117",
+  "https://itunes.apple.com/search (AU App Store name checks, 29 Oct 2026)",
+  "https://rdap.verisign.com (domain checks)",
+  "User PDF 'Memory Game' (26 Oct 2026) and its 29 sources"
+ ],
+ "caveats": [
+  "Revenue scenarios, conversion, renewal and the solo budget are assumptions or estimates, not data.",
+  "On-device transcription quality at a noisy table is untested (E3).",
+  "Some facts come from search summaries (RevenueCat ranges, tabletop decay, Apple Intelligence device list) rather than full page reads.",
+  "Not legal advice: get the consent wording, the Children's Code position and the NSW SDA s11 'communicating a recording' point reviewed before launch.",
+  "Trademark: IP Australia search not run (manual step).",
+  "PDF market figures (Ancestry, Plaud, AU board games, ABS) are quoted from the PDF and not re-verified."
+ ]
+}
